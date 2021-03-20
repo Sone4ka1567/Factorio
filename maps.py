@@ -55,14 +55,3 @@ class HardMapCreator(MapCreator):
     def create_map(self):
         return HardMap()
 
-
-# def get_map(creator: MapCreator):
-#     map_object: Map = creator.gen_map()
-#
-#
-# if __name__ == "__main__":
-#     map_type = input()
-#     if map_type == 'easy':
-#         get_map(EasyMapCreator())
-#     else:
-#         get_map(HardMapCreator())
