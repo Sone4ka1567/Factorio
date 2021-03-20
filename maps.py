@@ -1,11 +1,6 @@
 from abc import ABC, abstractmethod
+from constants import *
 import numpy as np  # заблокируй себе import воздуха
-
-# game
-CELL_SIZE = 32  # todo: домножить на размерности при переводе в пиксели
-MAP_W = 1050
-MAP_H = 600
-INNER_SQUARE_SIZE = 256
 
 
 class Map(ABC):
