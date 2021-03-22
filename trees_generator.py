@@ -69,7 +69,9 @@ for i in range(1):
     # nonlinear_noise = (-normalized_noise + 1) / 12
     # nonlinear_noise = (np.tanh(-2 * normalized_noise - 0.8) + 1) / 12
     # nonlinear_noise = (np.tanh(-2 * normalized_noise - 0.8) + 1) / 22
+    normalized_noise = np.where(normalized_noise > 0, 0, normalized_noise)
     nonlinear_noise = (np.tanh(-2 * np.power(normalized_noise, 3) - 1) + 1) / 24
+    # nonlinear_noise = np.where(nonlinear_noise < 0.003, 0x, normalized_noise)
     # nonlinear_noise = 2 / (30000 * (normalized_noise + 1.084)**2)
     # nonlinear_noise = 1 / (5000 * (normalized_noise+1.01))
     #
