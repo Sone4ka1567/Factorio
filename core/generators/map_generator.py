@@ -1,22 +1,21 @@
 import numpy as np
 from random import randint
 from math import sin, cos, sqrt
+from constants import *
 from copy import deepcopy
-from random_generator import random_from_done_intervals
+from random_generator import random_from_blocked_intervals
 from PIL import Image
 
 cell_len = 1
 
-map_h = 600 * cell_len
-map_w = 1050 * cell_len
-# map_h = 40 * cell_len
-# map_w = 70 * cell_len
+# MAP_H = 40 * cell_len
+# MAP_W = 70 * cell_len
 
 raw_materials = {'iron': 1, 'copper': 2, 'coal': 3, 'stone': 4}
 
 
 def abs_coordinates(x, y):
-    return x + map_w // 2, y + map_h // 2
+    return x + MAP_W // 2, y + MAP_H // 2
 
 
 # inner_square_bounds = np.array([[-128, -128], [128, 128]])
@@ -89,7 +88,7 @@ for _ in range(10):
         ores_bounds.append([[ore_center[0] - inner_ore_size_half, ore_center[1] - inner_ore_size_half],
                             [ore_center[0] + inner_ore_size_half, ore_center[1] + inner_ore_size_half]])
 
-    pic_mtx = np.zeros((map_h, map_w))
+    pic_mtx = np.zeros((MAP_H, MAP_W))
 
 
     def point_on_ore(x, y, ore):
@@ -122,7 +121,7 @@ exit()
 
 # class MapGenerator:
 #     def __init__(self):
-#         self.map_matrix = np.zeros((map_h, map_w, 2), dtype=np.int)  # [[[300, 1], [200, 1], [100, 1], [0, 0]]]
+#         self.map_matrix = np.zeros((MAP_H, MAP_W, 2), dtype=np.int)  # [[[300, 1], [200, 1], [100, 1], [0, 0]]]
 #         self.done_x_intervals = []
 #         self.done_y_intervals = []
 #
@@ -148,7 +147,7 @@ exit()
 #         self.map_matrix[ore_bounds[0][1]: ore_bounds[1][1], ore_bounds[0][0]: ore_bounds[1][0]] = \
 #             np.ones((inner_ore_size, inner_ore_size, 2), dtype=np.int)
 #         # my_print(self.map_matrix)
-#         pic_mtx = np.zeros((map_h, map_w))
+#         pic_mtx = np.zeros((MAP_H, MAP_W))
 #         x_left, y_left = (inner_square_abs_bounds[0][0], inner_square_abs_bounds[0][1])
 #         x_right, y_right = (inner_square_abs_bounds[1][0], inner_square_abs_bounds[1][1])
 #         print(x_left, y_left)

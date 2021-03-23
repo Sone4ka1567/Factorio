@@ -12,6 +12,7 @@ class Map(ABC):
     ore_size: int
 
     def generate_matrix(self):
+        # todo: написать генератор
         pass
 
 
@@ -38,6 +39,10 @@ class HardMap(Map):
 class MapCreator:
     @abstractmethod
     def create_map(self):
+        """
+        factory method implementation
+        :return: Map object
+        """
         pass
 
     def gen_map(self):
