@@ -5,7 +5,7 @@ from PIL import Image
 from math import sin, cos, sqrt
 from random import randint
 from random_generator import random_point_with_blocked_square
-
+from matplotlib import pyplot as plt
 
 def abs_coordinates(x, y):
     return x + MAP_W // 2, y + MAP_H // 2
@@ -114,17 +114,40 @@ class Map(ABC):
             return inner_ores_bounds, outer_ores_bounds
 
         inner_ores_bounds, outer_ores_bounds = gen_ore_centers()
-        ores_bounds = inner_ores_bounds + outer_ores_bounds
-        pic_mtx = np.array([[0] * MAP_W] * MAP_H)
-        for y in range(len(pic_mtx)):
-            for x in range(len(pic_mtx[y])):
-                for i in range(len(ores_bounds)):
-                    if point_on_ore(x, y, ores_bounds[i]):
-                        pic_mtx[y][x] = 50 if i < 4 else 70
-        if point_on_ore(x, y, basic_square_mtx_bounds):
-            pic_mtx[y][x] += 10
 
-        Image.fromarray(pic_mtx).show()
+        matix = np.array([[0] * MAP_W] * MAP_H)
+        for ore in inner_ores_bounds:
+            ore_matrix = np.array([[0] * self.ore_size] * self.ore_size)
+            ore_matrix = np.random.rand(32, 32)
+            ore_matrix = np.where(ore_matrix < 0.333, 0, np.random.rand(32, 32) * 300)
+            # ore
+            mt10 = (np.random.rand(10, 10) / 5 + 0.5) * 1000
+            mt16 = np.zeros((16, 16))
+            mt16[3:13, 3:13] = mt10
+            mt16 = np.where(mt16 == 0, (np.random.rand(16, 16) / 5 + 0.3) * 1000, mt16)
+            mt28 = np.zeros((28, 28))
+            mt28[6:22, 6:22] = mt16
+            # possib28 = np.random.rand(28, 28) * 0.6
+            mt28 = np.where((mt28 == 0), ((np.random.rand(28, 28) / 2.5 + 0.2) - 0.4) * 1000, mt28)
+            mt28 = np.where((mt28 < 0),0, mt28)
+
+            mt32 = -np.ones((32, 32))
+            mt32[2:30, 2:30] = mt28
+            # possib32 = np.random.rand(32, 32) * 0.3
+            mt32 = np.where((mt32 == -1), (np.random.rand(32, 32) / 5) * 1000, mt32)
+            plt.imshow(mt32)
+            plt.show()
+        # ores_bounds = inner_ores_bounds + outer_ores_bounds
+        # pic_mtx = np.array([[0] * MAP_W] * MAP_H)
+        # for y in range(len(mt16)):
+        #     for x in range(len(mt16[y])):
+        # #         for i in range(len(ores_bounds)):
+        # #             if point_on_ore(x, y, ores_bounds[i]):
+        # #                 pic_mtx[y][x] = 50 if i < 4 else 70
+        # # if point_on_ore(x, y, basic_square_mtx_bounds):
+        # #     pic_mtx[y][x] += 10
+        #
+        # Image.fromarray(pic_mtx).show()
 
 
 class EasyMap(Map):
@@ -132,8 +155,8 @@ class EasyMap(Map):
         self.ore_size = 32
         self.inner_square_parts = [(10, 1, (800, 1000)),
                                    (16, 1, (600, 800)),
-                                   (28, 0.6, (300, 600)),
-                                   (32, 0.3, (0, 300)),
+                                   (28, 0.6, (200, 600)),
+                                   (32, 0.3, (0, 200)),
                                    ]
         self.radius_coef = (8, 10)
         self.num_ores = 10
