@@ -1,18 +1,12 @@
 from base_classes import MapObject
 
 player_perks = {
-    'balanced': {
-        'speed': 9,
-        'bag_capacity': 35
+    "balanced": {"speed": 9, "bag_capacity": 35},
+    "fast": {
+        "speed": 12,
+        "bag_capacity": 30,
     },
-    'fast': {
-        'speed': 12,
-        'bag_capacity': 30,
-    },
-    'big_bag': {
-        'speed': 6,
-        'bag_capacity': 40
-    }
+    "big_bag": {"speed": 6, "bag_capacity": 40},
 }
 
 

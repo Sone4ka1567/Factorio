@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
-from constants import *
-import numpy as np  # заблокируй себе import воздуха
+import numpy as np
+import constants as const
 
 
 class Map(ABC):
-    height = MAP_H
-    width = MAP_W
+    height = const.MAP_H
+    width = const.MAP_W
     map_matrix = np.zeros((height, width, 2), dtype=np.int)
-    inner_square_size = INNER_SQUARE_SIZE
+    inner_square_size = const.INNER_SQUARE_SIZE
     inner_square_parts: list
     ore_size: int
 
@@ -18,21 +18,23 @@ class Map(ABC):
 class EasyMap(Map):
     def __init__(self):
         self.ore_size = 32
-        self.inner_square_parts = [(10, 1, (800, 1000)),
-                                   (16, 1, (600, 800)),
-                                   (28, 0.6, (300, 600)),
-                                   (32, 0.3, (0, 300)),
-                                   ]
+        self.inner_square_parts = [
+            (10, 1, (800, 1000)),
+            (16, 1, (600, 800)),
+            (28, 0.6, (300, 600)),
+            (32, 0.3, (0, 300)),
+        ]
 
 
 class HardMap(Map):
     def __init__(self):
         self.ore_size = 28
-        self.inner_square_parts = [(6, 1, (700, 900)),
-                                   (12, 1, (500, 700)),
-                                   (24, 0.6, (300, 500)),
-                                   (28, 0.3, (0, 300)),
-                                   ]
+        self.inner_square_parts = [
+            (6, 1, (700, 900)),
+            (12, 1, (500, 700)),
+            (24, 0.6, (300, 500)),
+            (28, 0.3, (0, 300)),
+        ]
 
 
 class MapCreator:
@@ -54,4 +56,3 @@ class EasyMapCreator(MapCreator):
 class HardMapCreator(MapCreator):
     def create_map(self):
         return HardMap()
-
