@@ -27,6 +27,9 @@ class MapCell:
         self.usable_object = None
         self.raw_material_batch = None
 
+    def __str__(self):
+        return f'{self.category}, {type(self.raw_material_batch)}'
+
 
 class Map(ABC):
     height = MAP_H
@@ -150,12 +153,19 @@ class Map(ABC):
         def create_batch_for_cell(x, y):
             for bounds, batch_type, ore_matrix in ores_with_types:
                 if point_on_ore(x, y, bounds):
-                    return batch_type(ore_matrix[x][y])
+                    return batch_type(ore_matrix[x - bounds[0][0]][y - bounds[0][1]])
 
         surface_noise = gen_surface_noise(self.height, self.width)
+        plt.imshow(surface_noise)
+        plt.show()
 
         def interpret_surface_noise(el):
-            return 'dark' if el == 1 else 'water' if el == 2 else 'light'
+            if el == 1:
+                return 'dark'
+            if el == 2:
+                return 'water'
+            if el == 3:
+                return 'light'
 
         for y in range(MAP_H):
             for x in range(MAP_W):
@@ -164,11 +174,25 @@ class Map(ABC):
                 # raw_material_gen, amount = get_ore_of_cell(x, y)
                 # if raw_material_gen:
                 #     cell.raw_material_batch = raw_material_gen.generate_raw_material(amount)
-                if trees_matrix[y][x]:
-                    cell.raw_material_batch = TreeBatch(randint(10, 20))  # CONST
-                else:
-                    cell.raw_material_batch = create_batch_for_cell(x, y)
+                if cell.category != 'water':
+                    if trees_matrix[y][x]:
+                        cell.raw_material_batch = TreeBatch(randint(10, 20))  # CONST
+                    else:
+                        cell.raw_material_batch = create_batch_for_cell(x, y)
                 self.map_matrix[y][x] = cell
+        print(self.map_matrix[46:80][120:180])
+        # print(self.map_matrix[10:][10:])
+        res = np.zeros((self.height, self.width))
+        for y in range(MAP_H):
+            for x in range(MAP_W):
+                cell = self.map_matrix[y][x]
+                # print(cell)
+                if cell.category == 'water':
+                    res[y][x] = 20
+            #     print(b.category, end=' ')
+            # print()
+        plt.imshow(res)
+        plt.show()
 
 
 class EasyMap(Map):
