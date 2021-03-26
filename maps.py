@@ -7,6 +7,7 @@ from copy import copy
 from random import randint, shuffle, choice
 from random_generator import random_point_with_blocked_square
 from core.generators.trees_generator import gen_trees_map
+from core.generators.surface_generator import gen_surface_noise
 from matplotlib import pyplot as plt
 from core.generators.ore_generator import gen_ore_matrix
 from core.virtual_objects.raw_materials.raw_materials import IronBatch, CopperBatch, StoneBatch, CoalBatch, TreeBatch
@@ -21,8 +22,8 @@ def dist(point1: tuple, point2: tuple) -> float:
 
 
 class MapCell:
-    def __init__(self, category):
-        self.category = category
+    def __init__(self, category: str):
+        self.category: str = category
         self.usable_object = None
         self.raw_material_batch = None
 
@@ -138,15 +139,8 @@ class Map(ABC):
         # TODO:
         """
         * gen_ore_matrix() - implement algo
-        * generate surface_noise
-        * interpret_surface_noise()
+        * test all
         """
-
-        def interpret_surface_noise():
-            pass
-
-        def surface_noise():
-            pass
 
         trees_matrix = gen_trees_map(self.height, self.width)
 
@@ -158,7 +152,12 @@ class Map(ABC):
                 if point_on_ore(x, y, bounds):
                     return batch_type(ore_matrix[x][y])
 
-        for y in range(len(MAP_H)):
+        surface_noise = gen_surface_noise(self.height, self.width)
+
+        def interpret_surface_noise(el):
+            return 'dark' if el == 1 else 'water' if el == 2 else 'light'
+
+        for y in range(MAP_H):
             for x in range(MAP_W):
                 cell = MapCell(interpret_surface_noise(surface_noise[y][x]))
                 # фабричны метод (зачем....)

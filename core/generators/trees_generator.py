@@ -1,6 +1,6 @@
 import numpy as np
 from constants import MAP_H, MAP_W
-from perlin import gen_perlin_noise
+from core.generators.perlin import gen_perlin_noise
 
 
 def gen_nonlinear_noise(height, width):
