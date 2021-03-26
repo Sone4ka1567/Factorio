@@ -6,6 +6,7 @@ from math import sin, cos, sqrt
 from copy import copy
 from random import randint, shuffle, choice
 from random_generator import random_point_with_blocked_square
+from core.generators.trees_generator import gen_trees_map
 from matplotlib import pyplot as plt
 from core.generators.ore_generator import gen_ore_matrix
 from core.virtual_objects.raw_materials.raw_materials import IronBatch, CopperBatch, StoneBatch, CoalBatch, TreeBatch
@@ -136,10 +137,9 @@ class Map(ABC):
 
         # TODO:
         """
-        * gen_ore_matrix()
+        * gen_ore_matrix() - implement algo
         * generate surface_noise
         * interpret_surface_noise()
-        * generate trees
         """
 
         def interpret_surface_noise():
@@ -148,7 +148,7 @@ class Map(ABC):
         def surface_noise():
             pass
 
-        trees = None
+        trees_matrix = gen_trees_map(self.height, self.width)
 
         for i in range(len(ores_with_types)):
             ores_with_types[i].append(gen_ore_matrix(self.ore_size))
@@ -165,7 +165,7 @@ class Map(ABC):
                 # raw_material_gen, amount = get_ore_of_cell(x, y)
                 # if raw_material_gen:
                 #     cell.raw_material_batch = raw_material_gen.generate_raw_material(amount)
-                if trees[y][x]:
+                if trees_matrix[y][x]:
                     cell.raw_material_batch = TreeBatch(randint(10, 20))  # CONST
                 else:
                     cell.raw_material_batch = create_batch_for_cell(x, y)
