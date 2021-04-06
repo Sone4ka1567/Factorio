@@ -9,7 +9,6 @@ class MaterialBatch(VirtualObject):
         return MaterialBatch(self.amount)
 
 
-
 class RawMaterialBatch(MaterialBatch):
     def __init__(self, amount, intermediate_class=None):
         super().__init__(amount)
@@ -28,8 +27,6 @@ class IronBatch(RawMaterialBatch):
         super().__init__(amount)
         self.intermediate_class = IronPlatesBatch
 
-    def __name__(self):
-        return 'IronBatch'
 
 class CopperPlatesBatch(MaterialBatch):
     pass
@@ -39,15 +36,13 @@ class CopperBatch(RawMaterialBatch):
     def __init__(self, amount):
         super().__init__(amount)
         self.intermediate_class = CopperPlatesBatch
-    def __name__(self):
-        return 'CopperBatch'
+
 
 class CoalBatch(RawMaterialBatch):
     def __init__(self, amount):
         super().__init__(amount)
         self.intermediate_class = None  # ??????????????
-    def __name__(self):
-        return 'CoalBatch'
+
 
 class StoneBricksBatch(MaterialBatch):
     pass
@@ -57,15 +52,19 @@ class StoneBatch(RawMaterialBatch):
     def __init__(self, amount):
         super().__init__(amount)
         self.intermediate_class = StoneBricksBatch
-    def __name__(self):
-        return 'StoneBatch'
+
+
+class WaterBatch(RawMaterialBatch):
+    def __init__(self, amount=float('inf')):
+        super().__init__(amount)
+        self.intermediate_class = StoneBricksBatch
+
 
 class TreeBatch(RawMaterialBatch):
     def __init__(self, amount):
         super().__init__(amount)
         self.intermediate_class = None  # ??????????????
-    def __name__(self):
-        return 'TreeBatch'
+
 # def exchange(input_batch: RawMaterialBatch, output_batch: RawMaterialBatch, amount: int):
 #     if not isinstance(output_batch, type(input_batch)):
 #         return False

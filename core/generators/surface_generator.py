@@ -14,7 +14,6 @@ def gen_surface_noise(height, width):
     res2 = np.where(noise < 0.1, 3, 1)
     return res2 - res1
 
-
 # if __name__ == '__main__':
 #     from matplotlib import pyplot as plt
 #
