@@ -26,12 +26,19 @@ class Map(ABC):
     num_ores: int
     radius_coefficient_bounds: tuple
     map_objects: dict
+    map_matrix: list
 
     def __init__(self):
         self.map_objects = {}
         self.map_matrix = [
             [None for __ in range(self.width)] for _ in range(self.height)
         ]
+
+    def get_map_objects(self):
+        return self.map_objects
+
+    def get_map_matrix(self):
+        return self.map_matrix
 
     def generate_matrix(self):
         trees_matrix = gen_trees_map(self.height, self.width)
