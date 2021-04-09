@@ -1,5 +1,5 @@
 import json
-from pygameGUI import PygameSprite, PygameGUI
+from pygamegui import PygameSprite
 import constants as const
 
 with open("player_perks.json", "r+") as f:
@@ -9,7 +9,6 @@ with open("player_perks.json", "r+") as f:
 class Player(PygameSprite):
     def __init__(self, game, x_spawn, y_spawn, bag_capacity, speed, picture):
         super().__init__()
-        self.gui = PygameGUI()
         self.game = game
         self.groups = self.game.all_sprites
         self.init_sprite_and_group(self.groups)
