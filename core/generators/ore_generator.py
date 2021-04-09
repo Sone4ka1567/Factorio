@@ -7,94 +7,13 @@ from core.virtual_objects.raw_materials.raw_materials import (
     CoalBatch,
     WaterBatch
 )
-
-# from trees_generator import perlin
-#
-#
-# def perlin(x, y, seed=0):
-#     np.random.seed(seed)
-#     p = np.arange(256, dtype=int)
-#     np.random.shuffle(p)
-#     p = np.stack([p, p]).flatten()
-#     xi = x.astype(int)
-#     yi = y.astype(int)
-#     xf = x - xi
-#     yf = y - yi
-#     u = fade(xf)
-#     v = fade(yf)
-#     n00 = gradient(p[p[xi] + yi], xf, yf)
-#     n01 = gradient(p[p[xi] + yi + 1], xf, yf - 1)
-#     n11 = gradient(p[p[xi + 1] + yi + 1], xf - 1, yf - 1)
-#     n10 = gradient(p[p[xi + 1] + yi], xf - 1, yf)
-#     x1 = linear_interpolation(n00, n10, u)
-#     x2 = linear_interpolation(n01, n11, u)
-#     return linear_interpolation(x1, x2, v)
-#
-#
-# def linear_interpolation(a, b, x):
-#     return a + x * (b - a)
-#
-#
-# def fade(t):
-#     return 6 * t ** 5 - 15 * t ** 4 + 10 * t ** 3
-#
-#
-# def gradient(h, x, y):
-#     vectors = np.array([[0, 1], [0, -1], [1, 0], [-1, 0]])
-#     g = vectors[h % 4]
-#     return g[:, :, 0] * x + g[:, :, 1] * y
-#
-#
-# def generate_trees_locations():
-#     lin_x = np.linspace(0, 5, 256, endpoint=False)
-#     lin_y = np.linspace(0, 5, 256, endpoint=False)
-#
-#     x, y = np.meshgrid(lin_x, lin_y)
-#     noise = perlin(x, y, seed=np.random.randint(1, 256))
-#
-#     # trees_map = np.zeros((len(noise), len(noise[0])))
-#
-#     normalized_noise = - (noise / np.linalg.norm(noise) * 100) * 5
-#     normalized_noise = np.where(normalized_noise > 1, 1, normalized_noise)
-#     normalized_noise = np.where(normalized_noise < -1, -1, normalized_noise)
-#
-#     normalized_noise = np.where(normalized_noise > 0, np.zeros_like(normalized_noise), normalized_noise)
-#     nonlinear_noise = (np.tanh(-2 * np.power(normalized_noise, 3) - 1) + 1) / 24
-#
-#     return nonlinear_noise
-#
-#
-# from random import randint
-#
-# res = [[100] * 32] * 32
-#
-#
-# def self.dist(x, y):
-#     return sqrt((x - 16) ** 2 + (y - 16) ** 2)
-#
-#
-# for y in range(32):
-#     for x in range(32):
-#         res[y][x] -= 0.1*self.dist(x, y)
-#         # if abs(self.dist(x, y) - 5) < 1:
-#         #     res[y][x] = 10
-#
-#
-#
-#
-# # noise = np.where(noise < 0, 0, noise)
-# plt.imshow(res)
-# # plt.imshow(noise)
-# #
-# plt.show()
-#
-# def gen_ore_matrix(ore_size):
-#     return np.ones((ore_size, ore_size))
 import numpy as np
 from random import randint
 import random
 from math import sin, cos, sqrt
 import constants as const
+from core.generators.norm import normalize
+from core.generators.perlin import gen_perlin_noise
 
 
 class OresGenerator:
@@ -102,8 +21,8 @@ class OresGenerator:
     generates bounds of ores && water
     """
 
-    def __init__(self, radius_coef_bounds, ore_size, num_ores, map_width, map_height):
-        self.radius_coef_bounds = radius_coef_bounds
+    def __init__(self, radius_coefficient_bounds, ore_size, num_ores, map_width, map_height):
+        self.radius_coefficient_bounds = radius_coefficient_bounds
         self.ore_size = ore_size
         self.num_ores = num_ores
         self.map_width = map_width
@@ -158,10 +77,22 @@ class OresGenerator:
 
     @staticmethod
     def gen_ore_matrix(size):
-        return np.ones((size, size))
+        perlin_noise = normalize(gen_perlin_noise(size, size))
+
+        raw_radial_gradient = np.fromfunction(lambda x, y: np.sqrt((x - size // 2) ** 2 + (y - size // 2) ** 2),
+                                              shape=(size, size))
+        radial_gradient = normalize(1 - raw_radial_gradient)
+
+        n = 0.24
+        res = n * perlin_noise - radial_gradient * (1 - n)
+        res = normalize(res)
+        res = np.where(res < 0.7, res, 1)
+        res = (1 - res) * 1000
+        res = np.where(res > 500, res ** 2 / 1000, res ** 3 / 500000)
+        return res
 
     def _gen_circle_rad(self, diagonal) -> int:
-        return int(random.uniform(*self.radius_coef_bounds) * diagonal)
+        return int(random.uniform(*self.radius_coefficient_bounds) * diagonal)
 
     def _gen_inner_ores_centers(self):
         first_ore_center = (
