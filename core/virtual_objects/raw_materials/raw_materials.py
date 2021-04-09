@@ -55,7 +55,7 @@ class StoneBatch(RawMaterialBatch):
 
 
 class WaterBatch(RawMaterialBatch):
-    def __init__(self, amount=float('inf')):
+    def __init__(self, amount=int(1e3)):
         super().__init__(amount)
         self.intermediate_class = None
 
