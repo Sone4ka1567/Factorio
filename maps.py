@@ -31,30 +31,10 @@ class Map(ABC):
     width = const.MAP_W
     num_ores = int
     ore_size: int
-    radius_coef_bounds: tuple
+    radius_coefficient_bounds: tuple
 
     def __init__(self):
         self.map_matrix = [[None for __ in range(self.width)] for _ in range(self.height)]
-
-    @staticmethod
-    def _point_on_ore(x, y, ore):
-        return ore[0][0] < x < ore[1][0] and ore[0][1] < y < ore[1][1]
-
-    @staticmethod
-    def _get_ore_center(prev_ore_center, distance):
-        degree = random.randint(0, 360)
-        center = (
-            int(prev_ore_center[0] + sin(degree) * distance),
-            int(prev_ore_center[1] + cos(degree) * distance),
-        )
-        crossing = (
-            int(prev_ore_center[0] + sin(degree) * distance / 2),
-            int(prev_ore_center[1] + cos(degree) * distance / 2),
-        )
-        return center, crossing
-
-    def _gen_circle_rad(self, diagonal) -> int:
-        return int(random.uniform(*self.radius_coef_bounds) * diagonal)
 
     def generate_matrix(self):
 
@@ -72,7 +52,7 @@ class Map(ABC):
         def interpret_surface_noise(el):
             return "dark" if el == 1 else 'light'
 
-        ores_gen = OresGenerator(radius_coef_bounds=self.radius_coef_bounds,
+        ores_gen = OresGenerator(radius_coefficient_bounds=self.radius_coefficient_bounds,
                                  ore_size=self.ore_size,
                                  num_ores=self.num_ores,
                                  map_width=self.width,
@@ -81,7 +61,7 @@ class Map(ABC):
             for x in range(self.width):
                 cell = MapCell(interpret_surface_noise(surface_noise[y][x]))
                 generated = ores_gen.create_batch_for_cell(x, y)
-                if generated and generated.__class__.__name__ == 'WaterBatch':
+                if generated and isinstance(generated, WaterBatch):
                     cell.raw_material_batch = WaterBatch()
                 elif trees_matrix[y][x]:
                     cell.raw_material_batch = TreeBatch(random.randint(10, 20))  # CONST
@@ -90,6 +70,7 @@ class Map(ABC):
                 self.map_matrix[y][x] = cell
         # print(self.map_matrix[10:][10:])
 
+    def plot(self):
         categories = {'dark': 13, 'light': 15}
         map_objects = {'IronBatch': 1, 'CopperBatch': 3, 'CoalBatch': 5, 'StoneBatch': 7, 'TreeBatch': 9,
                        'WaterBatch': 11}
@@ -100,7 +81,12 @@ class Map(ABC):
                 # print(cell)
                 res[y][x] = categories[cell.category]
                 if cell and cell.raw_material_batch:
-                    res[y][x] = map_objects[cell.raw_material_batch.__class__.__name__]
+                    # res[y][x] = map_objects[cell.raw_material_batch.__class__.__name__]
+                    if cell.raw_material_batch.__class__.__name__ in ['IronBatch','CopperBatch', 'CoalBatch', 'StoneBatch']:
+                        res[y][x] = cell.raw_material_batch.amount / 100
+                    else:
+                        res[y][x] = map_objects[cell.raw_material_batch.__class__.__name__]
+
 
             #     print(b.category, end=' ')
             # print()
@@ -112,7 +98,7 @@ class EasyMap(Map):
     def __init__(self):
         super().__init__()
         self.ore_size = 32
-        self.radius_coef_bounds = (0.8, 1)
+        self.radius_coefficient_bounds = (0.8, 1)
         self.num_ores = 12
 
 
@@ -120,7 +106,7 @@ class HardMap(Map):
     def __init__(self):
         super().__init__()
         self.ore_size = 28
-        self.radius_coef_bounds = (1, 1.2)
+        self.radius_coefficient_bounds = (1, 1.2)
         self.num_ores = 10
 
 
@@ -150,9 +136,10 @@ class HardMapCreator(MapCreator):
 
 
 if __name__ == "__main__":
-    for i in range(5):
+    for i in range(1):
         creator = EasyMapCreator()
-        creator.gen_map()
+        map = creator.gen_map()
+        map.plot()
 #
 
 #
