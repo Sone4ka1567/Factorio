@@ -1,9 +1,9 @@
 import numpy as np
-from ken_perlin_noise import gen_perlin_noise
+from core.generators.perlin import gen_noise
 
 
 def gen_trees_noise(height, width):
-    noise = gen_perlin_noise(width, height)
+    noise = gen_noise(width, height)
 
     normalized_noise = -(noise / np.linalg.norm(noise) * 100) * 5
     normalized_noise = np.where(normalized_noise > 1, 1, normalized_noise)

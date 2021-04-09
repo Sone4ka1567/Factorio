@@ -1,7 +1,7 @@
 import random
 from math import sin, cos, sqrt
 import numpy as np
-from ken_perlin_noise import gen_perlin_noise
+from core.generators.perlin import gen_noise
 import constants as const
 from core.generators.random_generator import random_point_with_blocked_square
 from core.virtual_objects.raw_materials.raw_materials import (
@@ -82,7 +82,7 @@ class OresGenerator:
 
     @staticmethod
     def gen_ore_matrix(size):
-        perlin_noise = normalize(gen_perlin_noise(size, size))
+        perlin_noise = normalize(gen_noise(size, size))
 
         raw_radial_gradient = np.fromfunction(
             lambda x, y: np.sqrt((x - size // 2) ** 2 + (y - size // 2) ** 2),
