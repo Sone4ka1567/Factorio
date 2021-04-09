@@ -32,13 +32,12 @@ class MapCell:
 
 
 class Map(ABC):
-    # __slots__ = ("height", "width", "num_ores", "ore_size", "radius_coefficient_bounds")
+    height = const.MAP_H
+    width = const.MAP_W
+    ore_size: int
+    radius_coefficient_bounds: tuple
+
     def __init__(self):
-        self.height = const.MAP_H
-        self.width = const.MAP_W
-        self.num_ores: int
-        self.ore_size: int
-        self.radius_coefficient_bounds: tuple
         self.map_matrix = [[None for __ in range(self.width)] for _ in range(self.height)]
 
     def generate_matrix(self):
