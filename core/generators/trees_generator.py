@@ -19,4 +19,5 @@ def gen_trees_noise(height, width):
 
 def gen_trees_map(height, width):
     noise = gen_trees_noise(height, width)
-    return np.fromfunction(lambda x, y: np.random.rand(y, x) < noise, (width, height))
+    prob_matrix = np.random.rand(height, width)
+    return np.where(prob_matrix < noise, 1, 0)

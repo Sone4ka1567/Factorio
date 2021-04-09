@@ -236,4 +236,4 @@ class OresGenerator:
         for bounds, batch_type, ore_matrix in self.ores_with_types:
             if self._point_on_ore(x, y, bounds):
                 return batch_type(ore_matrix[x - bounds[0][0]][y - bounds[0][1]])
-            return None
+        return None
