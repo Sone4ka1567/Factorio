@@ -1,26 +1,14 @@
 from abc import ABC, abstractmethod
-import constants as const
-import numpy as np
-from PIL import Image
-from math import sin, cos, sqrt
-from copy import copy
 import random
-from random_generator import random_point_with_blocked_square
 from core.generators.trees_generator import gen_trees_map
-from core.generators.surface_generator import gen_surface_noise
-from matplotlib import pyplot as plt
-from core.generators.ore_generator import OresGenerator
-from core.virtual_objects.raw_materials.raw_materials import (
-    TreeBatch,
-    WaterBatch
-)
-
-cell_sizes = []
-map_objects = {}
+from core.generators.surface_generator import gen_surface_map
+from core.generators.ores_generator import OresGenerator
+from core.virtual_objects.raw_materials.raw_materials import TreeBatch, WaterBatch
+import constants as const
 
 
 class MapCell:
-    __slots__ = {'category', 'usable_object', 'raw_material_batch'}
+    __slots__ = {"category", "usable_object", "raw_material_batch"}
 
     def __init__(self, category: str):
         self.category: str = category
@@ -37,65 +25,41 @@ class Map(ABC):
     ore_size: int
     num_ores: int
     radius_coefficient_bounds: tuple
+    map_objects: dict
 
     def __init__(self):
-        self.map_matrix = [[None for __ in range(self.width)] for _ in range(self.height)]
+        self.map_objects = {}
+        self.map_matrix = [
+            [None for __ in range(self.width)] for _ in range(self.height)
+        ]
 
     def generate_matrix(self):
-
-        # TODO:
-        """
-        * gen_ore_matrix() - implement algo
-        * test all
-        """
-
         trees_matrix = gen_trees_map(self.height, self.width)
-        surface_noise = gen_surface_noise(self.height, self.width)
+        surface_noise = gen_surface_map(self.height, self.width)
 
-        def interpret_surface_noise(el):
-            return "dark" if el == 1 else 'light'
+        ores_gen = OresGenerator(
+            radius_coefficient_bounds=self.radius_coefficient_bounds,
+            ore_size=self.ore_size,
+            num_ores=self.num_ores,
+            map_width=self.width,
+            map_height=self.height,
+        )
 
-        ores_gen = OresGenerator(radius_coefficient_bounds=self.radius_coefficient_bounds,
-                                 ore_size=self.ore_size,
-                                 num_ores=self.num_ores,
-                                 map_width=self.width,
-                                 map_height=self.height)
         for y in range(self.height):
             for x in range(self.width):
-                cell = MapCell(interpret_surface_noise(surface_noise[y][x]))
-                generated = ores_gen.create_batch_for_cell(x, y)
-                if generated and isinstance(generated, WaterBatch):
-                    cell.raw_material_batch = WaterBatch()
-                elif trees_matrix[y][x]:
-                    cell.raw_material_batch = TreeBatch(random.randint(10, 20))  # CONST
-                else:
-                    cell.raw_material_batch = generated
-                self.map_matrix[y][x] = id(cell)
-                map_objects[id(cell)] = cell
-        # print(self.map_matrix[10:][10:])
-
-    def plot(self):
-        categories = {'dark': 13, 'light': 15}
-        map_objects = {'IronBatch': 1, 'CopperBatch': 3, 'CoalBatch': 5, 'StoneBatch': 7, 'TreeBatch': 9,
-                       'WaterBatch': 11}
-        res = np.zeros((self.height, self.width))
-        for y in range(self.height):
-            for x in range(self.width):
-                cell: MapCell = self.map_matrix[y][x]
-                # print(cell)
-                res[y][x] = categories[cell.category]
-                if cell and cell.raw_material_batch:
-                    # res[y][x] = map_objects[cell.raw_material_batch.__class__.__name__]
-                    if cell.raw_material_batch.__class__.__name__ in ['IronBatch', 'CopperBatch', 'CoalBatch',
-                                                                      'StoneBatch']:
-                        res[y][x] = cell.raw_material_batch.amount / 100
+                surface_cat = "dark" if surface_noise[y][x] == 1 else "light"
+                cell = MapCell(category=surface_cat)
+                generated_batch = ores_gen.create_batch_for_cell(x, y)
+                if generated_batch:
+                    if isinstance(generated_batch, WaterBatch):
+                        cell.raw_material_batch = WaterBatch()
                     else:
-                        res[y][x] = map_objects[cell.raw_material_batch.__class__.__name__]
-
-            #     print(b.category, end=' ')
-            # print()
-        plt.imshow(res)
-        plt.show()
+                        cell.raw_material_batch = generated_batch
+                if trees_matrix[y][x] and not cell.raw_material_batch:
+                    cell.raw_material_batch = TreeBatch(random.randint(10, 20))  # CONST
+                cell_id = id(cell)
+                self.map_matrix[y][x] = cell_id
+                self.map_objects[cell_id] = cell
 
 
 class EasyMap(Map):
@@ -121,7 +85,6 @@ class MapCreator:
         factory method implementation
         :return: Map object
         """
-        pass
 
     def gen_map(self):
         map_object: Map = self.create_map()
@@ -142,33 +105,4 @@ class HardMapCreator(MapCreator):
 if __name__ == "__main__":
     for i in range(1):
         creator = EasyMapCreator()
-        map = creator.gen_map()
-    # while True:
-    #     pass
-#
-
-#
-#
-# def noise_to_kind():
-#     pass
-#
-#
-#
-#
-# def get_ore_of_cell(x, y):
-#     pass
-#
-#
-# for y in range(len(const.MAP_H)):
-#     for x in range(const.MAP_W):
-#         cell = MapCell(interpret_surface_noise(surface_noise[y][x]))
-#         # фабричны метод (зачем....)
-#         # raw_material_gen, amount = get_ore_of_cell(x, y)
-#         # if raw_material_gen:
-#         #     cell.raw_material_batch = raw_material_gen.generate_raw_material(amount)
-#
-#         cell.raw_material_batch = create_batch_for_cell(x, y)
-#         map[y][x] = cell
-#
-#
-# def create_batch_for_cell(x, y):
+        map_obj = creator.gen_map()
