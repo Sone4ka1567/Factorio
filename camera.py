@@ -1,6 +1,5 @@
-from pygameGUI import PygameGUI
-from constants import *
-# паттерн стратегия
+from pygamegui import PygameGUI
+import constants as const
 
 
 class Camera:
@@ -13,19 +12,12 @@ class Camera:
         return entity.rect.move(self.camera.topleft)
 
     def update(self, player):
-        x = -player.rect.x + int(DISPLAY_W / 2)
-        y = -player.rect.y + int(DISPLAY_H / 2)
+        x_border = -player.rect.x + int(const.DISPLAY_W / 2)
+        y_border = -player.rect.y + int(const.DISPLAY_H / 2)
 
-        # limit scrolling to map size
-        x = min(0, x)  # left
-        y = min(0, y)  # top
-        x = max(-(self.width - DISPLAY_W), x)  # right
-        y = max(-(self.height - DISPLAY_H), y)  # bottom
+        x_border = min(0, x_border)  # left
+        y_border = min(0, y_border)  # top
+        x_border = max(-(self.width - const.DISPLAY_W), x_border)  # right
+        y_border = max(-(self.height - const.DISPLAY_H), y_border)  # bottom
 
-        self.camera = self.gui.get_rect(x, y, self.width, self.height)
-
-
-
-
-
-
+        self.camera = self.gui.get_rect(x_border, y_border, self.width, self.height)

@@ -62,7 +62,7 @@ class GUI(ABC):
         pass
 
     @abstractmethod
-    def get_rect(self, x, y, width, height):
+    def get_rect(self, x_border, y_border, width, height):
         pass
 
     @abstractmethod
