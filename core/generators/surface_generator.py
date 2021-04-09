@@ -1,5 +1,5 @@
 import numpy as np
-from core.generators.perlin import gen_perlin_noise
+from ken_perlin_noise import gen_perlin_noise
 
 
 def gen_surface_map(height, width):
