@@ -1,24 +1,9 @@
 from constants import *
+import json
 from pygameGUI import PygameSprite, PygameGUI
 
-
-player_perks = {
-    'balanced': {
-        'speed': 9,
-        'bag_capacity': 35,
-        'picture': 'player_walk1.png'
-    },
-    'fast': {
-        'speed': 12,
-        'bag_capacity': 30,
-        'picture': 'female_walk1.png'
-    },
-    'big_bag': {
-        'speed': 6,
-        'bag_capacity': 40,
-        'picture': 'adventurer_walk1.png'
-    }
-}
+with open('player_perks.json', 'r+') as f:
+    player_perks = json.load(f)
 
 
 class Player(PygameSprite):
