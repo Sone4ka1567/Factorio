@@ -1,5 +1,5 @@
 from constants import *
-from pygameGUI import PygameSprite
+from pygameGUI import PygameSprite, PygameGUI
 
 
 player_perks = {
@@ -22,16 +22,22 @@ player_perks = {
 
 
 class Player(PygameSprite):
-    def __init__(self, bag_capacity, speed, picture):
+    def __init__(self, game, x_spawn, y_spawn, bag_capacity, speed, picture):
         super().__init__()
+        self.gui = PygameGUI()
+        self.game = game
+        self.groups = self.game.all_sprites
+        self.init_sprite_and_group(self.groups)
+
         self.bag = {}
         self.bag_capacity = bag_capacity
         self.speed = speed
         self.image = self.gui.get_image(picture)
+        self.image.set_colorkey(BLACK)
 
         self.rect = self.image.get_rect()
-        self.rect.centerx = DISPLAY_W / 2
-        self.rect.bottom = DISPLAY_H / 2
+        self.rect.x = x_spawn * CELL_SIZE
+        self.rect.y = y_spawn * CELL_SIZE
 
     def update(self):
         self.speedx = 0
@@ -48,12 +54,12 @@ class Player(PygameSprite):
 
         self.rect.x += self.speedx
         self.rect.y += self.speedy
-        if self.rect.right > DISPLAY_W:
-            self.rect.right = DISPLAY_W
+        if self.rect.right > PIXEL_MAP_W:
+            self.rect.right = PIXEL_MAP_W
         if self.rect.left < 0:
             self.rect.left = 0
-        if self.rect.bottom > DISPLAY_H:
-            self.rect.bottom = DISPLAY_H
+        if self.rect.bottom > PIXEL_MAP_H:
+            self.rect.bottom = PIXEL_MAP_H
         if self.rect.top < 0:
             self.rect.top = 0
 
