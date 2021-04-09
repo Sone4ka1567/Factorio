@@ -1,3 +1,8 @@
+import random
+from math import sin, cos, sqrt
+import numpy as np
+from ken_perlin_noise import gen_perlin_noise
+import constants as const
 from random_generator import random_point_with_blocked_square
 from core.virtual_objects.raw_materials.raw_materials import (
     IronBatch,
@@ -6,11 +11,6 @@ from core.virtual_objects.raw_materials.raw_materials import (
     CoalBatch,
     WaterBatch,
 )
-import numpy as np
-import random
-from math import sin, cos, sqrt
-import constants as const
-from ken_perlin_noise import gen_perlin_noise
 
 
 def normalize(matrix: np.array):
@@ -25,7 +25,7 @@ class OresGenerator:
     """
 
     def __init__(
-            self, radius_coefficient_bounds, ore_size, num_ores, map_width, map_height
+        self, radius_coefficient_bounds, ore_size, num_ores, map_width, map_height
     ):
         self.radius_coefficient_bounds = radius_coefficient_bounds
         self.ore_size = ore_size
@@ -128,7 +128,7 @@ class OresGenerator:
             first_crossing, int(inner_ore_radius * 3)
         )[0]
         while self._dist(fourth_ore_center, third_ore_center) <= int(
-                inner_ore_radius * 2
+            inner_ore_radius * 2
         ):
             fourth_ore_center = self._get_ore_center(
                 first_crossing, int(inner_ore_radius * 2)
@@ -163,7 +163,7 @@ class OresGenerator:
             ],
         )
         outer_ores_centers = []
-        for ore in range(self.num_ores - 4):
+        for _ in range(self.num_ores - 4):
             x, y = random_point_with_blocked_square(
                 self.ore_size,
                 self.ore_size,
@@ -227,7 +227,7 @@ class OresGenerator:
         for ore_bounds in outer_ores_bounds:
             ores_with_types.append([ore_bounds, random.choice(batch_types)])
 
-        for i in range(len(ores_with_types)):
+        for i, _ in enumerate(ores_with_types):
             ores_with_types[i].append(self.gen_ore_matrix(self.ore_size))
 
         return ores_with_types
@@ -236,6 +236,8 @@ class OresGenerator:
         for bounds, batch_type, ore_matrix in self.ores_with_types:
             if self._point_on_ore(x, y, bounds):
                 return batch_type(ore_matrix[x - bounds[0][0]][y - bounds[0][1]])
+            return None
+
 
 # if __name__ == "__main__":
 #
