@@ -1,0 +1,6 @@
+numpy~=1.19.3
+pillow~=8.0.1
+matplotlib~=3.3.2
+future~=0.18.2
+pygame~=2.0.1
+ken_perlin_noise~=0.0.0
