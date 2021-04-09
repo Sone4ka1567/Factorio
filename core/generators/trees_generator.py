@@ -2,7 +2,7 @@ import numpy as np
 from core.generators.perlin import gen_perlin_noise
 
 
-def gen_nonlinear_noise(height, width):
+def gen_trees_noise(height, width):
     noise = gen_perlin_noise(width, height)
 
     normalized_noise = -(noise / np.linalg.norm(noise) * 100) * 5
@@ -18,6 +18,5 @@ def gen_nonlinear_noise(height, width):
 
 
 def gen_trees_map(height, width):
-    noise = gen_nonlinear_noise(height, width)
-    prob_matrix = np.random.rand(height, width)
-    return np.where(prob_matrix < noise, 1, 0)
+    noise = gen_trees_noise(height, width)
+    return np.fromfunction(lambda x, y: np.random.rand(y, x) < noise, (width, height))

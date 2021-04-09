@@ -1,5 +1,4 @@
 from random_generator import random_point_with_blocked_square
-from matplotlib import pyplot as plt
 from core.virtual_objects.raw_materials.raw_materials import (
     IronBatch,
     CopperBatch,
@@ -8,12 +7,16 @@ from core.virtual_objects.raw_materials.raw_materials import (
     WaterBatch,
 )
 import numpy as np
-from random import randint
 import random
 from math import sin, cos, sqrt
 import constants as const
-from core.generators.norm import normalize
-from core.generators.perlin import gen_perlin_noise
+from ken_perlin_noise import gen_perlin_noise
+
+
+def normalize(matrix: np.array):
+    min_el = np.min(matrix)
+    max_el = np.max(matrix)
+    return (matrix - min_el) / (max_el - min_el)
 
 
 class OresGenerator:
@@ -22,7 +25,7 @@ class OresGenerator:
     """
 
     def __init__(
-        self, radius_coefficient_bounds, ore_size, num_ores, map_width, map_height
+            self, radius_coefficient_bounds, ore_size, num_ores, map_width, map_height
     ):
         self.radius_coefficient_bounds = radius_coefficient_bounds
         self.ore_size = ore_size
@@ -38,8 +41,8 @@ class OresGenerator:
             (inner_square_size_half, inner_square_size_half),
         )
         self.inner_square_mtx_bounds = (
-            self.mtx_coordinates(*inner_square_bounds[0]),
-            self.mtx_coordinates(*inner_square_bounds[1]),
+            self._mtx_coordinates(*inner_square_bounds[0]),
+            self._mtx_coordinates(*inner_square_bounds[1]),
         )
         basic_square_size_half = 128  # CONST coef
         basic_square_bounds = (
@@ -47,17 +50,17 @@ class OresGenerator:
             (basic_square_size_half, basic_square_size_half),
         )
         self.basic_square_mtx_bounds = (
-            self.mtx_coordinates(*basic_square_bounds[0]),
-            self.mtx_coordinates(*basic_square_bounds[1]),
+            self._mtx_coordinates(*basic_square_bounds[0]),
+            self._mtx_coordinates(*basic_square_bounds[1]),
         )
         self.ores_with_types = self._generate_ores_bounds()
 
     @staticmethod
-    def mtx_coordinates(x, y):
+    def _mtx_coordinates(x, y):
         return x + const.MAP_W // 2, y + const.MAP_H // 2
 
     @staticmethod
-    def dist(point1: tuple, point2: tuple) -> float:
+    def _dist(point1: tuple, point2: tuple) -> float:
         return sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2)
 
     @staticmethod
@@ -124,8 +127,8 @@ class OresGenerator:
         fifth_ore_center = self._get_ore_center(
             first_crossing, int(inner_ore_radius * 3)
         )[0]
-        while self.dist(fourth_ore_center, third_ore_center) <= int(
-            inner_ore_radius * 2
+        while self._dist(fourth_ore_center, third_ore_center) <= int(
+                inner_ore_radius * 2
         ):
             fourth_ore_center = self._get_ore_center(
                 first_crossing, int(inner_ore_radius * 2)
@@ -169,7 +172,7 @@ class OresGenerator:
                 blocked_square,
             )
             for gen_ore_center in outer_ores_centers:
-                while self.dist((x, y), gen_ore_center) <= int(outer_ore_diagonal * 4):
+                while self._dist((x, y), gen_ore_center) <= int(outer_ore_diagonal * 4):
                     x, y = random_point_with_blocked_square(
                         self.ore_size,
                         self.ore_size,
@@ -233,7 +236,6 @@ class OresGenerator:
         for bounds, batch_type, ore_matrix in self.ores_with_types:
             if self._point_on_ore(x, y, bounds):
                 return batch_type(ore_matrix[x - bounds[0][0]][y - bounds[0][1]])
-
 
 # if __name__ == "__main__":
 #
