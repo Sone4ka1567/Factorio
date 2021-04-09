@@ -61,6 +61,9 @@ class PygameGUI(GUI):
         img_folder = os.path.join(game_folder, 'img')
         return pygame.image.load(os.path.join(img_folder, image)).convert()
 
+    def get_display_info(self):
+        return pygame.display.Info().current_w, pygame.display.Info().current_h
+
     def get_rect(self, x_border, y_border, width, height):
         return pygame.Rect(x_border, y_border, width, height)
 

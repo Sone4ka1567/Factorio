@@ -1,10 +1,6 @@
-from tkinter import Tk
-
-root = Tk()
-
 # game settings
-DISPLAY_W = root.winfo_screenwidth()
-DISPLAY_H = root.winfo_screenheight()
+DISPLAY_W = 0
+DISPLAY_H = 0
 FPS = 45
 
 
