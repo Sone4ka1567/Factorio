@@ -35,6 +35,7 @@ class Map(ABC):
     height = const.MAP_H
     width = const.MAP_W
     ore_size: int
+    num_ores: int
     radius_coefficient_bounds: tuple
 
     def __init__(self):
