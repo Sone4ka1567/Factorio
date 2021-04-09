@@ -62,7 +62,15 @@ class GUI(ABC):
         pass
 
     @abstractmethod
+    def get_rect(self, x, y, width, height):
+        pass
+
+    @abstractmethod
     def get_event_type(self, event):
+        pass
+
+    @abstractmethod
+    def draw_line(self, screen, color, start, end):
         pass
 
     @abstractmethod

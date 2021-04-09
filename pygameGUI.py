@@ -10,6 +10,9 @@ class PygameSprite(pygame.sprite.Sprite):
         self.speedy = 0
         self.gui = PygameGUI()
 
+    def init_sprite_and_group(self, group):
+        pygame.sprite.Sprite.__init__(self, group)
+
 
 class PygameGUI(GUI):
     def __init__(self):
@@ -53,15 +56,19 @@ class PygameGUI(GUI):
         img_folder = os.path.join(game_folder, 'img')
         return pygame.image.load(os.path.join(img_folder, image)).convert()
 
+    def get_rect(self, x, y, width, height):
+        return pygame.Rect(x, y, width, height)
+
+
     def get_keystate(self):
         keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_LEFT]:
+        if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
             return 'LEFT'
-        if keystate[pygame.K_RIGHT]:
+        if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
             return 'RIGHT'
-        if keystate[pygame.K_UP]:
+        if keystate[pygame.K_UP] or keystate[pygame.K_w]:
             return 'UP'
-        if keystate[pygame.K_DOWN]:
+        if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
             return 'DOWN'
 
     def get_events(self):
@@ -70,6 +77,9 @@ class PygameGUI(GUI):
     def get_event_type(self, event):
         if event.type == pygame.QUIT:
             return 'QUIT'
+
+    def draw_line(self, screen, color, start, end):
+        pygame.draw.line(screen, color, start, end)
 
     def flip_display(self):
         pygame.display.flip()
