@@ -57,7 +57,7 @@ class StoneBatch(RawMaterialBatch):
 class WaterBatch(RawMaterialBatch):
     def __init__(self, amount=float('inf')):
         super().__init__(amount)
-        self.intermediate_class = StoneBricksBatch
+        self.intermediate_class = None
 
 
 class TreeBatch(RawMaterialBatch):
