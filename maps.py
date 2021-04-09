@@ -15,8 +15,13 @@ from core.virtual_objects.raw_materials.raw_materials import (
     WaterBatch
 )
 
+cell_sizes = []
+map_objects = {}
+
 
 class MapCell:
+    __slots__ = {'category', 'usable_object', 'raw_material_batch'}
+
     def __init__(self, category: str):
         self.category: str = category
         self.usable_object = None
@@ -27,13 +32,13 @@ class MapCell:
 
 
 class Map(ABC):
-    height = const.MAP_H
-    width = const.MAP_W
-    num_ores = int
-    ore_size: int
-    radius_coefficient_bounds: tuple
-
+    # __slots__ = ("height", "width", "num_ores", "ore_size", "radius_coefficient_bounds")
     def __init__(self):
+        self.height = const.MAP_H
+        self.width = const.MAP_W
+        self.num_ores: int
+        self.ore_size: int
+        self.radius_coefficient_bounds: tuple
         self.map_matrix = [[None for __ in range(self.width)] for _ in range(self.height)]
 
     def generate_matrix(self):
@@ -46,8 +51,6 @@ class Map(ABC):
 
         trees_matrix = gen_trees_map(self.height, self.width)
         surface_noise = gen_surface_noise(self.height, self.width)
-        plt.imshow(surface_noise)
-        plt.show()
 
         def interpret_surface_noise(el):
             return "dark" if el == 1 else 'light'
@@ -67,7 +70,8 @@ class Map(ABC):
                     cell.raw_material_batch = TreeBatch(random.randint(10, 20))  # CONST
                 else:
                     cell.raw_material_batch = generated
-                self.map_matrix[y][x] = cell
+                self.map_matrix[y][x] = id(cell)
+                map_objects[id(cell)] = cell
         # print(self.map_matrix[10:][10:])
 
     def plot(self):
@@ -82,11 +86,11 @@ class Map(ABC):
                 res[y][x] = categories[cell.category]
                 if cell and cell.raw_material_batch:
                     # res[y][x] = map_objects[cell.raw_material_batch.__class__.__name__]
-                    if cell.raw_material_batch.__class__.__name__ in ['IronBatch','CopperBatch', 'CoalBatch', 'StoneBatch']:
+                    if cell.raw_material_batch.__class__.__name__ in ['IronBatch', 'CopperBatch', 'CoalBatch',
+                                                                      'StoneBatch']:
                         res[y][x] = cell.raw_material_batch.amount / 100
                     else:
                         res[y][x] = map_objects[cell.raw_material_batch.__class__.__name__]
-
 
             #     print(b.category, end=' ')
             # print()
@@ -139,7 +143,8 @@ if __name__ == "__main__":
     for i in range(1):
         creator = EasyMapCreator()
         map = creator.gen_map()
-        map.plot()
+    # while True:
+    #     pass
 #
 
 #
