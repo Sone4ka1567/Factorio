@@ -58,6 +58,10 @@ class GUI(ABC):
         pass
 
     @abstractmethod
+    def get_display_info(self):
+        pass
+
+    @abstractmethod
     def get_events(self):
         pass
 

@@ -8,6 +8,7 @@ class Game:
     def __init__(self):
         self.gui = PygameGUI()
         self.gui.start()
+        const.DISPLAY_W, const.DISPLAY_H = self.gui.get_display_info()
         self.screen = self.gui.set_screen(const.DISPLAY_W, const.DISPLAY_H)
         self.gui.set_caption('ENDustrial')
         self.clock = self.gui.set_clock()
