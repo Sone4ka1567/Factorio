@@ -3,7 +3,7 @@ from math import sin, cos, sqrt
 import numpy as np
 from ken_perlin_noise import gen_perlin_noise
 import constants as const
-from random_generator import random_point_with_blocked_square
+from core.generators.random_generator import random_point_with_blocked_square
 from core.virtual_objects.raw_materials.raw_materials import (
     IronBatch,
     CopperBatch,
@@ -94,7 +94,7 @@ class OresGenerator:
         res = n * perlin_noise - radial_gradient * (1 - n)
         res = normalize(res)
         res = np.where(res < 0.7, res, 1)
-        res = (1 - res) * 1000
+        res = (1 - res) * 1000  # CONST
         res = np.where(res > 500, res ** 2 / 1000, res ** 3 / 500000)
         return res
 
