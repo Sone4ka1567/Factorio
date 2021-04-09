@@ -5,7 +5,7 @@ from core.virtual_objects.raw_materials.raw_materials import (
     CopperBatch,
     StoneBatch,
     CoalBatch,
-    WaterBatch
+    WaterBatch,
 )
 import numpy as np
 from random import randint
@@ -21,7 +21,9 @@ class OresGenerator:
     generates bounds of ores && water
     """
 
-    def __init__(self, radius_coefficient_bounds, ore_size, num_ores, map_width, map_height):
+    def __init__(
+        self, radius_coefficient_bounds, ore_size, num_ores, map_width, map_height
+    ):
         self.radius_coefficient_bounds = radius_coefficient_bounds
         self.ore_size = ore_size
         self.num_ores = num_ores
@@ -79,8 +81,10 @@ class OresGenerator:
     def gen_ore_matrix(size):
         perlin_noise = normalize(gen_perlin_noise(size, size))
 
-        raw_radial_gradient = np.fromfunction(lambda x, y: np.sqrt((x - size // 2) ** 2 + (y - size // 2) ** 2),
-                                              shape=(size, size))
+        raw_radial_gradient = np.fromfunction(
+            lambda x, y: np.sqrt((x - size // 2) ** 2 + (y - size // 2) ** 2),
+            shape=(size, size),
+        )
         radial_gradient = normalize(1 - raw_radial_gradient)
 
         n = 0.24
@@ -121,7 +125,7 @@ class OresGenerator:
             first_crossing, int(inner_ore_radius * 3)
         )[0]
         while self.dist(fourth_ore_center, third_ore_center) <= int(
-                inner_ore_radius * 2
+            inner_ore_radius * 2
         ):
             fourth_ore_center = self._get_ore_center(
                 first_crossing, int(inner_ore_radius * 2)
@@ -136,7 +140,7 @@ class OresGenerator:
             second_ore_center,
             third_ore_center,
             fourth_ore_center,
-            fifth_ore_center
+            fifth_ore_center,
         ]
         return ores_centers
 
@@ -231,50 +235,56 @@ class OresGenerator:
                 return batch_type(ore_matrix[x - bounds[0][0]][y - bounds[0][1]])
 
 
-if __name__ == '__main__':
-
-    MAP_H = 32
-    MAP_W = 32
-    possib_map = np.zeros((MAP_H, MAP_W), dtype=np.int)
-    trees_map = np.zeros_like(possib_map)
-
-    blocked = []
-
-    while len(blocked) < (MAP_H - 1) * (MAP_W - 1) - 5:
-        # print(f'blocked_x: {blocked_x}')
-        # print(f'blocked_y: {blocked_y}')
-        # i = random_with_blocked_values(1, MAP_H - 2)
-        # # if not i:
-        # #     continue
-        # j = random_with_blocked_values(1, MAP_W - 2)
-        i = randint(2, MAP_H - 3)
-        j = randint(2, MAP_W - 3)
-        # while (i, j) in blocked:
-        #     print(i, j)
-        #     i = randint(1, MAP_H - 2)
-        #     j = randint(1, MAP_W - 2)
-        blocked.append((i, j))
-
-        # if not j:
-        #     continue
-        neighbors = [possib_map[a][b] for a in range(i - 1, i + 2) for b in range(j - 1, j + 2) if (a, b) != (i, j)]
-        num_ok_neighbors = 0
-        for n in neighbors:
-            if n > 0:
-                num_ok_neighbors += 1
-
-        if num_ok_neighbors == 0:
-            possib_map[i][j] = np.random.randint(900, 1000)
-        elif 1 <= num_ok_neighbors <= 2:
-            possib_map[i][j] = np.random.randint(950, 1000)
-        elif 3 <= num_ok_neighbors <= 4:
-            possib_map[i][j] = np.random.randint(850, 950)
-        else:
-            possib_map[i][j] = np.random.randint(100, 250)
-
-    for y in range(1, MAP_H - 1):
-        for x in range(1, MAP_W - 1):
-            trees_map[y][x] = int(randint(0, 1000) < possib_map[y][x])
-
-    plt.imshow(trees_map, cmap='gray')
-    plt.show()
+# if __name__ == "__main__":
+#
+#     MAP_H = 32
+#     MAP_W = 32
+#     possib_map = np.zeros((MAP_H, MAP_W), dtype=np.int)
+#
+#     blocked = []
+#
+#     while len(blocked) < (MAP_H - 1) * (MAP_W - 1) - 5:
+#         # print(f'blocked_x: {blocked_x}')
+#         # print(f'blocked_y: {blocked_y}')
+#         # i = random_with_blocked_values(1, MAP_H - 2)
+#         # # if not i:
+#         # #     continue
+#         # j = random_with_blocked_values(1, MAP_W - 2)
+#         i = randint(2, MAP_H - 3)
+#         j = randint(2, MAP_W - 3)
+#         # while (i, j) in blocked:
+#         #     print(i, j)
+#         #     i = randint(1, MAP_H - 2)
+#         #     j = randint(1, MAP_W - 2)
+#         blocked.append((i, j))
+#
+#         # if not j:
+#         #     continue
+#         neighbors = [
+#             possib_map[a][b]
+#             for a in range(i - 1, i + 2)
+#             for b in range(j - 1, j + 2)
+#             if (a, b) != (i, j)
+#         ]
+#         num_ok_neighbors = 0
+#         for n in neighbors:
+#             if n > 0:
+#                 num_ok_neighbors += 1
+#
+#         if num_ok_neighbors == 0:
+#             possib_map[i][j] = np.random.randint(900, 1000)
+#         elif 1 <= num_ok_neighbors <= 2:
+#             possib_map[i][j] = np.random.randint(950, 1000)
+#         elif 3 <= num_ok_neighbors <= 4:
+#             possib_map[i][j] = np.random.randint(850, 950)
+#         else:
+#             possib_map[i][j] = np.random.randint(100, 250)
+#
+#
+#     trees_map =
+#     for y in range(1, MAP_H - 1):
+#         for x in range(1, MAP_W - 1):
+#             trees_map[y][x] = int(randint(0, 1000) < possib_map[y][x])
+#
+#     plt.imshow(trees_map, cmap="gray")
+#     plt.show()
