@@ -6,8 +6,8 @@ import os
 class PygameSprite(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.speedx = 0
-        self.speedy = 0
+        self.speed_x = 0
+        self.speed_y = 0
         self.gui = PygameGUI()
 
     def init_sprite_and_group(self, group):
