@@ -18,9 +18,6 @@ class PygameSprite(pygame.sprite.Sprite):
 
 
 class PygameGUI(GUI):
-    def __init__(self):
-        super().__init__()
-
     def start(self):
         # pylint: disable=no-member
         pygame.init()
@@ -58,7 +55,7 @@ class PygameGUI(GUI):
 
     def get_image(self, image):
         game_folder = os.path.dirname(__file__)
-        img_folder = os.path.join(game_folder, 'img')
+        img_folder = os.path.join(game_folder, "img")
         return pygame.image.load(os.path.join(img_folder, image)).convert()
 
     def get_display_info(self):
@@ -71,13 +68,13 @@ class PygameGUI(GUI):
         keystate = pygame.key.get_pressed()
         # pylint: disable=no-member
         if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
-            return 'LEFT'
+            return "LEFT"
         if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
-            return 'RIGHT'
+            return "RIGHT"
         if keystate[pygame.K_UP] or keystate[pygame.K_w]:
-            return 'UP'
+            return "UP"
         if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
-            return 'DOWN'
+            return "DOWN"
         # pylint: enable=no-member
         return None
 
@@ -87,7 +84,7 @@ class PygameGUI(GUI):
     def get_event_type(self, event):
         # pylint: disable=no-member
         if event.type == pygame.QUIT:
-            return 'QUIT'
+            return "QUIT"
         # pylint: enable=no-member
         return None
 
