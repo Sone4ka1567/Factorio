@@ -2,6 +2,7 @@ import sys
 from pygamegui import PygameGUI
 from player import Player, player_perks
 from camera import Camera
+from maps import EasyMapCreator, HardMapCreator
 import constants as const
 
 
@@ -22,13 +23,6 @@ class Game:
         self.choose_player_screen_playing, self.choose_map_playing = True, True
         self.choose_player_text, self.start_text, self.button_text = None, None, None
         self.player_perk, self.choose_map_text = None, None
-
-    """
-     def load_map(self):
-        folder = path.dirname(__file__)
-        map_generator(self.difficulty, self.difficulty)
-        self.map = Map(path.join(folder, 'map.txt')) 
-        """
 
     def new(self):
         # self.load_map()
@@ -93,10 +87,11 @@ class Game:
                         self.player_perk = level
                         self.choose_player_screen_playing = False
                     elif level in ("easy", "hard"):
-                        if level == "easy":  #TODO
-                            pass
+                        if level == "easy":
+                            creator = EasyMapCreator()
                         else:
-                            pass
+                            creator = HardMapCreator()
+                        self.map = creator.gen_map()
                         self.choose_map_playing = False
         else:
             self.gui.draw_rect(
