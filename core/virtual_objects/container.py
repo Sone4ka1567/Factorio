@@ -11,6 +11,12 @@ class Container:
                 return cur_batch.amount >= batch.amount
         return False
 
+    def contains_type(self, batch):
+        for cur_batch in self.data:
+            if isinstance(cur_batch, type(batch)):
+                return True
+        return False
+
     def add(self, batch):
         done = False
         for idx, cur_batch in enumerate(self.data):
@@ -35,7 +41,8 @@ class Container:
         return Container(deepcopy(self.data))
 
     def produce_inside(self, target_batch):
-        requirements = target_batch.count_optimal_requirements(self)
+        bag_copy = self.copy()
+        requirements = target_batch.count_optimal_requirements(bag_copy)
         if not requirements:
             print('impossible')
             return False
