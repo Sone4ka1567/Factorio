@@ -1,4 +1,4 @@
-from material_batch import MaterialBatch
+from core.virtual_objects.materials.material_batch import MaterialBatch
 from core.virtual_objects.container import Container
 
 
@@ -70,16 +70,16 @@ class StoneBricksBatch(BasicMaterialBatch):
         self.associated_raw = StoneBatch
 
 
-class WaterBatch(RawMaterialBatch):
+class SiliconBatch(RawMaterialBatch):
     def __init__(self, amount=int(1e5)):
         super().__init__(amount)
-        self.associated_intermediate = SteamBatch
+        self.associated_intermediate = SiliconPlateBatch
 
 
-class SteamBatch(BasicMaterialBatch):
+class SiliconPlateBatch(BasicMaterialBatch):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_raw = WaterBatch
+        self.associated_raw = SiliconBatch
 
 
 class WoodBatch(RawMaterialBatch):

@@ -3,7 +3,7 @@ import random
 from core.generators.trees_generator import gen_trees_map
 from core.generators.surface_generator import gen_surface_map
 from core.generators.ores_generator import OresGenerator
-from core.virtual_objects.materials.raw_and_basics import WoodBatch, WaterBatch
+from core.virtual_objects.materials.raw_and_basics import WoodBatch
 import constants as const
 
 
@@ -58,10 +58,7 @@ class Map(ABC):
                 cell = MapCell(category=surface_cat)
                 generated_batch = ores_gen.create_batch_for_cell(x, y)
                 if generated_batch:
-                    if isinstance(generated_batch, WaterBatch):
-                        cell.raw_material_batch = WaterBatch()
-                    else:
-                        cell.raw_material_batch = generated_batch
+                    cell.raw_material_batch = generated_batch
                 if trees_matrix[y][x] and not cell.raw_material_batch:
                     cell.raw_material_batch = WoodBatch(random.randint(10, 20))  # CONST
                 cell_id = id(cell)
@@ -113,3 +110,4 @@ if __name__ == "__main__":
     for i in range(1):
         creator = EasyMapCreator()
         map_obj = creator.gen_map()
+        map_obj.plot()

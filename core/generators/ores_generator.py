@@ -9,7 +9,7 @@ from core.virtual_objects.materials.raw_and_basics import (
     CopperBatch,
     StoneBatch,
     CoalBatch,
-    WaterBatch,
+    SiliconBatch
 )
 
 
@@ -217,7 +217,7 @@ class OresGenerator:
 
         inner_ores_bounds, outer_ores_bounds = self._gen_ore_centers()
 
-        batch_types = [IronBatch, CoalBatch, CopperBatch, StoneBatch, WaterBatch]
+        batch_types = [IronBatch, CoalBatch, CopperBatch, StoneBatch, SiliconBatch]
         random.shuffle(batch_types)
 
         ores_with_types = []
