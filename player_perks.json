@@ -1,16 +1,16 @@
 {
   "balanced": {
-    "speed": 9,
+    "speed": 7,
     "bag_capacity": 35,
     "picture": "player_walk1.png"
   },
   "fast": {
-    "speed": 12,
+    "speed": 10,
     "bag_capacity": 30,
     "picture": "female_walk1.png"
   },
   "big_bag": {
-    "speed": 6,
+    "speed": 4,
     "bag_capacity": 40,
     "picture": "adventurer_walk1.png"
   }
