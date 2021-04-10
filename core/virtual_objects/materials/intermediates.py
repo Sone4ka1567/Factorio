@@ -19,6 +19,9 @@ class IntermediateMaterialBatch(MaterialBatch):
     def count_optimal_requirements(self, container: Container):
         container_copy = container.copy()
         res_set = []
+        if container_copy.contains(self):
+            container_copy.remove(self)
+            return [self]
         for child in self.required_res:
             cur_res = child.count_optimal_requirements(container_copy)
             if not cur_res:
@@ -94,7 +97,6 @@ class Radar(IntermediateMaterialBatch):
 if __name__ == "__main__":
     batch = Resistor(2)
     real_bag = Container([IronPlatesBatch(3), CopperPlatesBatch(2)])
-    bag_copy = real_bag.copy()
-    print(batch.count_optimal_requirements(bag_copy))
-    print(bag_copy)
-    print(real_bag)
+    res = batch.count_optimal_requirements(real_bag)
+    for _ in res:
+        print(_)
