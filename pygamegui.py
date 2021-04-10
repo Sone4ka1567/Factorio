@@ -64,6 +64,12 @@ class PygameGUI(GUI):
     def get_rect(self, x_border, y_border, width, height):
         return pygame.Rect(x_border, y_border, width, height)
 
+    def get_mouse_pos(self):
+        return pygame.mouse.get_pos()
+
+    def get_mouse_pressed(self):
+        return pygame.mouse.get_pressed(3)
+
     def get_keystate(self):
         keystate = pygame.key.get_pressed()
         # pylint: disable=no-member
@@ -91,8 +97,17 @@ class PygameGUI(GUI):
     def draw_line(self, screen, color, start, end):
         pygame.draw.line(screen, color, start, end)
 
+    def draw_rect(self, screen, color, coordinates):
+        pygame.draw.rect(screen, color, coordinates)
+
+    def get_font(self, name, size):
+        return pygame.font.SysFont(name, size)
+
     def flip_display(self):
         pygame.display.flip()
+
+    def update_display(self):
+        pygame.display.update()
 
     def quit_game(self):
         # pylint: disable=no-member
