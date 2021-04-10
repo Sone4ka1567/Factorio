@@ -101,7 +101,7 @@ class PygameGUI(GUI):
         pygame.draw.rect(screen, color, coordinates)
 
     def get_font(self, name, size):
-        return pygame.font.SysFont(name, size)
+        return pygame.font.Font(name, size)
 
     def flip_display(self):
         pygame.display.flip()

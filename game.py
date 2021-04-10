@@ -13,9 +13,9 @@ class Game:
         self.gui.set_caption("ENDustrial")
         self.clock = self.gui.set_clock()
 
-        self.big_font = self.gui.get_font("comicsansms", const.DISPLAY_H // 4)
-        self.font = self.gui.get_font("comicsansms", const.DISPLAY_H // 8)
-        self.small_font = self.gui.get_font("comicsansms", const.DISPLAY_H // 12)
+        self.big_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 4)
+        self.font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 6)
+        self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 16)
 
         self.start_screen_playing = True
 
@@ -88,16 +88,16 @@ class Game:
                                             y_top + (height - self.button_text.get_height()) / 2))
 
     def show_start_screen(self):
-        self.start_text = self.big_font.render("ENDustrial", True, const.ORANGE_GREY)
+        self.start_text = self.font.render("ENDustrial", True, const.ORANGE_GREY)
 
         while self.start_screen_playing:
             self.screen.fill(const.BG_COLOR)
             self.screen.blit(self.start_text,
-                             ((const.DISPLAY_W - self.start_text.get_width()) / 2, const.DISPLAY_H // 6))
+                             ((const.DISPLAY_W - self.start_text.get_width()) / 2, const.DISPLAY_H // 8))
 
             self.create_button("LET'S GO", const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
-                               const.DISPLAY_H / 2 + const.DISPLAY_H // 16,
-                               const.DISPLAY_W // 5, const.DISPLAY_H // 8, const.WHITE, const.LIGHT_GREY, 'start')
+                               const.DISPLAY_H / 2,
+                               const.DISPLAY_W // 5, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'start')
 
             self.events()
 
