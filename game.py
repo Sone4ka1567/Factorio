@@ -13,9 +13,9 @@ class Game:
         self.gui.set_caption("ENDustrial")
         self.clock = self.gui.set_clock()
 
-        self.big_font = self.gui.get_font("comicsansms", 350)
-        self.font = self.gui.get_font("comicsansms", 150)
-        self.small_font = self.gui.get_font("comicsansms", 100)
+        self.big_font = self.gui.get_font("comicsansms", const.DISPLAY_H // 4)
+        self.font = self.gui.get_font("comicsansms", const.DISPLAY_H // 8)
+        self.small_font = self.gui.get_font("comicsansms", const.DISPLAY_H // 12)
 
         self.start_screen_playing = True
 
@@ -95,13 +95,18 @@ class Game:
             self.screen.blit(self.start_text,
                              ((const.DISPLAY_W - self.start_text.get_width()) / 2, const.DISPLAY_H // 6))
 
-            self.create_button("LET'S GO", const.DISPLAY_W / 2 - const.DISPLAY_W // 10, const.DISPLAY_H / 2,
+            self.create_button("LET'S GO", const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
+                               const.DISPLAY_H / 2 + const.DISPLAY_H // 16,
                                const.DISPLAY_W // 5, const.DISPLAY_H // 8, const.WHITE, const.LIGHT_GREY, 'start')
 
             self.events()
 
             self.gui.update_display()
             self.gui.set_fps(self.clock, const.FPS)
+
+    def choose_player_screen(self):  #TODO
+        self.choose_player_text = self.font.render("Choose a player", True, const.ORANGE_GREY)
+
 
     def show_go_screen(self):
         pass
