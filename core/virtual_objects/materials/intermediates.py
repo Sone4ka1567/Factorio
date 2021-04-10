@@ -1,6 +1,10 @@
-from material_batch import MaterialBatch
-from raw_and_basics import CopperPlatesBatch, IronPlatesBatch, BasicMaterialBatch, IronBatch
-from abc import ABC, abstractmethod
+from core.virtual_objects.materials.material_batch import MaterialBatch
+from core.virtual_objects.materials.raw_and_basics import (
+    CopperPlatesBatch,
+    IronPlatesBatch,
+    WoodenPlateBatch,
+    SiliconPlateBatch,
+)
 from core.virtual_objects.container import Container
 
 
@@ -35,13 +39,59 @@ class SteelPlate(IntermediateMaterialBatch):
         self.required_res = (IronPlatesBatch(amount),)
 
 
+class Pipe(IntermediateMaterialBatch):
+    def __init__(self, amount):
+        super().__init__(amount)
+        self.required_res = (IronPlatesBatch(amount),)
+
+
+class IronGearWheel(IntermediateMaterialBatch):
+    def __init__(self, amount):
+        super().__init__(amount)
+        self.required_res = (IronPlatesBatch(amount * 2),)
+
+
+class ElectricCircuit(IntermediateMaterialBatch):
+    def __init__(self, amount):
+        super().__init__(amount)
+        self.required_res = (CopperCable(amount * 3), WoodenPlateBatch(amount))
+
+
 class Resistor(IntermediateMaterialBatch):
     def __init__(self, amount):
         super().__init__(amount)
-        self.required_res = (CopperCable(2 * amount), SteelPlate(amount))  # CONST
+        self.required_res = (CopperCable(amount * 2), SteelPlate(amount))
 
 
-if __name__ == '__main__':
+class Transistor(IntermediateMaterialBatch):
+    def __init__(self, amount):
+        super().__init__(amount)
+        self.required_res = (SiliconPlateBatch(amount * 3), IronPlatesBatch(amount))
+
+
+class IntegratedCircuit(IntermediateMaterialBatch):
+    def __init__(self, amount):
+        super().__init__(amount)
+        self.required_res = (ElectricCircuit(amount * 5), Resistor(amount * 3))
+
+
+class ControlUnit(IntermediateMaterialBatch):
+    def __init__(self, amount):
+        super().__init__(amount)
+        self.required_res = (IntegratedCircuit(amount * 5), Transistor(amount * 5))
+
+
+class Radar(IntermediateMaterialBatch):
+    def __init__(self, amount):
+        super().__init__(amount)
+        self.required_res = (
+            ControlUnit(amount * 3),
+            SteelPlate(amount * 25),
+            IronGearWheel(amount * 15),
+        )
+
+
+if __name__ == "__main__":
     batch = Resistor(2)
     real_bag = Container([IronPlatesBatch(3), CopperPlatesBatch(2)])
     bag_copy = real_bag.copy()
