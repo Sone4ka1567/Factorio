@@ -18,7 +18,9 @@ class Game:
         self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 16)
 
         self.start_screen_playing = True
+        self.choose_player_screen_playing = True
         self.choose_player_text, self.start_text, self.button_text = None, None, None
+        self.player_perk = None
 
     """
      def load_map(self):
@@ -31,7 +33,7 @@ class Game:
         # self.load_map()
         self.all_sprites = self.gui.group_sprites()
         # здесь надо будет еще обработать карту
-        self.player = Player(self, 0, 0, **player_perks["fast"])
+        self.player = Player(self, 0, 0, **player_perks[self.player_perk])
         # self.camera = Camera(self.map.width, self.map.height)
         self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H)
 
@@ -83,6 +85,9 @@ class Game:
                     self.start_screen_playing = False
                 elif level == 'exit':
                     self.quit()
+                elif level == 'fast' or level == 'balanced' or level == 'big_bag':
+                    self.player_perk = level
+                    self.choose_player_screen_playing = False
         else:
             self.gui.draw_rect(self.screen, default_color, (x_left, y_top, width, height))
 
@@ -115,8 +120,30 @@ class Game:
             self.gui.update_display()
             self.gui.set_fps(self.clock, const.FPS)
 
-    def choose_player_screen(self):  #TODO
+    def choose_player_screen(self):
         self.choose_player_text = self.font.render("Choose a player", True, const.ORANGE_GREY)
+
+        while self.choose_player_screen_playing:
+            self.screen.fill(const.BG_COLOR)
+            self.screen.blit(self.choose_player_text,
+                             ((const.DISPLAY_W - self.choose_player_text.get_width()) / 2, const.DISPLAY_H // 8))
+
+            self.create_button("FAST", const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
+                               const.DISPLAY_H / 2,
+                               const.DISPLAY_W // 5, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'fast')
+
+            self.create_button("BALANCED", const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
+                               const.DISPLAY_H / 2 + const.DISPLAY_H // 6,
+                               const.DISPLAY_W // 5, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'balanced')
+
+            self.create_button("BIG BAG", const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
+                               const.DISPLAY_H / 2 + const.DISPLAY_H // 3,
+                               const.DISPLAY_W // 5, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'big_bag')
+
+            self.events()
+
+            self.gui.update_display()
+            self.gui.set_fps(self.clock, const.FPS)
 
     def show_go_screen(self):
         pass
