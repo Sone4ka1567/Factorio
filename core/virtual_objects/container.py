@@ -1,6 +1,9 @@
+from copy import deepcopy
+
+
 class Container:
-    def __init__(self):
-        self.data = []
+    def __init__(self, data=None):
+        self.data = [] if data is None else data
 
     def contains(self, batch):
         for cur_batch in self.data:
@@ -23,3 +26,12 @@ class Container:
 
     def get_data(self):
         return self.data
+
+    def copy(self):
+        return Container(deepcopy(self.data))
+
+    def __str__(self):
+        if self.data:
+            return str([str(batch) for batch in self.data])
+        else:
+            return "EMPTY BAG"
