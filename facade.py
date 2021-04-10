@@ -2,8 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class GUI(ABC):
-    def __init__(self):
-        pass
 
     @abstractmethod
     def start(self):
@@ -66,6 +64,18 @@ class GUI(ABC):
         pass
 
     @abstractmethod
+    def get_mouse_pos(self):
+        pass
+
+    @abstractmethod
+    def get_mouse_pressed(self):
+        pass
+
+    @abstractmethod
+    def get_font(self, name, size):
+        pass
+
+    @abstractmethod
     def get_rect(self, x_border, y_border, width, height):
         pass
 
@@ -78,7 +88,15 @@ class GUI(ABC):
         pass
 
     @abstractmethod
+    def draw_rect(self, screen, color, coordinates):
+        pass
+
+    @abstractmethod
     def flip_display(self):
+        pass
+
+    @abstractmethod
+    def update_display(self):
         pass
 
     @abstractmethod

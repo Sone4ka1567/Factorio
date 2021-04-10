@@ -13,6 +13,12 @@ class Game:
         self.gui.set_caption("ENDustrial")
         self.clock = self.gui.set_clock()
 
+        self.big_font = self.gui.get_font("comicsansms", 350)
+        self.font = self.gui.get_font("comicsansms", 150)
+        self.small_font = self.gui.get_font("comicsansms", 100)
+
+        self.start_screen_playing = True
+
     """
      def load_map(self):
         folder = path.dirname(__file__)
@@ -64,10 +70,38 @@ class Game:
     def events(self):
         for event in self.gui.get_events():
             if self.gui.get_event_type(event) == "QUIT":
-                self.playing = False
+                self.quit()
+
+    def create_button(self, message, x_left, y_top, width, height, hover_color, default_color, level):
+        mouse = self.gui.get_mouse_pos()
+        click = self.gui.get_mouse_pressed()
+        if x_left + width > mouse[0] > x_left and y_top + height > mouse[1] > y_top:
+            self.gui.draw_rect(self.screen, hover_color, (x_left, y_top, width, height))
+            if click[0] == 1:
+                if level == 'start':
+                    self.start_screen_playing = False
+        else:
+            self.gui.draw_rect(self.screen, default_color, (x_left, y_top, width, height))
+
+        self.button_text = self.small_font.render(message, True, const.BLACK)
+        self.screen.blit(self.button_text, (x_left + (width - self.button_text.get_width()) / 2,
+                                            y_top + (height - self.button_text.get_height()) / 2))
 
     def show_start_screen(self):
-        pass
+        self.start_text = self.big_font.render("ENDustrial", True, const.ORANGE_GREY)
+
+        while self.start_screen_playing:
+            self.screen.fill(const.BG_COLOR)
+            self.screen.blit(self.start_text,
+                             ((const.DISPLAY_W - self.start_text.get_width()) / 2, const.DISPLAY_H // 6))
+
+            self.create_button("LET'S GO", const.DISPLAY_W / 2 - const.DISPLAY_W // 10, const.DISPLAY_H / 2,
+                               const.DISPLAY_W // 5, const.DISPLAY_H // 8, const.WHITE, const.LIGHT_GREY, 'start')
+
+            self.events()
+
+            self.gui.update_display()
+            self.gui.set_fps(self.clock, const.FPS)
 
     def show_go_screen(self):
         pass
