@@ -75,21 +75,21 @@ class Game:
             if self.gui.get_event_type(event) == "QUIT":
                 self.quit()
 
-    def create_button(self, message, x_left, y_top, width, height, hover_color, default_color, level):
+    def create_button(self, message, x_left, y_top, width, height, hovercolor, defaultcolor, level):
         mouse = self.gui.get_mouse_pos()
-        click = self.gui.get_mouse_pressed()
         if x_left + width > mouse[0] > x_left and y_top + height > mouse[1] > y_top:
-            self.gui.draw_rect(self.screen, hover_color, (x_left, y_top, width, height))
-            if click[0] == 1:
-                if level == 'start':
-                    self.start_screen_playing = False
-                elif level == 'exit':
-                    self.quit()
-                elif level == 'fast' or level == 'balanced' or level == 'big_bag':
-                    self.player_perk = level
-                    self.choose_player_screen_playing = False
+            self.gui.draw_rect(self.screen, hovercolor, (x_left, y_top, width, height))
+            for event in self.gui.get_events():
+                if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN':
+                    if level == 'start':
+                        self.start_screen_playing = False
+                    elif level == 'exit':
+                        self.quit()
+                    elif level in ('fast', 'balanced', 'big_bag'):
+                        self.player_perk = level
+                        self.choose_player_screen_playing = False
         else:
-            self.gui.draw_rect(self.screen, default_color, (x_left, y_top, width, height))
+            self.gui.draw_rect(self.screen, defaultcolor, (x_left, y_top, width, height))
 
         self.button_text = self.small_font.render(message, True, const.BLACK)
         self.screen.blit(self.button_text, (x_left + (width - self.button_text.get_width()) / 2,
@@ -101,19 +101,23 @@ class Game:
         while self.start_screen_playing:
             self.screen.fill(const.BG_COLOR)
             self.screen.blit(self.start_text,
-                             ((const.DISPLAY_W - self.start_text.get_width()) / 2, const.DISPLAY_H // 8))
+                             ((const.DISPLAY_W - self.start_text.get_width()) / 2,
+                              const.DISPLAY_H // 8))
 
             self.create_button("START", const.DISPLAY_W / 2 - const.DISPLAY_W // 12,
                                const.DISPLAY_H / 2,
-                               const.DISPLAY_W // 6, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'start')
+                               const.DISPLAY_W // 6, const.DISPLAY_H // 12,
+                               const.WHITE, const.ORANGE_GREY, 'start')
 
             self.create_button("CREDITS", const.DISPLAY_W / 2 - const.DISPLAY_W // 12,
                                const.DISPLAY_H / 2 + const.DISPLAY_H // 6,
-                               const.DISPLAY_W // 6, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'credits')
+                               const.DISPLAY_W // 6, const.DISPLAY_H // 12,
+                               const.WHITE, const.ORANGE_GREY, 'credits')
 
             self.create_button("EXIT", const.DISPLAY_W / 2 - const.DISPLAY_W // 12,
                                const.DISPLAY_H / 2 + const.DISPLAY_H // 3,
-                               const.DISPLAY_W // 6, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'exit')
+                               const.DISPLAY_W // 6, const.DISPLAY_H // 12,
+                               const.WHITE, const.ORANGE_GREY, 'exit')
 
             self.events()
 
@@ -126,19 +130,23 @@ class Game:
         while self.choose_player_screen_playing:
             self.screen.fill(const.BG_COLOR)
             self.screen.blit(self.choose_player_text,
-                             ((const.DISPLAY_W - self.choose_player_text.get_width()) / 2, const.DISPLAY_H // 8))
+                             ((const.DISPLAY_W - self.choose_player_text.get_width()) / 2,
+                              const.DISPLAY_H // 8))
 
             self.create_button("FAST", const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
                                const.DISPLAY_H / 2,
-                               const.DISPLAY_W // 5, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'fast')
+                               const.DISPLAY_W // 5, const.DISPLAY_H // 12,
+                               const.WHITE, const.ORANGE_GREY, 'fast')
 
             self.create_button("BALANCED", const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
                                const.DISPLAY_H / 2 + const.DISPLAY_H // 6,
-                               const.DISPLAY_W // 5, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'balanced')
+                               const.DISPLAY_W // 5, const.DISPLAY_H // 12,
+                               const.WHITE, const.ORANGE_GREY, 'balanced')
 
             self.create_button("BIG BAG", const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
                                const.DISPLAY_H / 2 + const.DISPLAY_H // 3,
-                               const.DISPLAY_W // 5, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'big_bag')
+                               const.DISPLAY_W // 5, const.DISPLAY_H // 12,
+                               const.WHITE, const.ORANGE_GREY, 'big_bag')
 
             self.events()
 
