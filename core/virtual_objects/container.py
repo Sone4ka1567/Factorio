@@ -34,22 +34,27 @@ class Container:
     def copy(self):
         return Container(deepcopy(self.data))
 
-    def can_produce(self, target_batch):
-        bag_copy = self.copy()
-        res = target_batch.count_requirements(bag_copy)
-        if res:
-            self.data = bag_copy.data
-            print('without res: ', self)
-            return True
-        print('impossible')
-        return False
-
     def produce_inside(self, target_batch):
-        if self.can_produce(target_batch):
-            self.add(target_batch)
-            print('with res:', self)
-            return True
-        return False
+        requirements = target_batch.count_optimal_requirements(self)
+        if not requirements:
+            print('impossible')
+            return False
+        for requirement in requirements:
+            print(requirement)
+            self.remove(requirement)
+        self.add(target_batch)
+        print('res: ', self)
+        return True
+
+    def produce_outside(self, target_batch):
+        requirements = target_batch.count_optimal_requirements(self)
+        if not requirements:
+            print('impossible')
+            return False
+        for requirement in requirements:
+            self.remove(requirement)
+        print('res: ', self)
+        return True
 
     def __str__(self):
         if self.data:

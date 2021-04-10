@@ -11,7 +11,7 @@ class MaterialBatch(VirtualObject):
         return MaterialBatch(self.amount)
 
     @abstractmethod
-    def count_requirements(self, container: Container):
+    def count_optimal_requirements(self, container: Container):
         pass
 
     def __str__(self):
