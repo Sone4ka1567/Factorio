@@ -19,9 +19,9 @@ class Game:
         self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 16)
 
         self.start_screen_playing = True
-        self.choose_player_screen_playing = True
+        self.choose_player_screen_playing, self.choose_map_playing = True, True
         self.choose_player_text, self.start_text, self.button_text = None, None, None
-        self.player_perk = None
+        self.player_perk, self.choose_map_text = None, None
 
     """
      def load_map(self):
@@ -92,6 +92,12 @@ class Game:
                     elif level in ("fast", "balanced", "big_bag"):
                         self.player_perk = level
                         self.choose_player_screen_playing = False
+                    elif level in ("easy", "hard"):
+                        if level == "easy":  #TODO
+                            pass
+                        else:
+                            pass
+                        self.choose_map_playing = False
         else:
             self.gui.draw_rect(
                 self.screen, defaultcolor, (x_left, y_top, width, height)
@@ -203,6 +209,48 @@ class Game:
                 const.WHITE,
                 const.ORANGE_GREY,
                 "big_bag",
+            )
+
+            self.events()
+
+            self.gui.update_display()
+            self.gui.set_fps(self.clock, const.FPS)
+
+    def choose_map_screen(self):
+        self.choose_map_text = self.font.render(
+            "Choose difficulty", True, const.ORANGE_GREY
+        )
+
+        while self.choose_map_playing:
+            self.screen.fill(const.BG_COLOR)
+            self.screen.blit(
+                self.choose_map_text,
+                (
+                    (const.DISPLAY_W - self.choose_map_text.get_width()) / 2,
+                    const.DISPLAY_H // 8,
+                ),
+            )
+
+            self.create_button(
+                "EASY",
+                const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
+                const.DISPLAY_H / 2,
+                const.DISPLAY_W // 5,
+                const.DISPLAY_H // 12,
+                const.WHITE,
+                const.ORANGE_GREY,
+                "easy",
+            )
+
+            self.create_button(
+                "HARD",
+                const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
+                const.DISPLAY_H / 2 + const.DISPLAY_H // 6,
+                const.DISPLAY_W // 5,
+                const.DISPLAY_H // 12,
+                const.WHITE,
+                const.ORANGE_GREY,
+                "hard",
             )
 
             self.events()
