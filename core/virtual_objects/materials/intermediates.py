@@ -42,6 +42,8 @@ class Resistor(IntermediateMaterialBatch):
 
 if __name__ == '__main__':
     batch = Resistor(2)
-    container = Container()
-    container.data.extend((IronPlatesBatch(4), CopperPlatesBatch(5)))
-    print(batch.count_requirements(container)[0][0], batch.count_requirements(container)[1][0])
+    real_bag = Container([IronPlatesBatch(3), CopperPlatesBatch(2)])
+    bag_copy = real_bag.copy()
+    print(batch.count_requirements(bag_copy))
+    print(bag_copy)
+    print(real_bag)
