@@ -4,7 +4,7 @@ import numpy as np
 from core.generators.perlin import gen_noise
 import constants as const
 from core.generators.random_generator import random_point_with_blocked_square
-from core.virtual_objects.raw_materials.raw_materials import (
+from core.virtual_objects.materials.raw_and_basics import (
     IronBatch,
     CopperBatch,
     StoneBatch,
