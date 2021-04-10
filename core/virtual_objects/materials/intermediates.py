@@ -12,13 +12,14 @@ class IntermediateMaterialBatch(MaterialBatch):
     def __copy__(self):
         return IntermediateMaterialBatch(self.amount, self.required_res)
 
-    def count_requirements(self, container: Container):
+    def count_optimal_requirements(self, container: Container):
+        container_copy = container.copy()
         res_set = []
         for child in self.required_res:
-            cur_res = child.count_requirements(container)
+            cur_res = child.count_optimal_requirements(container_copy)
             if not cur_res:
                 return False
-            res_set.append(cur_res)
+            res_set.append(*cur_res)
         return res_set
 
 
@@ -44,6 +45,6 @@ if __name__ == '__main__':
     batch = Resistor(2)
     real_bag = Container([IronPlatesBatch(3), CopperPlatesBatch(2)])
     bag_copy = real_bag.copy()
-    print(batch.count_requirements(bag_copy))
+    print(batch.count_optimal_requirements(bag_copy))
     print(bag_copy)
     print(real_bag)

@@ -10,7 +10,7 @@ class RawMaterialBatch(MaterialBatch):
     def __copy__(self):
         return RawMaterialBatch(self.amount, self.associated_intermediate)
 
-    def count_requirements(self, container: Container):
+    def count_optimal_requirements(self, container: Container):
         return tuple(self.associated_intermediate(self.amount))
 
 
@@ -22,10 +22,11 @@ class BasicMaterialBatch(MaterialBatch):
     def __copy__(self):
         return BasicMaterialBatch(self.amount, self.associated_raw)
 
-    def count_requirements(self, container: Container):
-        if container.contains(self):
-            container.remove(self)
-            return self
+    def count_optimal_requirements(self, container: Container):
+        container_copy = container.copy()
+        if container_copy.contains(self):
+            container_copy.remove(self)
+            return [self]
         return False
 
 
