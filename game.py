@@ -18,6 +18,7 @@ class Game:
         self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 16)
 
         self.start_screen_playing = True
+        self.choose_player_text, self.start_text, self.button_text = None, None, None
 
     """
      def load_map(self):
@@ -80,6 +81,8 @@ class Game:
             if click[0] == 1:
                 if level == 'start':
                     self.start_screen_playing = False
+                elif level == 'exit':
+                    self.quit()
         else:
             self.gui.draw_rect(self.screen, default_color, (x_left, y_top, width, height))
 
@@ -95,9 +98,17 @@ class Game:
             self.screen.blit(self.start_text,
                              ((const.DISPLAY_W - self.start_text.get_width()) / 2, const.DISPLAY_H // 8))
 
-            self.create_button("LET'S GO", const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
+            self.create_button("START", const.DISPLAY_W / 2 - const.DISPLAY_W // 12,
                                const.DISPLAY_H / 2,
-                               const.DISPLAY_W // 5, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'start')
+                               const.DISPLAY_W // 6, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'start')
+
+            self.create_button("CREDITS", const.DISPLAY_W / 2 - const.DISPLAY_W // 12,
+                               const.DISPLAY_H / 2 + const.DISPLAY_H // 6,
+                               const.DISPLAY_W // 6, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'credits')
+
+            self.create_button("EXIT", const.DISPLAY_W / 2 - const.DISPLAY_W // 12,
+                               const.DISPLAY_H / 2 + const.DISPLAY_H // 3,
+                               const.DISPLAY_W // 6, const.DISPLAY_H // 12, const.WHITE, const.ORANGE_GREY, 'exit')
 
             self.events()
 
@@ -106,7 +117,6 @@ class Game:
 
     def choose_player_screen(self):  #TODO
         self.choose_player_text = self.font.render("Choose a player", True, const.ORANGE_GREY)
-
 
     def show_go_screen(self):
         pass
