@@ -1,10 +1,14 @@
-from intermediates import *
-from material_batch import *
-from raw_and_basics import *
+from core.virtual_objects.materials.intermediates import *
+from core.virtual_objects.materials.abstracts import *
+from core.virtual_objects.materials.raw_and_basics import *
 
-basic_assembling_blueprints = {frozenset([1, 2]): 3, frozenset([1, 3]): 4}
 
-print(basic_assembling_blueprints[frozenset((3, 1))])
+#
+# basic_assembling_blueprints = {frozenset([1, 2]): 3, frozenset([1, 3]): 4}
+#
+# print(basic_assembling_blueprints[frozenset((3, 1))])
+
+
 # class Furnace:
 #     target: type
 #
@@ -29,14 +33,14 @@ print(basic_assembling_blueprints[frozenset((3, 1))])
 
 
 class Player:
-    def __init__(self):
-        self.bag: Container = Container([IronPlatesBatch(3), CopperPlatesBatch(2)])
 
-    def produce(self, target_batch: MaterialBatch):
+    def __init__(self):
+        self.bag: Container = Container([CopperCable(15), WoodenPlate(5), Resistor(4)])
+
+    def produce(self, target_batch: ProductMaterial):
         return self.bag.produce_inside(target_batch)
 
 
 hero = Player()
-
-res = hero.produce(Resistor(2))
-print(res)
+print(hero.produce(IntegratedCircuit(1)))
+print(hero.bag)

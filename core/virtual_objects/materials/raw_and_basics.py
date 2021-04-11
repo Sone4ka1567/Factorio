@@ -1,97 +1,68 @@
-from core.virtual_objects.materials.material_batch import MaterialBatch
-from core.virtual_objects.container import Container
+from core.virtual_objects.materials.abstracts import RawMaterial, BasicMaterial
 
 
-class RawMaterialBatch(MaterialBatch):
-    def __init__(self, amount, intermediate_class=None):
-        super().__init__(amount)
-        self.associated_intermediate = intermediate_class
-
-    def __copy__(self):
-        return RawMaterialBatch(self.amount, self.associated_intermediate)
-
-    def count_optimal_requirements(self, container: Container):
-        return tuple(self.associated_intermediate(self.amount))
-
-
-class BasicMaterialBatch(MaterialBatch):
-    def __init__(self, amount, raw_class=None):
-        super().__init__(amount)
-        self.associated_raw = raw_class
-
-    def __copy__(self):
-        return BasicMaterialBatch(self.amount, self.associated_raw)
-
-    def count_optimal_requirements(self, container: Container):
-        container_copy = container.copy()
-        if container_copy.contains(self):
-            container_copy.remove(self)
-            return [self]
-        return False
-
-
-class IronBatch(RawMaterialBatch):
+class Iron(RawMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_intermediate = IronPlatesBatch
+        self.associated_intermediate = IronPlates
 
 
-class IronPlatesBatch(BasicMaterialBatch):
+class IronPlates(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_raw = IronBatch
+        self.associated_raw = Iron
 
 
-class CopperBatch(RawMaterialBatch):
+class Copper(RawMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_intermediate = CopperPlatesBatch
+        self.associated_intermediate = CopperPlates
 
 
-class CopperPlatesBatch(BasicMaterialBatch):
+class CopperPlates(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_raw = CopperBatch
+        self.associated_raw = Copper
 
 
-class CoalBatch(RawMaterialBatch):
+class Coal(RawMaterial):
     pass
 
 
-class StoneBatch(RawMaterialBatch):
+class Stone(RawMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_intermediate = StoneBricksBatch
+        self.associated_intermediate = StoneBricks
 
 
-class StoneBricksBatch(BasicMaterialBatch):
+class StoneBricks(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_raw = StoneBatch
+        self.associated_raw = Stone
 
 
-class SiliconBatch(RawMaterialBatch):
+class Silicon(RawMaterial):
     def __init__(self, amount=int(1e5)):
         super().__init__(amount)
-        self.associated_intermediate = SiliconPlateBatch
+        self.associated_intermediate = SiliconPlate
 
 
-class SiliconPlateBatch(BasicMaterialBatch):
+class SiliconPlate(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_raw = SiliconBatch
+        self.associated_raw = Silicon
 
 
-class WoodBatch(RawMaterialBatch):
+class Wood(RawMaterial):
     def __init__(self, amount):
         super().__init__(amount)
         self.associated_intermediate = None  # ??????????????
 
 
-class WoodenPlateBatch(BasicMaterialBatch):
+class WoodenPlate(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_raw = WoodBatch
+        self.associated_raw = Wood
 
 # def exchange(input_batch: RawMaterialBatch, output_batch: RawMaterialBatch, amount: int):
 #     if not isinstance(output_batch, type(input_batch)):

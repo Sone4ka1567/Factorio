@@ -7,6 +7,7 @@ class Container:
 
     def contains(self, batch):
         for cur_batch in self.data:
+            # print(type(batch), '-', type(cur_batch))
             if isinstance(cur_batch, type(batch)):
                 return cur_batch.amount >= batch.amount
         return False
@@ -41,27 +42,19 @@ class Container:
         return Container(deepcopy(self.data))
 
     def produce_inside(self, target_batch):
-        bag_copy = self.copy()
-        requirements = target_batch.count_optimal_requirements(bag_copy)
-        if not requirements:
-            print('impossible')
+        res = target_batch.get_producing_result(self, )
+        if not res:
             return False
-        for requirement in requirements:
-            print(requirement)
-            self.remove(requirement)
+        self.data = res[0].data
         self.add(target_batch)
-        print('res: ', self)
-        return True
+        return res[1]
 
     def produce_outside(self, target_batch):
-        requirements = target_batch.count_optimal_requirements(self)
-        if not requirements:
-            print('impossible')
+        res = target_batch.get_producing_result(self, )
+        if not res:
             return False
-        for requirement in requirements:
-            self.remove(requirement)
-        print('res: ', self)
-        return True
+        self.data = res[0].data
+        return res[1]
 
     def __str__(self):
         if self.data:

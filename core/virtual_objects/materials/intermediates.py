@@ -1,92 +1,80 @@
-from core.virtual_objects.materials.material_batch import MaterialBatch
+from core.virtual_objects.materials.abstracts import IntermediateMaterial
 from core.virtual_objects.materials.raw_and_basics import (
-    CopperPlatesBatch,
-    IronPlatesBatch,
-    WoodenPlateBatch,
-    SiliconPlateBatch,
+    CopperPlates,
+    IronPlates,
+    WoodenPlate,
+    SiliconPlate,
 )
 from core.virtual_objects.container import Container
 
 
-class IntermediateMaterialBatch(MaterialBatch):
-    def __init__(self, amount, required_res=()):
-        super().__init__(amount)
-        self.required_res = required_res
-
-    def __copy__(self):
-        return IntermediateMaterialBatch(self.amount, self.required_res)
-
-    def count_optimal_requirements(self, container: Container):
-        container_copy = container.copy()
-        res_set = []
-        if container_copy.contains(self):
-            container_copy.remove(self)
-            return [self]
-        for child in self.required_res:
-            cur_res = child.count_optimal_requirements(container_copy)
-            if not cur_res:
-                return False
-            res_set.append(*cur_res)
-        return res_set
-
-
-class CopperCable(IntermediateMaterialBatch):
+class CopperCable(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.required_res = (CopperPlatesBatch(max(amount // 2, 1)),)
+        self.producing_time = 0.5
+        self.required_res = (CopperPlates(max(amount // 2, 1)),)
 
 
-class SteelPlate(IntermediateMaterialBatch):
+class SteelPlate(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.required_res = (IronPlatesBatch(amount),)
+        self.producing_time = 1.0
+        self.required_res = (IronPlates(amount),)
 
 
-class Pipe(IntermediateMaterialBatch):
+class Pipe(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.required_res = (IronPlatesBatch(amount),)
+        self.producing_time = 1.0
+        self.required_res = (IronPlates(amount),)
 
 
-class IronGearWheel(IntermediateMaterialBatch):
+class IronGearWheel(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.required_res = (IronPlatesBatch(amount * 2),)
+        self.producing_time = 2.0
+        self.required_res = (IronPlates(amount * 2),)
 
 
-class ElectricCircuit(IntermediateMaterialBatch):
+class ElectricCircuit(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.required_res = (CopperCable(amount * 3), WoodenPlateBatch(amount))
+        self.producing_time = 0.5
+        self.required_res = (CopperCable(amount * 3), WoodenPlate(amount))
 
 
-class Resistor(IntermediateMaterialBatch):
+class Resistor(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
+        self.producing_time = 1.0
         self.required_res = (CopperCable(amount * 2), SteelPlate(amount))
 
 
-class Transistor(IntermediateMaterialBatch):
+class Transistor(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.required_res = (SiliconPlateBatch(amount * 3), IronPlatesBatch(amount))
+        self.producing_time = 2.0
+        self.required_res = (SiliconPlate(amount * 3), IronPlates(amount))
 
 
-class IntegratedCircuit(IntermediateMaterialBatch):
+class IntegratedCircuit(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
+        self.producing_time = 3.0
         self.required_res = (ElectricCircuit(amount * 5), Resistor(amount * 3))
 
 
-class ControlUnit(IntermediateMaterialBatch):
+class ControlUnit(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
+        self.producing_time = 5.0
         self.required_res = (IntegratedCircuit(amount * 5), Transistor(amount * 5))
 
 
-class Radar(IntermediateMaterialBatch):
+class Radar(IntermediateMaterial):
     def __init__(self, amount):
         super().__init__(amount)
+        self.producing_time = 7.0
         self.required_res = (
             ControlUnit(amount * 3),
             SteelPlate(amount * 25),
@@ -96,7 +84,7 @@ class Radar(IntermediateMaterialBatch):
 
 if __name__ == "__main__":
     batch = Resistor(2)
-    real_bag = Container([IronPlatesBatch(3), CopperPlatesBatch(2)])
-    res = batch.count_optimal_requirements(real_bag)
+    real_bag = Container([IronPlates(3), CopperPlates(2)])
+    res = batch.__count_optimal_requirements(real_bag)
     for _ in res:
         print(_)
