@@ -57,7 +57,7 @@ class Map(ABC):
                 surface_cat = "dark" if surface_noise[y][x] == 1 else "light"
                 cell = MapCell(category=surface_cat)
                 generated_batch = ores_gen.create_batch_for_cell(x, y)
-                if generated_batch:
+                if generated_batch and generated_batch.amount != 0:
                     cell.raw_material_batch = generated_batch
                 if trees_matrix[y][x] and not cell.raw_material_batch:
                     cell.raw_material_batch = WoodBatch(random.randint(10, 20))  # CONST
