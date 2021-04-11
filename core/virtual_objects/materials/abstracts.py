@@ -39,7 +39,7 @@ class ProductMaterial(MaterialBatch):
         pass
 
     @abstractmethod
-    def count_producing_time(self, new_container: Container, producing_time=0):
+    def count_producing_time(self, container: Container, producing_time=0):
         pass
 
     def get_producing_result(self, container: Container):
@@ -47,7 +47,7 @@ class ProductMaterial(MaterialBatch):
         requirements = self.count_optimal_requirements(container_copy)
         if not requirements:
             return False
-        prod_time = self.count_producing_time(container_copy)
+        prod_time = self.count_producing_time(container)
         return container_copy, prod_time
 
 
@@ -68,8 +68,8 @@ class BasicMaterial(ProductMaterial):
             return [self]
         return False
 
-    def count_producing_time(self, new_container: Container, producing_time=0):
-        return producing_time
+    def count_producing_time(self, container: Container, producing_time=0):
+        return 0
 
 
 class IntermediateMaterial(ProductMaterial):
@@ -96,10 +96,13 @@ class IntermediateMaterial(ProductMaterial):
             res_set.append(flatten(cur_res[0]))
         return res_set
 
-    def count_producing_time(self, new_container: Container, producing_time=0):
-        if new_container.contains(self):
-            return producing_time
-        producing_time += self.producing_time * self.amount
+    def count_producing_time(self, container: Container, producing_time=0):
+        # print('DD:', done_requirements)
+        if container.contains(self):
+            return 0
+        producing_time = self.producing_time * self.amount
         for child in self.required_res:
-            producing_time += child.count_producing_time(new_container, producing_time)
+            print('CH', child)
+            producing_time += child.count_producing_time(container, producing_time)
+            print('PR', producing_time)
         return producing_time
