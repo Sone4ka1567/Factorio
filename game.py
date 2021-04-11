@@ -30,8 +30,9 @@ class Game:
         # self.load_map()
         self.all_sprites = self.gui.group_sprites()
         # здесь надо будет еще обработать карту
-        self.player = Player(self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk])
-        # self.camera = Camera(self.map.width, self.map.height)
+        self.player = Player(
+            self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk]
+        )
         self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H)
 
     def run(self):
@@ -83,33 +84,45 @@ class Game:
                 else:
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt.png")
 
-                self.screen.blit(cell_image, ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
-
                 # чек на руду
-                if type(cur_cell.raw_material_batch) == IronBatch:
-                    cell_batch_image = self.gui.get_image("dirt_and_ore/iron.png")
-                    self.screen.blit(cell_batch_image,
-                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
-                elif type(cur_cell.raw_material_batch) == CopperBatch:
-                    cell_batch_image = self.gui.get_image("dirt_and_ore/copper.png")
-                    self.screen.blit(cell_batch_image,
-                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
-                elif type(cur_cell.raw_material_batch) == CoalBatch:
-                    cell_batch_image = self.gui.get_image("dirt_and_ore/coal.png")
-                    self.screen.blit(cell_batch_image,
-                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
-                elif type(cur_cell.raw_material_batch) == StoneBatch:
-                    cell_batch_image = self.gui.get_image("dirt_and_ore/stone.png")
-                    self.screen.blit(cell_batch_image,
-                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
-                elif type(cur_cell.raw_material_batch) == SiliconBatch:
-                    cell_batch_image = self.gui.get_image("dirt_and_ore/silicon.png")
-                    self.screen.blit(cell_batch_image,
-                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
-                elif type(cur_cell.raw_material_batch) == WoodBatch:
-                    cell_batch_image = self.gui.get_image("dirt_and_ore/tree1.png")
-                    self.screen.blit(cell_batch_image,
-                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
+                if isinstance(cur_cell.raw_material_batch, IronBatch) \
+                        and cur_cell.category == "light":
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_iron.xcf")
+                elif isinstance(cur_cell.raw_material_batch, IronBatch):
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_iron.xcf")
+
+                if isinstance(cur_cell.raw_material_batch, CopperBatch) \
+                        and cur_cell.category == "light":
+                    cell_batch_image = self.gui.get_image("dirt_and_ore/light_dirt_with_copper.xcf")
+                elif isinstance(cur_cell.raw_material_batch, CopperBatch):
+                    cell_batch_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_copper.xcf")
+
+                if isinstance(cur_cell.raw_material_batch, CoalBatch) \
+                        and cur_cell.category == "light":
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_coal.xcf")
+                elif isinstance(cur_cell.raw_material_batch, CoalBatch):
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_coal.xcf")
+
+                if isinstance(cur_cell.raw_material_batch, StoneBatch) \
+                        and cur_cell.category == "light":
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_stone.xcf")
+                elif isinstance(cur_cell.raw_material_batch, StoneBatch):
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_stone.xcf")
+
+                if isinstance(cur_cell.raw_material_batch, SiliconBatch) \
+                        and cur_cell.category == "light":
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_silicon.xcf")
+                elif isinstance(cur_cell.raw_material_batch, SiliconBatch):
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_silicon.xcf")
+
+                if isinstance(cur_cell.raw_material_batch, WoodBatch) \
+                        and cur_cell.category == "light":
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_tree.xcf")
+                elif isinstance(cur_cell.raw_material_batch, WoodBatch):
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_tree.xcf")
+
+                self.screen.blit(cell_image,
+                                 ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
 
     def draw(self):
         self.gui.fill_screen(self.screen, const.BG_COLOR)
