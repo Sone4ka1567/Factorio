@@ -23,4 +23,8 @@ UML-диаграмма ресурсов ("из чего что делается"
 ## Паттерны
 
 [Фабричный метод для создания карт](https://github.com/EgorVoron/patterns-project/blob/41cb173b12fd55de069cbb7a62a914fa5a2ab905/maps.py#L117)  
-[Фасад для pyGame](https://github.com/EgorVoron/patterns-project/blob/41cb173b12fd55de069cbb7a62a914fa5a2ab905/facade.py#L4)
+[Фасад для pyGame](https://github.com/EgorVoron/patterns-project/blob/41cb173b12fd55de069cbb7a62a914fa5a2ab905/facade.py#L4)  
+[Компоновщик](https://github.com/EgorVoron/patterns-project/blob/d6d463bf2bf32fd37060a9491a44a363ae6d83a5/core/virtual_objects/materials/abstracts.py#L36)
+*(нужен для построения и прохода по дереву зависимостей ресурса)*
+[Proxy](https://github.com/EgorVoron/patterns-project/blob/d6d463bf2bf32fd37060a9491a44a363ae6d83a5/core/map_objects/abstracts.py#L5)
+*(для подсчета прогресса в тиках)*
