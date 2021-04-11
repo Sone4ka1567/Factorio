@@ -3,6 +3,8 @@ from pygamegui import PygameGUI
 from player import Player, player_perks
 from camera import Camera
 from maps import EasyMapCreator, HardMapCreator
+from core.virtual_objects.materials.raw_and_basics import IronBatch, CopperBatch, WoodBatch
+from core.virtual_objects.materials.raw_and_basics import CoalBatch, StoneBatch, SiliconBatch
 import constants as const
 
 
@@ -28,7 +30,7 @@ class Game:
         # self.load_map()
         self.all_sprites = self.gui.group_sprites()
         # здесь надо будет еще обработать карту
-        self.player = Player(self, 0, 0, **player_perks[self.player_perk])
+        self.player = Player(self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk])
         # self.camera = Camera(self.map.width, self.map.height)
         self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H)
 
@@ -82,7 +84,33 @@ class Game:
                 else:
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt.png")
 
-                self.screen.blit(cell_image, (i * const.CELL_SIZE, j * const.CELL_SIZE))
+                self.screen.blit(cell_image, ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
+
+                # чек на руду
+                if type(cur_cell.raw_material_batch) == IronBatch:
+                    cell_batch_image = self.gui.get_image("dirt_and_ore/iron.png")
+                    self.screen.blit(cell_batch_image,
+                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
+                elif type(cur_cell.raw_material_batch) == CopperBatch:
+                    cell_batch_image = self.gui.get_image("dirt_and_ore/copper.png")
+                    self.screen.blit(cell_batch_image,
+                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
+                elif type(cur_cell.raw_material_batch) == CoalBatch:
+                    cell_batch_image = self.gui.get_image("dirt_and_ore/coal.png")
+                    self.screen.blit(cell_batch_image,
+                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
+                elif type(cur_cell.raw_material_batch) == StoneBatch:
+                    cell_batch_image = self.gui.get_image("dirt_and_ore/stone.png")
+                    self.screen.blit(cell_batch_image,
+                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
+                elif type(cur_cell.raw_material_batch) == SiliconBatch:
+                    cell_batch_image = self.gui.get_image("dirt_and_ore/silicon.png")
+                    self.screen.blit(cell_batch_image,
+                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
+                elif type(cur_cell.raw_material_batch) == WoodBatch:
+                    cell_batch_image = self.gui.get_image("dirt_and_ore/tree1.png")
+                    self.screen.blit(cell_batch_image,
+                                     ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
 
     def draw(self):
         self.gui.fill_screen(self.screen, const.BG_COLOR)
@@ -100,7 +128,7 @@ class Game:
                 self.quit()
 
     def create_button(
-        self, message, x_left, y_top, width, height, hovercolor, defaultcolor, level
+            self, message, x_left, y_top, width, height, hovercolor, defaultcolor, level
     ):
         mouse = self.gui.get_mouse_pos()
         if x_left + width > mouse[0] > x_left and y_top + height > mouse[1] > y_top:
