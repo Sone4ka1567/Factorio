@@ -3,8 +3,8 @@ from pygamegui import PygameGUI
 from player import Player, player_perks
 from camera import Camera
 from maps import EasyMapCreator, HardMapCreator
-from core.virtual_objects.materials.raw_and_basics import IronBatch, CopperBatch, WoodBatch
-from core.virtual_objects.materials.raw_and_basics import CoalBatch, StoneBatch, SiliconBatch
+from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
+from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
 import constants as const
 
 
@@ -75,40 +75,40 @@ class Game:
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt.png")
 
                 # чек на руду
-                if isinstance(cur_cell.raw_material_batch, IronBatch) \
+                if isinstance(cur_cell.raw_material_batch, Iron) \
                         and cur_cell.category == "light":
                     cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_iron.xcf")
-                elif isinstance(cur_cell.raw_material_batch, IronBatch):
+                elif isinstance(cur_cell.raw_material_batch, Iron):
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_iron.xcf")
 
-                if isinstance(cur_cell.raw_material_batch, CopperBatch) \
+                if isinstance(cur_cell.raw_material_batch, Copper) \
                         and cur_cell.category == "light":
                     cell_batch_image = self.gui.get_image("dirt_and_ore/light_dirt_with_copper.xcf")
-                elif isinstance(cur_cell.raw_material_batch, CopperBatch):
+                elif isinstance(cur_cell.raw_material_batch, Copper):
                     cell_batch_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_copper.xcf")
 
-                if isinstance(cur_cell.raw_material_batch, CoalBatch) \
+                if isinstance(cur_cell.raw_material_batch, Coal) \
                         and cur_cell.category == "light":
                     cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_coal.xcf")
-                elif isinstance(cur_cell.raw_material_batch, CoalBatch):
+                elif isinstance(cur_cell.raw_material_batch, Coal):
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_coal.xcf")
 
-                if isinstance(cur_cell.raw_material_batch, StoneBatch) \
+                if isinstance(cur_cell.raw_material_batch, Stone) \
                         and cur_cell.category == "light":
                     cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_stone.xcf")
-                elif isinstance(cur_cell.raw_material_batch, StoneBatch):
+                elif isinstance(cur_cell.raw_material_batch, Stone):
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_stone.xcf")
 
-                if isinstance(cur_cell.raw_material_batch, SiliconBatch) \
+                if isinstance(cur_cell.raw_material_batch, Silicon) \
                         and cur_cell.category == "light":
                     cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_silicon.xcf")
-                elif isinstance(cur_cell.raw_material_batch, SiliconBatch):
+                elif isinstance(cur_cell.raw_material_batch, Silicon):
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_silicon.xcf")
 
-                if isinstance(cur_cell.raw_material_batch, WoodBatch) \
+                if isinstance(cur_cell.raw_material_batch, Wood) \
                         and cur_cell.category == "light":
                     cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_tree.xcf")
-                elif isinstance(cur_cell.raw_material_batch, WoodBatch):
+                elif isinstance(cur_cell.raw_material_batch, Wood):
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_tree.xcf")
 
                 self.screen.blit(cell_image,

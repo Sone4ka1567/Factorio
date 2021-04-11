@@ -5,11 +5,11 @@ from core.generators.perlin import gen_noise
 import constants as const
 from core.generators.random_generator import random_point_with_blocked_square
 from core.virtual_objects.materials.raw_and_basics import (
-    IronBatch,
-    CopperBatch,
-    StoneBatch,
-    CoalBatch,
-    SiliconBatch
+    Iron,
+    Copper,
+    Stone,
+    Coal,
+    Silicon
 )
 
 
@@ -217,7 +217,7 @@ class OresGenerator:
 
         inner_ores_bounds, outer_ores_bounds = self._gen_ore_centers()
 
-        batch_types = [IronBatch, CoalBatch, CopperBatch, StoneBatch, SiliconBatch]
+        batch_types = [Iron, Coal, Copper, Stone, Silicon]
         random.shuffle(batch_types)
 
         ores_with_types = []

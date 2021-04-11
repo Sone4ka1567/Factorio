@@ -3,7 +3,7 @@ import random
 from core.generators.trees_generator import gen_trees_map
 from core.generators.surface_generator import gen_surface_map
 from core.generators.ores_generator import OresGenerator
-from core.virtual_objects.materials.raw_and_basics import WoodBatch
+from core.virtual_objects.materials.raw_and_basics import Wood
 import constants as const
 
 
@@ -60,7 +60,7 @@ class Map(ABC):
                 if generated_batch and generated_batch.amount != 0:
                     cell.raw_material_batch = generated_batch
                 if trees_matrix[y][x] and not cell.raw_material_batch:
-                    cell.raw_material_batch = WoodBatch(random.randint(10, 20))  # CONST
+                    cell.raw_material_batch = Wood(random.randint(10, 20))  # CONST
                 cell_id = id(cell)
                 self.map_matrix[y][x] = cell_id
                 self.map_objects[cell_id] = cell
