@@ -7,7 +7,7 @@
   "fast": {
     "speed": 180,
     "bag_capacity": 30,
-    "picture": "female_walk1.png"
+    "picture": "fast.png"
   },
   "big_bag": {
     "speed": 70,
