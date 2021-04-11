@@ -60,7 +60,6 @@ class Game:
             )
 
     def draw_map(self):
-        # сначала тип земли, рудник, есть ли что-то сверху
         x_cell = self.player.rect.x // const.CELL_SIZE
         y_cell = self.player.rect.y // const.CELL_SIZE
         cell_left = x_cell - self.screen.get_width() // const.CELL_SIZE
