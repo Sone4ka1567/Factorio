@@ -57,9 +57,37 @@ class Game:
                 self.screen, const.WHITE, (0, y_border), (const.DISPLAY_W, y_border)
             )
 
+    def draw_map(self):
+        # сначала тип земли, рудник, есть ли что-то сверху
+        x_cell = self.player.rect.x // const.CELL_SIZE
+        y_cell = self.player.rect.y // const.CELL_SIZE
+        cell_left = x_cell - self.screen.get_width() // const.CELL_SIZE
+        cell_right = x_cell + self.screen.get_width() // const.CELL_SIZE
+        cell_top = y_cell - self.screen.get_height() // const.CELL_SIZE
+        cell_bottom = y_cell + self.screen.get_height() // const.CELL_SIZE
+
+        # проверим на границы
+        cell_left = max(0, cell_left)
+        cell_right = min(const.MAP_W - 1, cell_right)
+        cell_top = max(0, cell_top)
+        cell_bottom = min(const.MAP_H - 1, cell_bottom)
+
+        for i in range(cell_left, cell_right + 1):
+            for j in range(cell_top, cell_bottom + 1):
+
+                cur_cell = self.map_obj[self.map_matr[j][i]]
+
+                if cur_cell.category == "light":
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt.png")
+                else:
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt.png")
+
+                self.screen.blit(cell_image, (i * const.CELL_SIZE, j * const.CELL_SIZE))
+
     def draw(self):
         self.gui.fill_screen(self.screen, const.BG_COLOR)
         self.draw_grid()
+        self.draw_map()
 
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
@@ -92,6 +120,8 @@ class Game:
                         else:
                             creator = HardMapCreator()
                         self.map = creator.gen_map()
+                        self.map_matr = self.map.get_map_matrix()
+                        self.map_obj = self.map.get_map_objects()
                         self.choose_map_playing = False
         else:
             self.gui.draw_rect(
