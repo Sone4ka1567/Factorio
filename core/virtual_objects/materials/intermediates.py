@@ -5,7 +5,6 @@ from core.virtual_objects.materials.raw_and_basics import (
     WoodenPlate,
     SiliconPlate,
 )
-from core.virtual_objects.container import Container
 
 
 class CopperCable(IntermediateMaterial):
@@ -80,11 +79,3 @@ class Radar(IntermediateMaterial):
             SteelPlate(amount * 25),
             IronGearWheel(amount * 15),
         )
-
-
-if __name__ == "__main__":
-    batch = Resistor(2)
-    real_bag = Container([IronPlates(3), CopperPlates(2)])
-    res = batch.__count_optimal_requirements(real_bag)
-    for _ in res:
-        print(_)
