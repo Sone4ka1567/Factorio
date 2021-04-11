@@ -22,22 +22,29 @@ class Player(PygameSprite):
         self.rect = self.image.get_rect()
         self.rect.x = x_spawn * const.CELL_SIZE
         self.rect.y = y_spawn * const.CELL_SIZE
+        self.x = x_spawn * const.CELL_SIZE
+        self.y = y_spawn * const.CELL_SIZE
 
     def update(self):
         self.speed_x = 0
         self.speed_y = 0
         direction = self.gui.get_keystate()
-        if direction == "LEFT":
+        if "LEFT" in direction:
             self.speed_x = -self.speed
-        if direction == "RIGHT":
+        if "RIGHT" in direction:
             self.speed_x = self.speed
-        if direction == "UP":
+        if "UP" in direction:
             self.speed_y = -self.speed
-        if direction == "DOWN":
+        if "DOWN" in direction:
             self.speed_y = self.speed
+        self.speed_x *= 0.7071
+        self.speed_y *= 0.7071
 
-        self.rect.x += self.speed_x
-        self.rect.y += self.speed_y
+        self.x += self.speed_x * self.game.dt
+        self.y += self.speed_y * self.game.dt
+        self.rect.x = self.x
+        self.rect.y = self.y
+
         if self.rect.right > const.PIXEL_MAP_W:
             self.rect.right = const.PIXEL_MAP_W
         if self.rect.left < 0:

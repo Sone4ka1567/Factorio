@@ -1,11 +1,11 @@
 # game settings
 DISPLAY_W = 0
 DISPLAY_H = 0
-FPS = 45
+FPS = 30
 
 
 # game
-CELL_SIZE = 32
+CELL_SIZE = 48
 MAP_W = 1024  # в клетках
 MAP_H = 768
 PIXEL_MAP_W = MAP_W * CELL_SIZE

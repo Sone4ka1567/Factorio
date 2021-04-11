@@ -35,8 +35,8 @@ class PygameGUI(GUI):
     def set_clock(self):
         return pygame.time.Clock()
 
-    def set_fps(self, clock, fps):
-        clock.tick(fps)
+    def tick_fps(self, clock, fps):
+        return clock.tick(fps)
 
     def group_sprites(self):
         return pygame.sprite.Group()
@@ -73,16 +73,17 @@ class PygameGUI(GUI):
     def get_keystate(self):
         keystate = pygame.key.get_pressed()
         # pylint: disable=no-member
+        lst = []
         if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
-            return "LEFT"
+            lst.append("LEFT")
         if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
-            return "RIGHT"
+            lst.append("RIGHT")
         if keystate[pygame.K_UP] or keystate[pygame.K_w]:
-            return "UP"
+            lst.append("UP")
         if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
-            return "DOWN"
+            lst.append("DOWN")
         # pylint: enable=no-member
-        return None
+        return lst
 
     def get_events(self):
         return pygame.event.get()

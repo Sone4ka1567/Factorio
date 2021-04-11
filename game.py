@@ -35,7 +35,7 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
-            self.gui.set_fps(self.clock, const.FPS)
+            self.dt = self.gui.tick_fps(self.clock, const.FPS) / 500
             self.events()
             self.update()
             self.draw()
@@ -88,6 +88,7 @@ class Game:
         self.gui.fill_screen(self.screen, const.BG_COLOR)
         self.draw_grid()
         self.draw_map()
+        # self.gui.update_display()
 
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
@@ -186,7 +187,7 @@ class Game:
             self.events()
 
             self.gui.update_display()
-            self.gui.set_fps(self.clock, const.FPS)
+            self.gui.tick_fps(self.clock, const.FPS)
 
     def choose_player_screen(self):
         self.choose_player_text = self.font.render(
@@ -239,7 +240,7 @@ class Game:
             self.events()
 
             self.gui.update_display()
-            self.gui.set_fps(self.clock, const.FPS)
+            self.gui.tick_fps(self.clock, const.FPS)
 
     def choose_map_screen(self):
         self.choose_map_text = self.font.render(
@@ -281,7 +282,7 @@ class Game:
             self.events()
 
             self.gui.update_display()
-            self.gui.set_fps(self.clock, const.FPS)
+            self.gui.tick_fps(self.clock, const.FPS)
 
     def show_go_screen(self):
         pass

@@ -24,7 +24,7 @@ class GUI(ABC):
         pass
 
     @abstractmethod
-    def set_fps(self, clock, fps):
+    def tick_fps(self, clock, fps):
         pass
 
     @abstractmethod
