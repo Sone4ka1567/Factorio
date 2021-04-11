@@ -50,16 +50,6 @@ class Game:
         self.gui.update_sprites(self.all_sprites)
         self.camera.update(self.player)
 
-    def draw_grid(self):
-        for x_border in range(0, const.DISPLAY_W, const.CELL_SIZE):
-            self.gui.draw_line(
-                self.screen, const.WHITE, (x_border, 0), (x_border, const.DISPLAY_H)
-            )
-        for y_border in range(0, const.DISPLAY_H, const.CELL_SIZE):
-            self.gui.draw_line(
-                self.screen, const.WHITE, (0, y_border), (const.DISPLAY_W, y_border)
-            )
-
     def draw_map(self):
         x_cell = self.player.rect.x // const.CELL_SIZE
         y_cell = self.player.rect.y // const.CELL_SIZE
@@ -126,7 +116,6 @@ class Game:
 
     def draw(self):
         self.gui.fill_screen(self.screen, const.BG_COLOR)
-        self.draw_grid()
         self.draw_map()
         # self.gui.update_display()
 
