@@ -33,14 +33,15 @@ from core.virtual_objects.materials.raw_and_basics import *
 
 
 class Player:
-
     def __init__(self):
-        self.bag: Container = Container([CopperCable(15), WoodenPlate(5), Resistor(4)])
+        # self.bag: Container = Container([CopperCable(2), SteelPlate(1)]) #  Resistor(1)
+        self.bag: Container = Container([IronPlates(25 + 30), ControlUnit(3)])
 
     def produce(self, target_batch: ProductMaterial):
         return self.bag.produce_inside(target_batch)
 
 
 hero = Player()
-print(hero.produce(IntegratedCircuit(1)))
+print(hero.produce(Radar(1)))
 print(hero.bag)
+print('right ans: ')
