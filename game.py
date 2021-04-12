@@ -83,9 +83,9 @@ class Game:
 
                 if isinstance(cur_cell.raw_material_batch, Copper) \
                         and cur_cell.category == "light":
-                    cell_batch_image = self.gui.get_image("dirt_and_ore/light_dirt_with_copper.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_copper.xcf")
                 elif isinstance(cur_cell.raw_material_batch, Copper):
-                    cell_batch_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_copper.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_copper.xcf")
 
                 if isinstance(cur_cell.raw_material_batch, Coal) \
                         and cur_cell.category == "light":
