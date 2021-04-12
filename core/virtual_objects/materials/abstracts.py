@@ -1,27 +1,23 @@
-from base_classes import VirtualObject
 from abc import abstractmethod
-from core.virtual_objects.container import Container
-
 from collections.abc import Iterable
+from base_classes import VirtualObject
+from core.virtual_objects.container import Container
 
 
 def flatten(lst):
-    for el in lst:
-        if isinstance(el, Iterable) and not isinstance(el, (str, bytes)):
-            yield from flatten(el)
+    for element in lst:
+        if isinstance(element, Iterable) and not isinstance(element, (str, bytes)):
+            yield from flatten(element)
         else:
-            yield el
+            yield element
 
 
 class MaterialBatch(VirtualObject):
     def __init__(self, amount):
         self.amount = amount
 
-    def __copy__(self):
-        return ProductMaterial(self.amount)
-
     def __str__(self):
-        return f'{self.__class__.__name__}: {self.amount}'
+        return f"{self.__class__.__name__}: {self.amount}"
 
 
 class RawMaterial(MaterialBatch):
@@ -29,7 +25,7 @@ class RawMaterial(MaterialBatch):
         super().__init__(amount)
         self.associated_intermediate = intermediate_class
 
-    def __copy__(self):
+    def copy(self):
         return RawMaterial(self.amount, self.associated_intermediate)
 
 
@@ -56,13 +52,13 @@ class BasicMaterial(ProductMaterial):
         super().__init__(amount)
         self.associated_raw = raw_class
 
-    def __copy__(self):
+    def copy(self):
         return BasicMaterial(self.amount, self.associated_raw)
 
     def count_optimal_requirements(self, container: Container):
-        print('-'*20)
-        print('B: need: ', self)
-        print('B: it has: ', container.contains(self))
+        print("-" * 20)
+        print("B: need: ", self)
+        print("B: it has: ", container.contains(self))
         if container.contains(self):
             container.remove(self)
             return [self]
@@ -79,17 +75,17 @@ class IntermediateMaterial(ProductMaterial):
         super().__init__(amount)
         self.required_res = required_res
 
-    def __copy__(self):
+    def copy(self):
         return IntermediateMaterial(self.amount, self.required_res)
 
     def count_optimal_requirements(self, container: Container):
         res_set = []
-        print('-'*20)
-        print('I: need: ', self)
-        print('I: it has: ', container.contains(self))
+        print("-" * 20)
+        print("I: need: ", self)
+        print("I: it has: ", container.contains(self))
         if container.contains(self):
             container.remove(self)
-            print('I: ch container:', container)
+            print("I: ch container:", container)
             return [self]
         for child in self.required_res:
             cur_res = child.count_optimal_requirements(container)
@@ -100,7 +96,6 @@ class IntermediateMaterial(ProductMaterial):
         return res_set
 
     def count_producing_time(self, container: Container, producing_time=0):
-        # print('DD:', done_requirements)
         if container.contains(self):
             return 0
         producing_time = self.producing_time * self.amount

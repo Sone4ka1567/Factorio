@@ -64,6 +64,7 @@ class WoodenPlate(BasicMaterial):
         super().__init__(amount)
         self.associated_raw = Wood
 
+
 # def exchange(input_batch: RawMaterialBatch, output_batch: RawMaterialBatch, amount: int):
 #     if not isinstance(output_batch, type(input_batch)):
 #         return False

@@ -42,7 +42,9 @@ class Container:
         return Container(deepcopy(self.data))
 
     def produce_inside(self, target_batch):
-        res = target_batch.get_producing_result(self, )
+        res = target_batch.get_producing_result(
+            self,
+        )
         if not res:
             return False
         self.data = res[0].data
@@ -50,7 +52,9 @@ class Container:
         return res[1]
 
     def produce_outside(self, target_batch):
-        res = target_batch.get_producing_result(self, )
+        res = target_batch.get_producing_result(
+            self,
+        )
         if not res:
             return False
         self.data = res[0].data
@@ -59,5 +63,4 @@ class Container:
     def __str__(self):
         if self.data:
             return str([str(batch) for batch in self.data])
-        else:
-            return "EMPTY BAG"
+        return "EMPTY BAG"
