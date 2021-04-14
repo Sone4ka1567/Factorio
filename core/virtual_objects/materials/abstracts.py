@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from collections.abc import Iterable
 from base_classes import VirtualObject
-from core.virtual_objects.container import Container
+from core.container import Container
 
 
 def flatten(lst):

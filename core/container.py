@@ -2,7 +2,8 @@ from copy import deepcopy
 
 
 class Container:
-    def __init__(self, data=None):
+    def __init__(self, max_size, data=None):
+        self.max_size = max_size
         self.data = [] if data is None else data
 
     def contains(self, batch):
@@ -19,6 +20,8 @@ class Container:
         return False
 
     def add(self, batch):
+        if len(self.data) == self.max_size:
+            return False
         done = False
         for idx, cur_batch in enumerate(self.data):
             if isinstance(cur_batch, type(batch)):
@@ -26,6 +29,7 @@ class Container:
                 done = True
         if not done:
             self.data.append(batch)
+        return True
 
     def remove(self, batch):
         for idx, cur_batch in enumerate(self.data):
@@ -42,9 +46,9 @@ class Container:
         return Container(deepcopy(self.data))
 
     def produce_inside(self, target_batch):
-        res = target_batch.get_producing_result(
-            self,
-        )
+        if len(self.data) == self.max_size:
+            return False
+        res = target_batch.get_producing_result(self)
         if not res:
             return False
         self.data = res[0].data
@@ -52,9 +56,7 @@ class Container:
         return res[1]
 
     def produce_outside(self, target_batch):
-        res = target_batch.get_producing_result(
-            self,
-        )
+        res = target_batch.get_producing_result(self)
         if not res:
             return False
         self.data = res[0].data
