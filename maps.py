@@ -31,7 +31,7 @@ class Map(ABC):
 
     def __init__(self):
         self.map_objects = {}
-        self.map_matrix = np.zeros((self.height, self.width))
+        self.map_matrix = np.zeros((self.height, self.width), dtype=np.int)
 
     def get_map_objects(self):
         return self.map_objects
