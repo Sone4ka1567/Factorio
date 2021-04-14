@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import random
+import numpy as np
 from core.generators.trees_generator import gen_trees_map
 from core.generators.surface_generator import gen_surface_map
 from core.generators.ores_generator import OresGenerator
@@ -26,13 +27,11 @@ class Map(ABC):
     num_ores: int
     radius_coefficient_bounds: tuple
     map_objects: dict
-    map_matrix: list
+    map_matrix: np.ndarray
 
     def __init__(self):
         self.map_objects = {}
-        self.map_matrix = [
-            [None for __ in range(self.width)] for _ in range(self.height)
-        ]
+        self.map_matrix = np.zeros((self.height, self.width))
 
     def get_map_objects(self):
         return self.map_objects
@@ -110,4 +109,3 @@ if __name__ == "__main__":
     for i in range(1):
         creator = EasyMapCreator()
         map_obj = creator.gen_map()
-        map_obj.plot()
