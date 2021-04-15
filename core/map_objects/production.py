@@ -7,8 +7,9 @@ from core.virtual_objects.materials.intermediates import *
 
 
 class Machine(UsableObjectProxy):
-    blueprints: dict
     input_slots: int
+    possible_targets: list
+    target: type
 
     def __init__(self, real_object: UsableObject):
         super().__init__(real_object)
@@ -25,9 +26,11 @@ class Machine(UsableObjectProxy):
     def remove_output(self, batch):
         self.output.remove(batch)
 
-    @property
-    def target(self):
-        return self.blueprints.get(frozenset(self.input.data))
+    def get_possible_targets(self):
+        return self.possible_targets
+
+    def set_target(self, batch_type):
+        self.target = batch_type
 
     def process(self):
         pass
@@ -39,7 +42,7 @@ class BurnerMachine(Machine):
         self.fuel = Container(1)
 
     def put_fuel(self, batch):
-        if isinstance(batch, (Coal, Wood)):
+        if isinstance(batch, (Coal, Wood)):  # decorate?
             res = self.fuel.add(batch)
             return res
         return False
@@ -59,6 +62,13 @@ class AssemblingMachine(BurnerMachine):
     def process(self):
         # todo
         pass
+
+
+class BurnerElectricGenerator(BurnerMachine):
+    input_slots = 1
+
+    def __init__(self, real_object: UsableObject):
+        super().__init__(real_object)
 
 
 class Furnace(BurnerMachine):

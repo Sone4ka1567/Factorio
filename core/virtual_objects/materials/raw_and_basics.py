@@ -10,6 +10,7 @@ class Iron(RawMaterial):
 class IronPlates(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
+        self.producing_time = 0.5
         self.associated_raw = Iron
 
 
@@ -22,6 +23,7 @@ class Copper(RawMaterial):
 class CopperPlates(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
+        self.producing_time = 0.5
         self.associated_raw = Copper
 
 
@@ -38,6 +40,7 @@ class Stone(RawMaterial):
 class StoneBricks(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
+        self.producing_time = 0.5
         self.associated_raw = Stone
 
 
@@ -50,6 +53,7 @@ class Silicon(RawMaterial):
 class SiliconPlate(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
+        self.producing_time = 0.5
         self.associated_raw = Silicon
 
 
@@ -62,6 +66,7 @@ class Wood(RawMaterial):
 class WoodenPlate(BasicMaterial):
     def __init__(self, amount):
         super().__init__(amount)
+        self.producing_time = 0.5
         self.associated_raw = Wood
 
 

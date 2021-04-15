@@ -30,6 +30,8 @@ class RawMaterial(MaterialBatch):
 
 
 class ProductMaterial(MaterialBatch):
+    producing_time: float
+
     @abstractmethod
     def count_optimal_requirements(self, container: Container):
         pass
@@ -69,7 +71,6 @@ class BasicMaterial(ProductMaterial):
 
 
 class IntermediateMaterial(ProductMaterial):
-    producing_time: float
 
     def __init__(self, amount, required_res=()):
         super().__init__(amount)
