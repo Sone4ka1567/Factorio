@@ -37,8 +37,8 @@ class Player(PygameSprite):
             self.speed_y = -self.speed
         if "DOWN" in direction:
             self.speed_y = self.speed
-        self.speed_x *= 0.7071
-        self.speed_y *= 0.7071
+        # self.speed_x *= 0.7071
+        # self.speed_y *= 0.7071
 
         self.x += self.speed_x * self.game.dt
         self.y += self.speed_y * self.game.dt

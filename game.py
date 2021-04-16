@@ -38,7 +38,7 @@ class Game:
     def run(self):
         self.playing = True
         while self.playing:
-            self.dt = self.gui.tick_fps(self.clock, const.FPS) / 500
+            self.dt = self.gui.tick_fps(self.clock, const.FPS) / 1000
             self.events()
             self.update()
             self.draw()
