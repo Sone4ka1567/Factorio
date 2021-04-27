@@ -38,7 +38,7 @@ class Machine(UsableObject):
         self.output = Container(1)
 
     def put_input(self, batch):
-        res = self.input.add(batch)
+        res = self.input.put(batch)
         return res
 
     def remove_input(self, batch):

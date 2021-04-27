@@ -8,7 +8,7 @@ class UsableObjectInterface(ABC):
         pass
 
 
-class UsableObject(ABC, UsableObjectInterface, MapObject):
+class UsableObject(ABC):
     def __init__(self, x, y):
         self.x = x
         self.y = y
