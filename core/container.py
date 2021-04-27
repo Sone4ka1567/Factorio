@@ -6,6 +6,9 @@ class Container:
         self.max_size = max_size
         self.data = [] if data is None else data
 
+    def is_empty(self):
+        return len(self.data) == 0
+
     def contains(self, batch):
         for cur_batch in self.data:
             # print(type(batch), '-', type(cur_batch))
@@ -19,15 +22,13 @@ class Container:
                 return True
         return False
 
-    def add(self, batch):
-        if len(self.data) == self.max_size:
-            return False
+    def put(self, batch):
         done = False
         for idx, cur_batch in enumerate(self.data):
             if isinstance(cur_batch, type(batch)):
                 self.data[idx].amount += batch.amount
                 done = True
-        if not done:
+        if not done and len(self.data) < self.max_size:
             self.data.append(batch)
         return True
 
@@ -52,7 +53,7 @@ class Container:
         if not res:
             return False
         self.data = res[0].data
-        self.add(target_batch)
+        self.put(target_batch)
         return res[1]
 
     def produce_outside(self, target_batch):
@@ -61,6 +62,9 @@ class Container:
             return False
         self.data = res[0].data
         return res[1]
+
+    def __getitem__(self, item):
+        return self.data[item]
 
     def __str__(self):
         if self.data:

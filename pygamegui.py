@@ -48,7 +48,7 @@ class PygameGUI(GUI):
         group.draw(screen)
 
     def add_sprite(self, group, sprite):
-        group.add(sprite)
+        group.put(sprite)
 
     def get_surface(self, width, height):
         return pygame.Surface((width, height))
