@@ -19,6 +19,10 @@ class MaterialBatch(VirtualObject):
     def __str__(self):
         return f"{self.__class__.__name__}: {self.amount}"
 
+    @staticmethod
+    def get_n(n):
+        return MaterialBatch(n)
+
 
 class RawMaterial(MaterialBatch):
     def __init__(self, amount, intermediate_class=None):
@@ -31,6 +35,10 @@ class RawMaterial(MaterialBatch):
 
 class ProductMaterial(MaterialBatch):
     producing_time: float
+    ticks_to_produce: int
+
+    # def ticks_to_produce(self):
+    #     return int(self.producing_time * 2)  # КОСТЫЛЬ
 
     @abstractmethod
     def count_optimal_requirements(self, container: Container):

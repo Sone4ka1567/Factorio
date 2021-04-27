@@ -4,20 +4,22 @@ from core.virtual_objects.materials.abstracts import RawMaterial, BasicMaterial
 class Iron(RawMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_intermediate = IronPlates
+        self.associated_basic = IronPlates
 
 
 class IronPlates(BasicMaterial):
+    ticks_to_produce = 1
+    producing_time = 0.5
+
     def __init__(self, amount):
         super().__init__(amount)
-        self.producing_time = 0.5
         self.associated_raw = Iron
 
 
 class Copper(RawMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_intermediate = CopperPlates
+        self.associated_basic = CopperPlates
 
 
 class CopperPlates(BasicMaterial):
@@ -34,7 +36,7 @@ class Coal(RawMaterial):
 class Stone(RawMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_intermediate = StoneBricks
+        self.associated_basic = StoneBricks
 
 
 class StoneBricks(BasicMaterial):
@@ -47,7 +49,7 @@ class StoneBricks(BasicMaterial):
 class Silicon(RawMaterial):
     def __init__(self, amount=int(1e5)):
         super().__init__(amount)
-        self.associated_intermediate = SiliconPlate
+        self.associated_basic = SiliconPlate
 
 
 class SiliconPlate(BasicMaterial):
@@ -60,7 +62,7 @@ class SiliconPlate(BasicMaterial):
 class Wood(RawMaterial):
     def __init__(self, amount):
         super().__init__(amount)
-        self.associated_intermediate = None  # ??????????????
+        self.associated_basic = None  # ??????????????
 
 
 class WoodenPlate(BasicMaterial):
@@ -68,7 +70,6 @@ class WoodenPlate(BasicMaterial):
         super().__init__(amount)
         self.producing_time = 0.5
         self.associated_raw = Wood
-
 
 # def exchange(input_batch: RawMaterialBatch, output_batch: RawMaterialBatch, amount: int):
 #     if not isinstance(output_batch, type(input_batch)):
