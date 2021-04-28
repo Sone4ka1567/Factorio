@@ -32,7 +32,9 @@ class CopperPlates(BasicMaterial):
 
 
 class Coal(RawMaterial):
-    pass
+    @staticmethod
+    def is_fuel():
+        return True
 
 
 class Stone(RawMaterial):
@@ -69,6 +71,10 @@ class Wood(RawMaterial):
     def __init__(self, amount):
         super().__init__(amount)
         self.associated_basic = None  # ??????????????
+
+    @staticmethod
+    def is_fuel():
+        return True
 
 
 class WoodenPlate(BasicMaterial):

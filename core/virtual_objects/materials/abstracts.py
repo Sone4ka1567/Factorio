@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import abstractmethod, abstractproperty
 from collections.abc import Iterable
 from base_classes import VirtualObject
 from core.container import Container
@@ -23,8 +23,14 @@ class MaterialBatch(VirtualObject):
     def get_n(n):
         return MaterialBatch(n)
 
+    @staticmethod
+    def is_fuel():
+        return False
+
 
 class RawMaterial(MaterialBatch):
+    ticks_to_produce = 1
+
     def __init__(self, amount, intermediate_class=None):
         super().__init__(amount)
         self.associated_intermediate = intermediate_class
@@ -40,9 +46,6 @@ class RawMaterial(MaterialBatch):
 class ProductMaterial(MaterialBatch):
     producing_time: float
     ticks_to_produce: int
-
-    # def ticks_to_produce(self):
-    #     return int(self.producing_time * 2)  # КОСТЫЛЬ
 
     @abstractmethod
     def count_optimal_requirements(self, container: Container):
