@@ -19,9 +19,8 @@ class MaterialBatch(VirtualObject):
     def __str__(self):
         return f"{self.__class__.__name__}: {self.amount}"
 
-    @staticmethod
-    def get_n(n):
-        return MaterialBatch(n)
+    def get_n(self, n):
+        return type(self)(n)
 
     @staticmethod
     def is_fuel():
@@ -29,14 +28,14 @@ class MaterialBatch(VirtualObject):
 
 
 class RawMaterial(MaterialBatch):
-    ticks_to_produce = 1
+    ticks_to_produce = 10
 
-    def __init__(self, amount, intermediate_class=None):
+    def __init__(self, amount, basic_class=None):
         super().__init__(amount)
-        self.associated_intermediate = intermediate_class
+        self.associated_basic = basic_class
 
     def copy(self):
-        return RawMaterial(self.amount, self.associated_intermediate)
+        return RawMaterial(self.amount, self.associated_basic)
 
     def __isub__(self, other):
         self.amount -= min(self.amount, other)

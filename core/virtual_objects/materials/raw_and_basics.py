@@ -8,7 +8,7 @@ class Iron(RawMaterial):
 
 
 class IronPlates(BasicMaterial):
-    ticks_to_produce = 1
+    ticks_to_produce = 10
     producing_time = 0.5
 
     def __init__(self, amount):
@@ -23,7 +23,7 @@ class Copper(RawMaterial):
 
 
 class CopperPlates(BasicMaterial):
-    ticks_to_produce = 1
+    ticks_to_produce = 10
     producing_time = 0.5
 
     def __init__(self, amount):
@@ -44,7 +44,7 @@ class Stone(RawMaterial):
 
 
 class StoneBricks(BasicMaterial):
-    ticks_to_produce = 1
+    ticks_to_produce = 10
     producing_time = 0.5
 
     def __init__(self, amount):
@@ -59,7 +59,7 @@ class Silicon(RawMaterial):
 
 
 class SiliconPlate(BasicMaterial):
-    ticks_to_produce = 1
+    ticks_to_produce = 15
     producing_time = 0.5
 
     def __init__(self, amount):
@@ -78,7 +78,7 @@ class Wood(RawMaterial):
 
 
 class WoodenPlate(BasicMaterial):
-    ticks_to_produce = 1
+    ticks_to_produce = 10
     producing_time = 0.5
 
     def __init__(self, amount):

@@ -8,7 +8,7 @@ from core.virtual_objects.materials.raw_and_basics import (
 
 
 class CopperCable(IntermediateMaterial):
-    ticks_to_produce = 1
+    ticks_to_produce = 10
     producing_time = 0.5
 
     def __init__(self, amount):
@@ -17,7 +17,7 @@ class CopperCable(IntermediateMaterial):
 
 
 class SteelPlate(IntermediateMaterial):
-    ticks_to_produce = 2
+    ticks_to_produce = 20
     producing_time = 1.0
 
     def __init__(self, amount):
@@ -26,7 +26,7 @@ class SteelPlate(IntermediateMaterial):
 
 
 class Pipe(IntermediateMaterial):
-    ticks_to_produce = 2
+    ticks_to_produce = 20
     producing_time = 1.0
 
     def __init__(self, amount):
@@ -35,7 +35,7 @@ class Pipe(IntermediateMaterial):
 
 
 class IronGearWheel(IntermediateMaterial):
-    ticks_to_produce = 4
+    ticks_to_produce = 40
     producing_time = 2.0
 
     def __init__(self, amount):
@@ -44,7 +44,7 @@ class IronGearWheel(IntermediateMaterial):
 
 
 class ElectricCircuit(IntermediateMaterial):
-    ticks_to_produce = 1
+    ticks_to_produce = 10
     producing_time = 0.5
 
     def __init__(self, amount):
@@ -53,7 +53,7 @@ class ElectricCircuit(IntermediateMaterial):
 
 
 class Resistor(IntermediateMaterial):
-    ticks_to_produce = 2
+    ticks_to_produce = 20
     producing_time = 1.0
 
     def __init__(self, amount):
@@ -63,7 +63,7 @@ class Resistor(IntermediateMaterial):
 
 
 class Transistor(IntermediateMaterial):
-    ticks_to_produce = 4
+    ticks_to_produce = 40
     producing_time = 2.0
 
     def __init__(self, amount):
@@ -72,7 +72,7 @@ class Transistor(IntermediateMaterial):
 
 
 class IntegratedCircuit(IntermediateMaterial):
-    ticks_to_produce = 6
+    ticks_to_produce = 60
     producing_time = 3.0
 
     def __init__(self, amount):
@@ -81,7 +81,7 @@ class IntegratedCircuit(IntermediateMaterial):
 
 
 class ControlUnit(IntermediateMaterial):
-    ticks_to_produce = 10
+    ticks_to_produce = 100
     producing_time = 5.0
 
     def __init__(self, amount):
@@ -90,7 +90,7 @@ class ControlUnit(IntermediateMaterial):
 
 
 class Radar(IntermediateMaterial):
-    ticks_to_produce = 14
+    ticks_to_produce = 140
     producing_time = 6.0
 
     def __init__(self, amount):
