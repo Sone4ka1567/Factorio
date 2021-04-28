@@ -23,9 +23,11 @@ class Copper(RawMaterial):
 
 
 class CopperPlates(BasicMaterial):
+    ticks_to_produce = 1
+    producing_time = 0.5
+
     def __init__(self, amount):
         super().__init__(amount)
-        self.producing_time = 0.5
         self.associated_raw = Copper
 
 
@@ -40,9 +42,11 @@ class Stone(RawMaterial):
 
 
 class StoneBricks(BasicMaterial):
+    ticks_to_produce = 1
+    producing_time = 0.5
+
     def __init__(self, amount):
         super().__init__(amount)
-        self.producing_time = 0.5
         self.associated_raw = Stone
 
 
@@ -53,9 +57,11 @@ class Silicon(RawMaterial):
 
 
 class SiliconPlate(BasicMaterial):
+    ticks_to_produce = 1
+    producing_time = 0.5
+
     def __init__(self, amount):
         super().__init__(amount)
-        self.producing_time = 0.5
         self.associated_raw = Silicon
 
 
@@ -66,16 +72,9 @@ class Wood(RawMaterial):
 
 
 class WoodenPlate(BasicMaterial):
+    ticks_to_produce = 1
+    producing_time = 0.5
+
     def __init__(self, amount):
         super().__init__(amount)
-        self.producing_time = 0.5
         self.associated_raw = Wood
-
-# def exchange(input_batch: RawMaterialBatch, output_batch: RawMaterialBatch, amount: int):
-#     if not isinstance(output_batch, type(input_batch)):
-#         return False
-#     else:
-#         possible_amount = min(input_batch.amount, amount)
-#         input_batch.amount -= possible_amount
-#         output_batch.amount += possible_amount
-#         return True
