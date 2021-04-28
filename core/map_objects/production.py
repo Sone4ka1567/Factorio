@@ -10,24 +10,38 @@ from core.virtual_objects.materials.intermediates import *
 
 class EnergySource(ABC):
     @abstractmethod
-    def check_energy(self):
+    def has_energy(self):
         pass
 
     @abstractmethod
     def subtract_energy(self):
         pass
 
+    @abstractmethod
+    def put_energy(self, *args):
+        pass
+
+    @abstractmethod
+    def amount(self):
+        pass
+
 
 class BurnerEnergySource(EnergySource):
     def __init__(self):
         self.fuel = Container(1)
-        self.fuel.put(Coal(10))
 
-    def check_energy(self):
+    def has_energy(self):
         return not self.fuel.is_empty()
 
     def subtract_energy(self):
-        self.fuel.remove(self.fuel[0].get_n(1))
+        if self.fuel:
+            self.fuel.remove(self.fuel[0].get_n(1))
+
+    def put_energy(self, fuel):
+        return self.fuel.put(fuel)
+
+    def amount(self):
+        return self.fuel
 
 
 class Machine(ABC):
@@ -51,12 +65,13 @@ class Machine(ABC):
     def remove_output(self, batch):
         self.output.remove(batch)
 
+    def put_energy(self, *args):
+        return self.energy_source.put_energy(*args)
+
     @abstractmethod
     def process(self):
         pass
 
-
-# todo: класть топливо
 
 class Furnace(Machine, ABC):
     input_slots_num = 1
@@ -67,7 +82,7 @@ class Furnace(Machine, ABC):
         self.target_type = None
 
     def process(self):
-        if not self.energy_source.check_energy():
+        if not self.energy_source.has_energy():
             return
         if self.producing_bar == 0:
             if self.input.is_empty():
@@ -76,18 +91,62 @@ class Furnace(Machine, ABC):
             self.target_type = input_batch.associated_basic
             self.input.remove(input_batch.get_n(1))
             self.producing_bar += 1
-        else:
             self.energy_source.subtract_energy()
+        else:
             if self.producing_bar == self.target_type.ticks_to_produce:
                 self.output.put(self.target_type(1))
                 self.producing_bar = 0
             else:
                 self.producing_bar += 1
-        print(f'prog: {self.producing_bar}, input: {self.input}, output: {self.output}')
+        print(f'progress: {self.producing_bar}, input: {self.input}, output: {self.output}')
 
 
 class BurnerFurnace(Furnace):
     valid_input = [Coal, Iron]
+
+    def __init__(self):
+        super().__init__()
+        self.energy_source = BurnerEnergySource()
+
+
+class AssemblingMachine(Machine, ABC):
+    input_slots_num = 1
+
+    def __init__(self):
+        super().__init__()
+        self.producing_bar = 0
+        self.target_type = None
+        self.possible_targets = (CopperCable, SteelPlate, Pipe, IronGearWheel)
+
+    def set_target(self, target):
+        if target in self.possible_targets:
+            self.target_type = target
+
+    def process(self):
+        if not self.energy_source.has_energy():
+            return
+        if self.producing_bar == 0:
+            if self.input.is_empty() or not self.target_type:
+                return
+            requirements = self.target_type(1).required_res
+            for r in requirements:
+                if self.input.contains(r):
+                    self.input.remove(r)
+                else:
+                    return
+            self.energy_source.subtract_energy()
+
+        if self.producing_bar == self.target_type.ticks_to_produce:
+            self.output.put(self.target_type(1))
+            self.producing_bar = 0
+        else:
+            self.producing_bar += 1
+        print(
+            f'progress: {self.producing_bar}, input: {self.input}, output: {self.output}, energy: {self.energy_source.amount()}')
+
+
+class BurnerAssemblingMachine(AssemblingMachine):
+    valid_input = [IronPlates, CopperPlates, WoodenPlate]
 
     def __init__(self):
         super().__init__()
