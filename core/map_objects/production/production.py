@@ -14,10 +14,10 @@ class Machine(ABC):
     input_slots_num: int
     progress = 0
     energy_source: PowerSource
-    valid_input: list
+    valid_input: tuple
     energy_consumption: int
     speed: int
-    batches_per_tick: int
+    ticks_per_batch = 10
 
     def __init__(self):
         self.input = Container(self.input_slots_num)
@@ -56,7 +56,6 @@ class Furnace(Machine, ABC):
         super().__init__()
         self.progress = 0
         self.target_type = None
-        self.batches_per_tick = 1
 
     def process(self):
         if not self.energy_source.has_energy():
@@ -66,13 +65,13 @@ class Furnace(Machine, ABC):
                 return
             input_batch = self.input[0]
             self.target_type = input_batch.associated_basic
-            self.batches_per_tick = self.speed // self.target_type.ticks_to_produce
-            self.input.remove(input_batch.get_n(self.batches_per_tick))
+            self.ticks_per_batch = self.target_type.ticks_to_produce // self.speed
+            self.input.remove(input_batch.get_n(1))
             self.progress += 1
             self.energy_source.subtract_energy()
         else:
-            if self.progress == self.target_type.ticks_to_produce:
-                putting_res = self.output.put(self.target_type(self.batches_per_tick))
+            if self.progress == self.ticks_per_batch:
+                putting_res = self.output.put(self.target_type(1))
                 if not putting_res:
                     print('CANNOT PUT RES')
                     return
@@ -92,7 +91,6 @@ class AssemblingMachine(Machine, ABC):
         super().__init__()
         self.progress = 0
         self.target_type = None
-        self.batches_per_tick = 1
 
     def set_target(self, target: type):
         if target in self.possible_targets:
@@ -106,25 +104,22 @@ class AssemblingMachine(Machine, ABC):
         if self.progress == 0:
             if self.input.is_empty() or not self.target_type:
                 return
-            self.batches_per_tick = self.speed // self.target_type.ticks_to_produce
-            requirements = self.target_type(self.batches_per_tick).required_res
+            self.ticks_per_batch = self.target_type.ticks_to_produce // self.speed
+            requirements = self.target_type(1).required_res
             for r in requirements:
                 if not self.input.contains(r):
                     return
                 self.input.remove(r)
             self.energy_source.subtract_energy()
             self.progress += 1
-        elif self.progress == self.target_type.ticks_to_produce:
-            putting_res = self.output.put(self.target_type(self.batches_per_tick))
+        elif self.progress == self.ticks_per_batch:
+            putting_res = self.output.put(self.target_type(1))
             if not putting_res:
                 print('CANNOT PUT RES')
                 return
             self.progress = 0
         else:
             self.progress += 1
-        # print(
-        #     f"progress: {self.progress}, input: {self.input}, output: {self.output}, energy: {self.energy_source.amount()}"
-        # )
 
 
 class MiningDrill(Machine, ABC):
@@ -133,22 +128,21 @@ class MiningDrill(Machine, ABC):
     def __init__(self, cell: MapCell):
         super().__init__()
         self.cell = cell
-        self.batches_per_tick = 1
 
     def process(self):
         if not self.energy_source.has_energy():
             return
-        self.batches_per_tick = self.speed // RawMaterial.ticks_to_produce
-        if self.cell.raw_material_batch.amount >= self.batches_per_tick:
-            self.cell.raw_material_batch -= self.batches_per_tick
-            self.output.put(self.cell.raw_material_batch.get_n(self.batches_per_tick))
+        self.ticks_per_batch = RawMaterial.ticks_to_produce // self.speed
+        if self.cell.raw_material_batch.amount >= 1:
+            self.cell.raw_material_batch -= 1
+            self.output.put(self.cell.raw_material_batch.get_n(1))
             self.energy_source.subtract_energy()
         if self.cell.raw_material_batch and self.cell.raw_material_batch.amount == 0:
             self.cell.raw_material_batch = None
 
 
 class BurnerFurnace(Furnace):
-    valid_input = [Coal, Iron]
+    valid_input = (Iron, Copper, Silicon)
     energy_consumption = 1
     speed = 1
 
@@ -158,7 +152,7 @@ class BurnerFurnace(Furnace):
 
 
 class ElectricFurnace(Furnace):
-    valid_input = [Iron]
+    valid_input = BurnerFurnace.valid_input
     energy_consumption = 50
     speed = 2
 
@@ -183,7 +177,7 @@ class ElectricAssemblingMachine(AssemblingMachine):
     possible_targets = BurnerAssemblingMachine.possible_targets + (
         ElectricCircuit, Resistor, Transistor, IntegratedCircuit, ControlUnit)
     energy_consumption = 40
-    speed = 1
+    speed = 2
 
     def __init__(self):
         super().__init__()

@@ -16,30 +16,30 @@ def timeit(func):
 
 
 @timeit
-def test_furnace():
+def test_furnace(iters):
     furnace = BurnerFurnace()
-    furnace.put_energy(Coal(10))
+    furnace.put_energy(Coal(12))
     furnace.put_input(Iron(10))
-    for _ in range(10):
+    for _ in range(iters):
         furnace.process()
 
     print(furnace.input)
     print(furnace.output)
 
 
-def test_ass_machine():
+def test_ass_machine(iters):
     machine = BurnerAssemblingMachine()
     print(machine.put_energy(Coal(10)))
     machine.set_target(IronGearWheel)
     machine.put_input(IronPlates(10))
-    for _ in range(11):
+    for _ in range(iters):
         machine.process()
         print(machine)
 
     print(machine)
 
 
-def test_el_ass_machine():
+def test_el_ass_machine(iters):
     power = Power()
     power.power = 300
     machine = ElectricAssemblingMachine()
@@ -47,33 +47,32 @@ def test_el_ass_machine():
     print(machine.set_target(IronGearWheel))
     machine.put_input(IronPlates(10))
 
-    for _ in range(10):
+    for _ in range(iters):
         machine.process()
-        print(power.power)
+        print(machine)
 
     print(machine.input)
     print(machine.output)
     print(power.power)
 
 
-def test_drill():
+def test_drill(iters):
     cell = MapCell('123')
     cell.raw_material_batch = Iron(10)
     drill = BurnerMiningDrill(cell)
     drill.put_energy(Coal(10))
-    for _ in range(10):
+    for _ in range(iters):
         drill.process()
-        print(cell.raw_material_batch)
-        print(drill.output)
+        print(drill)
 
 
-def test_el_furnace():
+def test_el_furnace(iters):
     power = Power()
     power.power = 300
     furnace = ElectricFurnace()
     furnace.put_input(Iron(10))
     furnace.put_energy(power)
-    for _ in range(10):
+    for _ in range(iters):
         furnace.process()
         print(power.power)
 
@@ -82,13 +81,18 @@ def test_el_furnace():
     furnace.disable()
     print(power.power)
 
-test_ass_machine()
-# test_el_ass_machine()
 
-# test_el_furnace()
+# test_ass_machine(100)
+# print('-'*30)
+# # test_el_ass_machine()
+# test_el_ass_machine(100)
+
+# test_el_furnace(100)
 # print('-' * 30)
-# test_furnace()
-#
+# test_furnace(100)
+
+test_drill(100)
+
 # b_furn = BurnerFurnace()
 # b_furn.put_energy(Wood(10))
 # print(b_furn)
