@@ -36,4 +36,15 @@ def test_ass_machine():
     print(machine.output)
 
 
-test_ass_machine()
+def test_drill():
+    cell = MapCell('123')
+    cell.raw_material_batch = Iron(10)
+    drill = BurnerMiningDrill(cell)
+    drill.put_energy(Coal(10))
+    for _ in range(10):
+        drill.process()
+        print(cell.raw_material_batch)
+        print(drill.output)
+
+
+test_drill()

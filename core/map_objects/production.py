@@ -6,6 +6,7 @@ from core.container import Container
 
 from core.virtual_objects.materials.raw_and_basics import *
 from core.virtual_objects.materials.intermediates import *
+from maps import MapCell
 
 
 class EnergySource(ABC):
@@ -150,4 +151,28 @@ class BurnerAssemblingMachine(AssemblingMachine):
 
     def __init__(self):
         super().__init__()
+        self.energy_source = BurnerEnergySource()
+
+
+class MiningDrill(Machine, ABC):
+    input_slots_num = 0
+
+    def __init__(self, cell: MapCell):
+        super().__init__()
+        self.cell = cell
+
+    def process(self):
+        if not self.energy_source.has_energy():
+            return
+        if self.cell.raw_material_batch.amount >= 1:
+            self.cell.raw_material_batch -= 1
+            self.output.put(self.cell.raw_material_batch.get_n(1))
+            self.energy_source.subtract_energy()
+        if self.cell.raw_material_batch and self.cell.raw_material_batch.amount == 0:
+            self.cell.raw_material_batch = None
+
+
+class BurnerMiningDrill(MiningDrill):
+    def __init__(self, cell: MapCell):
+        super().__init__(cell)
         self.energy_source = BurnerEnergySource()
