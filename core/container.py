@@ -4,7 +4,7 @@ from copy import deepcopy
 class Container:
     def __init__(self, max_size, data=None):
         self.max_size = max_size
-        self.data = [] if data is None else data
+        self.data = [] if data is None else list(data)
 
     def is_empty(self):
         return len(self.data) == 0
