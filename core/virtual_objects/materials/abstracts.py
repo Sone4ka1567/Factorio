@@ -32,6 +32,10 @@ class RawMaterial(MaterialBatch):
     def copy(self):
         return RawMaterial(self.amount, self.associated_intermediate)
 
+    def __isub__(self, other):
+        self.amount -= min(self.amount, other)
+        return self
+
 
 class ProductMaterial(MaterialBatch):
     producing_time: float
