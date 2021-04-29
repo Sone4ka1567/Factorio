@@ -3,9 +3,11 @@ from abc import abstractmethod, ABC
 from core.container import Container
 
 from core.map_objects.production.power_source import PowerSource
+from core.map_objects.abstracts import MapObject
+from maps import MapCell, Map
 
 
-class Machine(ABC):
+class Machine(MapObject, ABC):
     input_slots_num: int
     progress = 0
     energy_source: PowerSource
@@ -14,7 +16,8 @@ class Machine(ABC):
     speed: int
     ticks_per_batch = 10
 
-    def __init__(self):
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.input = Container(self.input_slots_num)
         self.output = Container(1)
 

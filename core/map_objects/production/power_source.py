@@ -1,5 +1,6 @@
 from abc import abstractmethod, ABC
 from core.container import Container
+from core.map_objects.production.electricity import Power
 
 
 class PowerSource(ABC):
@@ -49,11 +50,6 @@ class BurnerPowerSource(PowerSource):
 
     def finish_using(self):
         pass
-
-
-class Power:
-    def __init__(self):
-        self.power = 0
 
 
 class ElectricPowerSource(PowerSource):
