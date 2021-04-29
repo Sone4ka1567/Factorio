@@ -72,10 +72,6 @@ class Wood(RawMaterial):
         super().__init__(amount)
         self.associated_basic = None  # ??????????????
 
-    @staticmethod
-    def is_fuel():
-        return True
-
 
 class WoodenPlate(BasicMaterial):
     ticks_to_produce = 10
