@@ -41,8 +41,8 @@ class OresGenerator:
             (inner_square_size_half, inner_square_size_half),
         )
         self.inner_square_mtx_bounds = (
-            self._mtx_coordinates(*inner_square_bounds[0]),
-            self._mtx_coordinates(*inner_square_bounds[1]),
+            self.mtx_coordinates(*inner_square_bounds[0]),
+            self.mtx_coordinates(*inner_square_bounds[1]),
         )
         basic_square_size_half = 128  # CONST coef
         basic_square_bounds = (
@@ -50,13 +50,13 @@ class OresGenerator:
             (basic_square_size_half, basic_square_size_half),
         )
         self.basic_square_mtx_bounds = (
-            self._mtx_coordinates(*basic_square_bounds[0]),
-            self._mtx_coordinates(*basic_square_bounds[1]),
+            self.mtx_coordinates(*basic_square_bounds[0]),
+            self.mtx_coordinates(*basic_square_bounds[1]),
         )
         self.ores_with_types = self._generate_ores_bounds()
 
     @staticmethod
-    def _mtx_coordinates(x, y):
+    def mtx_coordinates(x, y):
         return x + const.MAP_W // 2, y + const.MAP_H // 2
 
     @staticmethod

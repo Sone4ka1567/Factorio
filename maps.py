@@ -39,6 +39,20 @@ class Map(ABC):
     def get_map_matrix(self):
         return self.map_matrix
 
+    def get_cell(self, x, y):
+        x, y = self.get_mtx_coordinates(x, y)
+        return self.map_objects[self.map_matrix[y][x]]
+
+    def set_cell(self, x, y, cell: MapCell):
+        x, y = self.get_mtx_coordinates(x, y)
+        cell_id = id(cell)
+        self.map_matrix[y][x] = cell_id
+        self.map_objects[cell_id] = cell
+
+    @staticmethod
+    def get_mtx_coordinates(x, y):
+        return OresGenerator.mtx_coordinates(x, y)
+
     def generate_matrix(self):
         trees_matrix = gen_trees_map(self.height, self.width)
         surface_noise = gen_surface_map(self.height, self.width)
