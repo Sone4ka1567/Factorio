@@ -25,7 +25,7 @@ class ElectricNetwork:
 
 class ElectricPole(MapObject):
     wire_len: int
-    coverage: int
+    coverage_rad: int
 
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -33,7 +33,7 @@ class ElectricPole(MapObject):
 
     def connect_to_network(self, network: ElectricNetwork):
         self.network = ElectricNetwork
-        network.poles.append(self)
+        network.add_pole(self)
 
 
 """
@@ -45,13 +45,16 @@ class ElectricPole(MapObject):
 """
 
 
-class BurnerElectricGenerator:
+class BurnerElectricGenerator(MapObject):
     input_slots_num = 1
     max_power_output = 900
+    wire_len = 2
 
-    def __init__(self):
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.fuel = Container(self.input_slots_num)
         self.power = Power()
+        self.network: ElectricNetwork = None
 
     def put_energy(self, batch):
         if batch.is_fuel():
@@ -62,3 +65,7 @@ class BurnerElectricGenerator:
 
     def get_power(self):
         return self.power
+
+    def connect_to_network(self, network: ElectricNetwork):
+        self.network = ElectricNetwork
+        network.add_generator(self)
