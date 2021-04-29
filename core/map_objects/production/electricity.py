@@ -13,9 +13,14 @@ class ElectricNetwork:
     def __init__(self):
         self.power = Power()
         self.poles = []
+        self.has_generator = False
 
     def add_pole(self, pole):
         self.poles.append(pole)
+
+    def add_generator(self, generator):
+        self.has_generator = True
+        self.power = generator.get_power()
 
 
 class ElectricPole(MapObject):
@@ -42,16 +47,18 @@ class ElectricPole(MapObject):
 
 class BurnerElectricGenerator:
     input_slots_num = 1
-    valid_input = (Coal, Wood)
     max_power_output = 900
 
     def __init__(self):
         self.fuel = Container(self.input_slots_num)
+        self.power = Power()
 
     def put_energy(self, batch):
         if batch.is_fuel():
             self.fuel.put(batch)
 
-    @property
-    def power(self):
-        return
+    def process(self):
+        self.power.power = 0 if self.fuel.is_empty() else self.max_power_output
+
+    def get_power(self):
+        return self.power
