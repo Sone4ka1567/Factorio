@@ -78,46 +78,46 @@ class Game:
                 cur_cell = self.map_obj[self.map_matr[j][i]]
 
                 if cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt.png")
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt.png").convert()
                 else:
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt.png")
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt.png").convert()
 
                 # чек на руду
                 if isinstance(cur_cell.raw_material_batch, Iron) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_iron.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_iron.xcf").convert()
                 elif isinstance(cur_cell.raw_material_batch, Iron):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_iron.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_iron.xcf").convert()
 
                 if isinstance(cur_cell.raw_material_batch, Copper) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_copper.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_copper.xcf").convert()
                 elif isinstance(cur_cell.raw_material_batch, Copper):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_copper.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_copper.xcf").convert()
 
                 if isinstance(cur_cell.raw_material_batch, Coal) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_coal.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_coal.xcf").convert()
                 elif isinstance(cur_cell.raw_material_batch, Coal):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_coal.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_coal.xcf").convert()
 
                 if isinstance(cur_cell.raw_material_batch, Stone) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_stone.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_stone.xcf").convert()
                 elif isinstance(cur_cell.raw_material_batch, Stone):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_stone.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_stone.xcf").convert()
 
                 if isinstance(cur_cell.raw_material_batch, Silicon) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_silicon.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_silicon.xcf").convert()
                 elif isinstance(cur_cell.raw_material_batch, Silicon):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_silicon.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_silicon.xcf").convert()
 
                 if isinstance(cur_cell.raw_material_batch, Wood) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_tree.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_tree.xcf").convert()
                 elif isinstance(cur_cell.raw_material_batch, Wood):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_tree.xcf")
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_tree.xcf").convert()
 
                 self.screen.blit(cell_image,
                                  ((i - left_border) * const.CELL_SIZE, (j - top_border) * const.CELL_SIZE))
