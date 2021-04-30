@@ -40,8 +40,6 @@ class Player(PygameSprite):
             self.speed_y = -self.speed
         if "DOWN" in direction:
             self.speed_y = self.speed
-        # self.speed_x *= 0.7071
-        # self.speed_y *= 0.7071
 
         self.x += self.speed_x
         self.y += self.speed_y
@@ -56,6 +54,9 @@ class Player(PygameSprite):
             self.rect.bottom = const.PIXEL_MAP_H
         if self.rect.top < 0:
             self.rect.top = 0
+
+    def collide_with_trees(self):
+        pass
 
     def dig(self, cell: MapCell):
         if cell.raw_material_batch:

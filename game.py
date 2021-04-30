@@ -2,6 +2,7 @@ import sys
 from pygamegui import PygameGUI
 from player import Player, player_perks
 from camera import Camera
+from tree_sprite import Tree
 from maps import EasyMapCreator, HardMapCreator
 from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
@@ -29,6 +30,7 @@ class Game:
     def new(self):
         # self.load_map()
         self.all_sprites = self.gui.group_sprites()
+        self.trees = self.gui.group_sprites()
         # здесь надо будет еще обработать карту
         self.player = Player(
             self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk]
@@ -85,9 +87,9 @@ class Game:
                 # чек на руду
                 if isinstance(cur_cell.raw_material_batch, Iron) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_iron.xcf").convert()
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_iron.xcf").convert_alpha()
                 elif isinstance(cur_cell.raw_material_batch, Iron):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_iron.xcf").convert()
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_iron.xcf").convert_alpha()
 
                 if isinstance(cur_cell.raw_material_batch, Copper) \
                         and cur_cell.category == "light":
@@ -115,9 +117,11 @@ class Game:
 
                 if isinstance(cur_cell.raw_material_batch, Wood) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_tree.xcf").convert_alpha()
+                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt.png").convert_alpha()
+                    Tree(self, i, j)
                 elif isinstance(cur_cell.raw_material_batch, Wood):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_tree.xcf").convert_alpha()
+                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt.png").convert_alpha()
+                    Tree(self, i, j)
 
                 self.screen.blit(cell_image,
                                  ((i - left_border) * const.CELL_SIZE, (j - top_border) * const.CELL_SIZE))
