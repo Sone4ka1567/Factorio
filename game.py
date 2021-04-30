@@ -122,10 +122,22 @@ class Game:
                 self.screen.blit(cell_image,
                                  ((i - left_border) * const.CELL_SIZE, (j - top_border) * const.CELL_SIZE))
 
+
     def draw(self):
         self.gui.fill_screen(self.screen, const.BG_COLOR)
         self.draw_map()
-        # self.gui.update_display()
+
+        mouse = self.gui.get_mouse_pos()
+        x_coord = mouse[0] // const.CELL_SIZE
+        y_coord = mouse[1] // const.CELL_SIZE
+        x_coord *= const.CELL_SIZE
+        y_coord *= const.CELL_SIZE
+        self.gui.draw_line(self.screen, const.HIGHLIGHT, (x_coord, y_coord), (x_coord + const.CELL_SIZE, y_coord))
+        self.gui.draw_line(self.screen, const.HIGHLIGHT, (x_coord, y_coord), (x_coord, y_coord + const.CELL_SIZE))
+        self.gui.draw_line(self.screen, const.HIGHLIGHT, (x_coord + const.CELL_SIZE, y_coord),
+                           (x_coord + const.CELL_SIZE, y_coord + const.CELL_SIZE))
+        self.gui.draw_line(self.screen, const.HIGHLIGHT, (x_coord, y_coord + const.CELL_SIZE),
+                           (x_coord + const.CELL_SIZE, y_coord + const.CELL_SIZE))
 
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
