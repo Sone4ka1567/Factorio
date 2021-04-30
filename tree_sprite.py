@@ -16,4 +16,4 @@ class Tree(PygameSprite):
         self.rect = self.image.get_rect()
 
         self.rect.centerx = x_spawn * const.CELL_SIZE + const.CELL_SIZE // 2
-        self.rect.centery = y_spawn * const.CELL_SIZE  + const.CELL_SIZE // 2
+        self.rect.bottom = y_spawn * const.CELL_SIZE + const.CELL_SIZE // 2
