@@ -5,7 +5,7 @@
     "picture": "player_walk1.png"
   },
   "fast": {
-    "speed": 75,
+    "speed": 70,
     "bag_capacity": 30,
     "picture": "fast.png"
   },
