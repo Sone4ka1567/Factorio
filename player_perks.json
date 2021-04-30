@@ -5,12 +5,12 @@
     "picture": "player_walk1.png"
   },
   "fast": {
-    "speed": 130,
+    "speed": 200,
     "bag_capacity": 30,
     "picture": "fast.png"
   },
   "big_bag": {
-    "speed": 70,
+    "speed": 50,
     "bag_capacity": 40,
     "picture": "adventurer_walk1.png"
   }

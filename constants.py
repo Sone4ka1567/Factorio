@@ -1,7 +1,7 @@
 # game settings
 DISPLAY_W = 0
 DISPLAY_H = 0
-FPS = 45
+FPS = 30
 
 
 # game

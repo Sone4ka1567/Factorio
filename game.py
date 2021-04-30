@@ -51,21 +51,29 @@ class Game:
         self.camera.update(self.player)
 
     def draw_map(self):
-        x_cell = self.player.rect.x // const.CELL_SIZE
-        y_cell = self.player.rect.y // const.CELL_SIZE
-        cell_left = x_cell - self.screen.get_width() // const.CELL_SIZE
-        cell_right = x_cell + self.screen.get_width() // const.CELL_SIZE
-        cell_top = y_cell - self.screen.get_height() // const.CELL_SIZE
-        cell_bottom = y_cell + self.screen.get_height() // const.CELL_SIZE
 
-        # проверим на границы
-        cell_left = max(0, cell_left)
-        cell_right = min(const.MAP_W - 1, cell_right)
-        cell_top = max(0, cell_top)
-        cell_bottom = min(const.MAP_H - 1, cell_bottom)
+        if (self.player.rect.x - const.DISPLAY_W // 2) < const.PIXEL_MAP_W - const.DISPLAY_W:
+            left_border = max(0, self.player.rect.x - const.DISPLAY_W // 2) // const.CELL_SIZE
+        else:
+            left_border = (const.PIXEL_MAP_W - const.DISPLAY_W) // const.CELL_SIZE
 
-        for i in range(cell_left, cell_right + 1):
-            for j in range(cell_top, cell_bottom + 1):
+        if (self.player.rect.x + const.DISPLAY_W // 2) > const.DISPLAY_W:
+            right_border = min(const.PIXEL_MAP_W, self.player.rect.x + const.DISPLAY_W // 2) // const.CELL_SIZE
+        else:
+            right_border = const.DISPLAY_W // const.CELL_SIZE
+
+        if (self.player.rect.y + const.DISPLAY_H // 2) > const.DISPLAY_H:
+            bottom_border = min(const.PIXEL_MAP_H, self.player.rect.y + const.DISPLAY_H // 2) // const.CELL_SIZE
+        else:
+            bottom_border = const.DISPLAY_H // const.CELL_SIZE
+
+        if (self.player.rect.y - const.DISPLAY_H // 2) < const.PIXEL_MAP_H - const.DISPLAY_H:
+            top_border = max(0, self.player.rect.y - const.DISPLAY_H // 2) // const.CELL_SIZE
+        else:
+            top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
+
+        for i in range(left_border, right_border):
+            for j in range(top_border, bottom_border):
 
                 cur_cell = self.map_obj[self.map_matr[j][i]]
 
@@ -112,7 +120,7 @@ class Game:
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_tree.xcf")
 
                 self.screen.blit(cell_image,
-                                 ((i - cell_left) * const.CELL_SIZE, (j - cell_top) * const.CELL_SIZE))
+                                 ((i - left_border) * const.CELL_SIZE, (j - top_border) * const.CELL_SIZE))
 
     def draw(self):
         self.gui.fill_screen(self.screen, const.BG_COLOR)
