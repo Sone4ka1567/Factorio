@@ -30,7 +30,8 @@ class Container:
                 done = True
         if not done and len(self.data) < self.max_size:
             self.data.append(batch)
-        return True
+            return True
+        return False
 
     def remove(self, batch):
         for idx, cur_batch in enumerate(self.data):

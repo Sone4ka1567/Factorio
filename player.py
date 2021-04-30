@@ -1,6 +1,9 @@
 import json
 from pygamegui import PygameSprite
 import constants as const
+from core.container import Container
+from maps import MapCell
+from result_func import result_ok, result_error
 
 with open("player_perks.json", "r+") as f:
     player_perks = json.load(f)
@@ -13,8 +16,8 @@ class Player(PygameSprite):
         self.groups = self.game.all_sprites
         self.init_sprite_and_group(self.groups)
 
-        self.bag = {}
         self.bag_capacity = bag_capacity
+        self.bag = Container(bag_capacity)
         self.speed = speed
         self.image = self.gui.get_image(picture)
         self.image.set_colorkey(const.BLACK)
@@ -54,5 +57,13 @@ class Player(PygameSprite):
         if self.rect.top < 0:
             self.rect.top = 0
 
-    def dig(self, *args):
-        pass
+    def dig(self, cell: MapCell):
+        if cell.raw_material_batch:
+            res = self.bag.put(cell.raw_material_batch.get_n(1))
+            if not res:
+                return result_error("cannot dig: bag is full")
+            cell.raw_material_batch.amount -= 1
+            if cell.raw_material_batch.amount == 0:
+                cell.raw_material_batch = None
+            return result_ok(f"+1 {cell.raw_material_batch.__class__.__name__}")
+        return result_error("nothing to dig here")
