@@ -40,8 +40,8 @@ class Player(PygameSprite):
         # self.speed_x *= 0.7071
         # self.speed_y *= 0.7071
 
-        self.x += self.speed_x * self.game.dt
-        self.y += self.speed_y * self.game.dt
+        self.x += self.speed_x
+        self.y += self.speed_y
         self.rect.x = self.x
         self.rect.y = self.y
 
