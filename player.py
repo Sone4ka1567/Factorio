@@ -25,8 +25,6 @@ class Player(PygameSprite):
         self.rect = self.image.get_rect()
         self.rect.x = x_spawn * const.CELL_SIZE
         self.rect.y = y_spawn * const.CELL_SIZE
-        self.x = x_spawn * const.CELL_SIZE
-        self.y = y_spawn * const.CELL_SIZE
 
     def update(self):
         self.speed_x = 0
@@ -41,10 +39,11 @@ class Player(PygameSprite):
         if "DOWN" in direction:
             self.speed_y = self.speed
 
-        self.x += self.speed_x
-        self.y += self.speed_y
-        self.rect.x = self.x
-        self.rect.y = self.y
+        self.rect.x += self.speed_x
+        self.collide_with_trees('horizontal')
+
+        self.rect.y += self.speed_y
+        self.collide_with_trees('vertical')
 
         if self.rect.right > const.PIXEL_MAP_W:
             self.rect.right = const.PIXEL_MAP_W
@@ -55,8 +54,22 @@ class Player(PygameSprite):
         if self.rect.top < 0:
             self.rect.top = 0
 
-    def collide_with_trees(self):
-        pass
+    def collide_with_trees(self, direction):
+        hits = self.sprite_collision(self.game.trees, False)
+        if hits:
+            if direction == 'horizontal':
+                if self.speed_x > 0:
+                    self.rect.x = hits[0].rect.left - self.rect.width
+                if self.speed_x < 0:
+                    self.rect.x = hits[0].rect.right
+                self.speed_x = 0
+
+            if direction == 'vertical':
+                if self.speed_y > 0:
+                    self.rect.y = hits[0].rect.top - self.rect.height
+                if self.speed_y < 0:
+                    self.rect.y = hits[0].rect.bottom
+                self.speed_y = 0
 
     def dig(self, cell: MapCell):
         if cell.raw_material_batch:
