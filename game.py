@@ -31,7 +31,13 @@ class Game:
         # self.load_map()
         self.all_sprites = self.gui.group_sprites()
         self.trees = self.gui.group_sprites()
-        # здесь надо будет еще обработать карту
+
+        for i in range(const.MAP_W):
+            for j in range(const.MAP_H):
+                cur_cell = self.map_obj[self.map_matr[j][i]]
+                if isinstance(cur_cell.raw_material_batch, Wood):
+                    Tree(self, i, j)
+
         self.player = Player(
             self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk]
         )
@@ -118,14 +124,11 @@ class Game:
                 if isinstance(cur_cell.raw_material_batch, Wood) \
                         and cur_cell.category == "light":
                     cell_image = self.gui.get_image("dirt_and_ore/light_dirt.png").convert_alpha()
-                    Tree(self, i, j)
                 elif isinstance(cur_cell.raw_material_batch, Wood):
                     cell_image = self.gui.get_image("dirt_and_ore/dark_dirt.png").convert_alpha()
-                    Tree(self, i, j)
 
                 self.screen.blit(cell_image,
                                  ((i - left_border) * const.CELL_SIZE, (j - top_border) * const.CELL_SIZE))
-
 
     def draw(self):
         self.gui.fill_screen(self.screen, const.BG_COLOR)
