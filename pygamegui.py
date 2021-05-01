@@ -18,6 +18,7 @@ class PygameSprite(pygame.sprite.Sprite):
 
 
 class PygameGUI(GUI):
+
     def start(self):
         # pylint: disable=no-member
         pygame.init()
@@ -26,8 +27,8 @@ class PygameGUI(GUI):
     def set_caption(self, caption):
         pygame.display.set_caption(caption)
 
-    def set_screen(self, width, height):
-        return pygame.display.set_mode((width, height))
+    def set_screen(self, width, height, hwsurf, double_buffer):
+        return pygame.display.set_mode((width, height), hwsurf | double_buffer)
 
     def fill_screen(self, screen, color):
         screen.fill(color)
@@ -111,6 +112,12 @@ class PygameGUI(GUI):
 
     def update_display(self):
         pygame.display.update()
+
+    def get_hwsurface(self):
+        return pygame.HWSURFACE
+
+    def get_double_buffer(self):
+        return pygame.DOUBLEBUF
 
     def quit_game(self):
         # pylint: disable=no-member

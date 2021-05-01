@@ -14,7 +14,10 @@ class Game:
         self.gui = PygameGUI()
         self.gui.start()
         const.DISPLAY_W, const.DISPLAY_H = self.gui.get_display_info()
-        self.screen = self.gui.set_screen(const.DISPLAY_W, const.DISPLAY_H)
+        self.screen = self.gui.set_screen(
+            const.DISPLAY_W, const.DISPLAY_H,
+            self.gui.get_hwsurface(), self.gui.get_double_buffer())
+
         self.gui.set_caption("ENDustrial")
         self.clock = self.gui.set_clock()
 
@@ -28,7 +31,6 @@ class Game:
         self.player_perk, self.choose_map_text = None, None
 
     def new(self):
-        # self.load_map()
         self.all_sprites = self.gui.group_sprites()
         self.trees = self.gui.group_sprites()
 

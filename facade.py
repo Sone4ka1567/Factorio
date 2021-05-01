@@ -12,7 +12,7 @@ class GUI(ABC):
         pass
 
     @abstractmethod
-    def set_screen(self, width, height):
+    def set_screen(self, width, height, hwsurf, double_buffer):
         pass
 
     @abstractmethod
@@ -97,6 +97,14 @@ class GUI(ABC):
 
     @abstractmethod
     def update_display(self):
+        pass
+
+    @abstractmethod
+    def get_hwsurface(self):
+        pass
+
+    @abstractmethod
+    def get_double_buffer(self):
         pass
 
     @abstractmethod
