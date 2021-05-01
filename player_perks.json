@@ -2,7 +2,7 @@
   "balanced": {
     "speed": 40,
     "bag_capacity": 35,
-    "picture": "player_walk1.png"
+    "picture": "fast.png"
   },
   "fast": {
     "speed": 50,
@@ -12,6 +12,6 @@
   "big_bag": {
     "speed": 30,
     "bag_capacity": 40,
-    "picture": "adventurer_walk1.png"
+    "picture": "fast.png"
   }
 }
