@@ -34,7 +34,9 @@ class BurnerPowerSource(PowerSource):
         self.fuel = Container(1)
 
     def has_energy(self):
-        return (not self.fuel.is_empty()) and self.fuel[0].amount >= self.energy_consumption
+        return (not self.fuel.is_empty()) and self.fuel[
+            0
+        ].amount >= self.energy_consumption
 
     def subtract_energy(self):
         if self.fuel:

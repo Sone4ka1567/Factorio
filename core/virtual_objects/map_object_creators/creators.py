@@ -1,12 +1,16 @@
 from typing import List
-
-from base_classes import VirtualObject
+from math import sqrt
 from abc import ABC, abstractmethod
+
 from maps import Map
-from core.map_objects.production.electricity import ElectricPole, ElectricNetwork, BurnerElectricGenerator
+from base_classes import VirtualObject
+from core.map_objects.production.electricity import (
+    ElectricPole,
+    ElectricNetwork,
+    BurnerElectricGenerator,
+)
 from core.map_objects.production.production import Machine
 from core.map_objects.production.power_source import ElectricPowerSource
-from math import sqrt
 
 
 def create_virtual_object(object_type, n):
@@ -54,7 +58,9 @@ class PoleCreator(MapObjectCreator):
         if nearest_pole:
             created_pole.connect_to_network(nearest_pole.network)
         else:
-            nearest_generator = find_nearest(x, y, pole_type.wire_len, map_obj, BurnerElectricGenerator)
+            nearest_generator = find_nearest(
+                x, y, pole_type.wire_len, map_obj, BurnerElectricGenerator
+            )
             if nearest_generator:
                 created_pole.connect_to_network(nearest_generator.network)
             else:
@@ -78,10 +84,25 @@ class PoleCreator(MapObjectCreator):
 
 
 class GeneratorCreator(MapObjectCreator):
-    def create_object(self, x, y, generator_type, map_obj: Map, networks: List[ElectricNetwork]):
+    def create_object(
+            self, x, y, generator_type, map_obj: Map, networks: List[ElectricNetwork]
+    ):
         created_generator = generator_type(x, y)
 
-        nearest_pole = find_nearest(x, y, generator_type.wire_len, map_obj, ElectricPole,
-                                    lambda pole: pole.network is None)
+        nearest_pole = find_nearest(
+            x,
+            y,
+            generator_type.wire_len,
+            map_obj,
+            ElectricPole,
+            lambda pole: pole.network is None,
+        )
         if nearest_pole:
             created_generator.connect_to_network(nearest_pole.network)
+        else:
+            el_net = ElectricNetwork()
+            networks.append(el_net)
+            created_generator.connect_to_network(el_net)
+            networks.append(el_net)
+
+        self.put_map_object(x, y, created_generator, map_obj)

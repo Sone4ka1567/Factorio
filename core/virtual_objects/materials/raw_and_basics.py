@@ -68,9 +68,7 @@ class SiliconPlate(BasicMaterial):
 
 
 class Wood(RawMaterial):
-    def __init__(self, amount):
-        super().__init__(amount)
-        self.associated_basic = None  # ??????????????
+    pass
 
 
 class WoodenPlate(BasicMaterial):

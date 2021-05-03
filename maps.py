@@ -123,3 +123,6 @@ if __name__ == "__main__":
     for i in range(1):
         creator = EasyMapCreator()
         map_obj = creator.gen_map()
+        from pympler.asizeof import asizeof
+
+        print(asizeof(map_obj))

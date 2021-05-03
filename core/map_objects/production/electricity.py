@@ -1,5 +1,3 @@
-from core.map_objects.production.machine import Machine
-from core.virtual_objects.materials.raw_and_basics import Coal, Wood
 from base_classes import MapObject
 from core.container import Container
 
@@ -38,7 +36,7 @@ class ElectricPole(MapObject):
 
 """
 Электрическая сеть, создающаяся при
-создании пола
+создании столба
 
 Сети дорожек, создающиеся с независимой дорожкой и
 знающие начало, конец и длину

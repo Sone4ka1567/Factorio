@@ -1,13 +1,12 @@
-from abc import abstractmethod, ABC
+from abc import ABC
 
-from core.map_objects.abstracts import UsableObjectProxy
-from core.map_objects.abstracts import UsableObject
-from core.container import Container
-
-from core.virtual_objects.materials.raw_and_basics import *
-from core.virtual_objects.materials.intermediates import *
+from core.virtual_objects.materials.raw_and_basics import RawMaterial, Iron, Copper, Silicon
+import core.virtual_objects.materials.intermediates as inter
 from maps import MapCell
-from core.map_objects.production.power_source import PowerSource, ElectricPowerSource, BurnerPowerSource
+from core.map_objects.production.power_source import (
+    ElectricPowerSource,
+    BurnerPowerSource,
+)
 from core.map_objects.production.machine import Machine
 
 
@@ -15,8 +14,8 @@ class Furnace(Machine, ABC):
     input_slots_num = 1
     energy_consumption: int
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.progress = 0
         self.target_type = None
 
@@ -36,22 +35,19 @@ class Furnace(Machine, ABC):
             if self.progress == self.ticks_per_batch:
                 putting_res = self.output.put(self.target_type(1))
                 if not putting_res:
-                    print('CANNOT PUT RES')
+                    print("CANNOT PUT RES")
                     return
                 self.progress = 0
             else:
                 self.progress += 1
-        print(
-            f"progress: {self.progress}, input: {self.input}, output: {self.output}, energy: {self.energy_source.amount()}"
-        )
 
 
 class AssemblingMachine(Machine, ABC):
     input_slots_num = 1
     possible_targets: list
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.progress = 0
         self.target_type = None
 
@@ -78,7 +74,7 @@ class AssemblingMachine(Machine, ABC):
         elif self.progress == self.ticks_per_batch:
             putting_res = self.output.put(self.target_type(1))
             if not putting_res:
-                print('CANNOT PUT RES')
+                print("CANNOT PUT RES")
                 return
             self.progress = 0
         else:
@@ -88,8 +84,8 @@ class AssemblingMachine(Machine, ABC):
 class MiningDrill(Machine, ABC):
     input_slots_num = 0
 
-    def __init__(self, cell: MapCell):
-        super().__init__()
+    def __init__(self, x, y, cell: MapCell):
+        super().__init__(x, y)
         self.cell = cell
 
     def process(self):
@@ -109,8 +105,8 @@ class BurnerFurnace(Furnace):
     energy_consumption = 1
     speed = 1
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.energy_source = BurnerPowerSource(self.energy_consumption)
 
 
@@ -119,31 +115,40 @@ class ElectricFurnace(Furnace):
     energy_consumption = 50
     speed = 2
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.energy_source = ElectricPowerSource(self.energy_consumption)
 
 
 class BurnerAssemblingMachine(AssemblingMachine):
-    valid_input = (IronPlates, CopperPlates, WoodenPlate)
-    possible_targets = (CopperCable, SteelPlate, Pipe, IronGearWheel)
+    valid_input = (inter.IronPlates, inter.CopperPlates, inter.WoodenPlate)
+    possible_targets = (inter.CopperCable, inter.SteelPlate, inter.Pipe, inter.IronGearWheel)
     energy_consumption = 1
     speed = 1
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.energy_source = BurnerPowerSource(self.energy_consumption)
 
 
 class ElectricAssemblingMachine(AssemblingMachine):
-    valid_input = BurnerAssemblingMachine.valid_input + (SiliconPlate,) + BurnerAssemblingMachine.possible_targets
+    valid_input = (
+        BurnerAssemblingMachine.valid_input
+        + (inter.SiliconPlate,)
+        + BurnerAssemblingMachine.possible_targets
+    )
     possible_targets = BurnerAssemblingMachine.possible_targets + (
-        ElectricCircuit, Resistor, Transistor, IntegratedCircuit, ControlUnit)
+        inter.ElectricCircuit,
+        inter.Resistor,
+        inter.Transistor,
+        inter.IntegratedCircuit,
+        inter.ControlUnit,
+    )
     energy_consumption = 40
     speed = 2
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.energy_source = ElectricPowerSource(self.energy_consumption)
 
 
@@ -151,8 +156,8 @@ class BurnerMiningDrill(MiningDrill):
     energy_consumption = 1
     speed = 1
 
-    def __init__(self, cell: MapCell):
-        super().__init__(cell)
+    def __init__(self, x, y, cell: MapCell):
+        super().__init__(x, y, cell)
         self.energy_source = BurnerPowerSource(self.energy_consumption)
 
 
@@ -160,6 +165,6 @@ class ElectricMiningDrill(MiningDrill):
     energy_consumption = 50
     speed = 2
 
-    def __init__(self, cell: MapCell):
-        super().__init__(cell)
+    def __init__(self, x, y, cell: MapCell):
+        super().__init__(x, y, cell)
         self.energy_source = ElectricPowerSource(self.energy_consumption)

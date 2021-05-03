@@ -4,17 +4,16 @@ from core.container import Container
 
 from core.map_objects.production.power_source import PowerSource
 from core.map_objects.abstracts import MapObject
-from maps import MapCell, Map
 
 
 class Machine(MapObject, ABC):
-    input_slots_num: int
-    progress = 0
-    energy_source: PowerSource
-    valid_input: tuple
-    energy_consumption: int
-    speed: int
-    ticks_per_batch = 10
+    input_slots_num: int = 1
+    progress: int = 0
+    energy_source: PowerSource = None
+    valid_input: tuple = tuple()
+    energy_consumption: int = 1
+    speed: int = 1
+    ticks_per_batch: int = 10
 
     def __init__(self, x, y):
         super().__init__(x, y)

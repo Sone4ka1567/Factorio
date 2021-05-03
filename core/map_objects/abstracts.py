@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from base_classes import MapObject
 
 
 class UsableObjectInterface(ABC):
