@@ -1,7 +1,8 @@
 from game import Game
+from pygamegui import PygameGUI
 
 
-game = Game()
+game = Game(PygameGUI())
 game.show_start_screen()
 game.choose_player_screen()
 game.choose_map_screen()

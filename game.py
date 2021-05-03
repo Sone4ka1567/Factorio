@@ -1,5 +1,4 @@
 import sys
-from pygamegui import PygameGUI
 from player import Player, player_perks
 from camera import Camera
 from tree_sprite import Tree
@@ -10,10 +9,10 @@ import constants as const
 
 
 class Game:
-    def __init__(self):
-        self.gui = PygameGUI()
+    def __init__(self, gui):
+        self.gui = gui
         self.gui.start()
-        const.DISPLAY_W, const.DISPLAY_H = self.gui.get_display_info()
+        const.DISPLAY_W, const.DISPLAY_H = 1200, 864  # self.gui.get_display_info()
         self.screen = self.gui.set_screen(
             const.DISPLAY_W, const.DISPLAY_H,
             self.gui.get_hwsurface(), self.gui.get_double_buffer())
@@ -21,9 +20,9 @@ class Game:
         self.gui.set_caption("ENDustrial")
         self.clock = self.gui.set_clock()
 
-        self.big_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 4)
-        self.font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 6)
-        self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 16)
+        self.big_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 5)
+        self.font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 7)
+        self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 18)
 
         self.start_screen_playing = True
         self.choose_player_screen_playing, self.choose_map_playing = True, True
@@ -43,7 +42,7 @@ class Game:
         self.player = Player(
             self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk]
         )
-        self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H)
+        self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H, self.gui)
 
     def run(self):
         self.playing = True
@@ -68,12 +67,18 @@ class Game:
             left_border = (const.PIXEL_MAP_W - const.DISPLAY_W) // const.CELL_SIZE
 
         if (self.player.rect.x + const.DISPLAY_W // 2) > const.DISPLAY_W:
-            right_border = min(const.PIXEL_MAP_W, self.player.rect.x + const.DISPLAY_W // 2) // const.CELL_SIZE
+            right_border = min(
+                const.PIXEL_MAP_W,
+                self.player.rect.x + const.DISPLAY_W // 2 + const.CELL_SIZE
+            ) // const.CELL_SIZE
         else:
             right_border = const.DISPLAY_W // const.CELL_SIZE
 
         if (self.player.rect.y + const.DISPLAY_H // 2) > const.DISPLAY_H:
-            bottom_border = min(const.PIXEL_MAP_H, self.player.rect.y + const.DISPLAY_H // 2) // const.CELL_SIZE
+            bottom_border = min(
+                const.PIXEL_MAP_H,
+                self.player.rect.y + const.DISPLAY_H // 2 + const.CELL_SIZE
+            ) // const.CELL_SIZE
         else:
             bottom_border = const.DISPLAY_H // const.CELL_SIZE
 
@@ -95,39 +100,63 @@ class Game:
                 # чек на руду
                 if isinstance(cur_cell.raw_material_batch, Iron) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_iron.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/light_dirt_with_iron.xcf"
+                    ).convert_alpha()
                 elif isinstance(cur_cell.raw_material_batch, Iron):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_iron.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/dark_dirt_with_iron.xcf"
+                    ).convert_alpha()
 
                 if isinstance(cur_cell.raw_material_batch, Copper) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_copper.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/light_dirt_with_copper.xcf"
+                    ).convert_alpha()
                 elif isinstance(cur_cell.raw_material_batch, Copper):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_copper.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/dark_dirt_with_copper.xcf"
+                    ).convert_alpha()
 
                 if isinstance(cur_cell.raw_material_batch, Coal) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_coal.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/light_dirt_with_coal.xcf"
+                    ).convert_alpha()
                 elif isinstance(cur_cell.raw_material_batch, Coal):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_coal.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/dark_dirt_with_coal.xcf"
+                    ).convert_alpha()
 
                 if isinstance(cur_cell.raw_material_batch, Stone) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_stone.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/light_dirt_with_stone.xcf"
+                    ).convert_alpha()
                 elif isinstance(cur_cell.raw_material_batch, Stone):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_stone.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/dark_dirt_with_stone.xcf"
+                    ).convert_alpha()
 
                 if isinstance(cur_cell.raw_material_batch, Silicon) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt_with_silicon.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/light_dirt_with_silicon.xcf"
+                    ).convert_alpha()
                 elif isinstance(cur_cell.raw_material_batch, Silicon):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt_with_silicon.xcf").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/dark_dirt_with_silicon.xcf"
+                    ).convert_alpha()
 
                 if isinstance(cur_cell.raw_material_batch, Wood) \
                         and cur_cell.category == "light":
-                    cell_image = self.gui.get_image("dirt_and_ore/light_dirt.png").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/light_dirt.png"
+                    ).convert_alpha()
                 elif isinstance(cur_cell.raw_material_batch, Wood):
-                    cell_image = self.gui.get_image("dirt_and_ore/dark_dirt.png").convert_alpha()
+                    cell_image = self.gui.get_image(
+                        "dirt_and_ore/dark_dirt.png"
+                    ).convert_alpha()
 
                 self.screen.blit(cell_image,
                                  ((i - left_border) * const.CELL_SIZE, (j - top_border) * const.CELL_SIZE))
@@ -197,7 +226,7 @@ class Game:
         )
 
     def show_start_screen(self):
-        self.start_text = self.font.render("ENDustrial", True, const.ORANGE_GREY)
+        self.start_text = self.big_font.render("ENDustrial", True, const.ORANGE_GREY)
 
         while self.start_screen_playing:
             self.screen.fill(const.BG_COLOR)

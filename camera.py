@@ -1,10 +1,9 @@
-from pygamegui import PygameGUI
 import constants as const
 
 
 class Camera:
-    def __init__(self, width, height):
-        self.gui = PygameGUI()
+    def __init__(self, width, height, gui):
+        self.gui = gui
         self.camera = self.gui.get_rect(0, 0, width, height)
         self.width, self.height = width, height
 
