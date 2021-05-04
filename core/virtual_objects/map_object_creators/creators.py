@@ -18,10 +18,14 @@ def create_virtual_object(object_type, n):
 
 
 class MapObjectCreator(VirtualObject, ABC):
+    def __init__(self, object_type, amount):
+        super().__init__(amount)
+        self.object_type = object_type
+
     def put_map_object(self, x, y, created_object, real_map: Map):
         cell = real_map.get_cell(x, y)
         cell.usable_object = created_object
-        real_map.set_cell(x, y, cell)
+        # real_map.set_cell(x, y, cell)
         self.amount -= 1
 
     @abstractmethod
@@ -30,8 +34,8 @@ class MapObjectCreator(VirtualObject, ABC):
 
 
 class MachineCreator(MapObjectCreator):
-    def create_object(self, x, y, machine_type, real_map: Map):
-        self.put_map_object(x, y, machine_type(x, y), real_map)
+    def create_object(self, x, y, real_map: Map):
+        self.put_map_object(x, y, self.object_type(x, y), real_map)
 
 
 def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: True):
@@ -50,16 +54,16 @@ def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: T
 
 class PoleCreator(MapObjectCreator):
     def create_object(
-            self, x, y, pole_type, map_obj: Map, networks: List[ElectricNetwork]
+            self, x, y, map_obj: Map, networks: List[ElectricNetwork]
     ):
-        created_pole: ElectricPole = pole_type(x, y)
+        created_pole: ElectricPole = self.object_type(x, y)
 
-        nearest_pole = find_nearest(x, y, pole_type.wire_len, map_obj, ElectricPole)
+        nearest_pole = find_nearest(x, y, self.object_type.wire_len, map_obj, ElectricPole)
         if nearest_pole:
             created_pole.connect_to_network(nearest_pole.network)
         else:
             nearest_generator = find_nearest(
-                x, y, pole_type.wire_len, map_obj, BurnerElectricGenerator
+                x, y, self.object_type.wire_len, map_obj, BurnerElectricGenerator
             )
             if nearest_generator:
                 created_pole.connect_to_network(nearest_generator.network)
@@ -85,14 +89,14 @@ class PoleCreator(MapObjectCreator):
 
 class GeneratorCreator(MapObjectCreator):
     def create_object(
-            self, x, y, generator_type, map_obj: Map, networks: List[ElectricNetwork]
+            self, x, y, map_obj: Map, networks: List[ElectricNetwork]
     ):
-        created_generator = generator_type(x, y)
+        created_generator = self.object_type(x, y)
 
         nearest_pole = find_nearest(
             x,
             y,
-            generator_type.wire_len,
+            self.object_type.wire_len,
             map_obj,
             ElectricPole,
             lambda pole: pole.network is None,
