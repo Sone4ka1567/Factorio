@@ -1,15 +1,28 @@
 from base_classes import MapObject
 from core.container import Container
+from maps import Map
 
 
 class Power:
-    def __init__(self):
-        self.power = 0
+    def __init__(self, map_object, generator_coordinates=None):
+        self.generator_coordinates = generator_coordinates
+        self.map_obj: Map = map_object
+
+    def set_generator(self, generator_coordinates):
+        self.generator_coordinates = generator_coordinates
+
+    @property
+    def power(self):
+        return (
+            self.map_obj.get_usable_object(*self.generator_coordinates).get_power()
+            if self.generator_coordinates
+            else 0
+        )
 
 
 class ElectricNetwork:
-    def __init__(self):
-        self.power = Power()
+    def __init__(self, map_obj):
+        self.power = Power(map_obj)
         self.poles = []
         self.has_generator = False
 
@@ -18,20 +31,35 @@ class ElectricNetwork:
 
     def add_generator(self, generator):
         self.has_generator = True
-        self.power = generator.get_power()
+        self.power.set_generator((generator.x, generator.y))
+
+    def get_power(self):
+        return self.power
+
+    def __str__(self):
+        return (
+            f"poles: {[str(i) for i in self.poles]}, has_generator: {self.has_generator},"
+            f" power: {None if not self.power else self.power.power}"
+        )
 
 
 class ElectricPole(MapObject):
-    wire_len: int
-    coverage_rad: int
+    wire_len: int = 2
+    coverage_rad: int = 2
 
     def __init__(self, x, y):
         super().__init__(x, y)
         self.network: ElectricNetwork = None
 
     def connect_to_network(self, network: ElectricNetwork):
-        self.network = ElectricNetwork
+        self.network = network
         network.add_pole(self)
+
+    def process(self):
+        pass
+
+    def __str__(self):
+        return f"pole: ({self.x}, {self.y})"
 
 
 """
@@ -51,7 +79,7 @@ class BurnerElectricGenerator(MapObject):
     def __init__(self, x, y):
         super().__init__(x, y)
         self.fuel = Container(self.input_slots_num)
-        self.power = Power()
+        self.power = 0
         self.network: ElectricNetwork = None
 
     def put_energy(self, batch):
@@ -59,7 +87,7 @@ class BurnerElectricGenerator(MapObject):
             self.fuel.put(batch)
 
     def process(self):
-        self.power.power = 0 if self.fuel.is_empty() else self.max_power_output
+        self.power = 0 if self.fuel.is_empty() else self.max_power_output
 
     def get_power(self):
         return self.power

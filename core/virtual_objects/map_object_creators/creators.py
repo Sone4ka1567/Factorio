@@ -44,15 +44,22 @@ def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: T
         for dy in range(-max_distance, max_distance):
             if dx == 0 and dy == 0:
                 continue
+            # print(f'finding {object_type}')
+            # print(x+dx, y+dy, map_obj.get_cell(x+dx, y+dy).usable_object.__class__.__name__)
             obj = map_obj.get_cell(x + dx, y + dy).usable_object
+            # print(isinstance(obj, object_type))
+            # print('-'*20)
+            # if obj:
+            #     print(condition(obj))
             if isinstance(obj, object_type) and condition(obj):
+                # print('HERE')
                 nearest_objects = {sqrt(dx ** 2 + dy ** 2): obj}
     if nearest_objects:
         return nearest_objects[min(nearest_objects.keys())]
     return None
 
 
-class PoleCreator(MapObjectCreator):
+class ElectricPoleCreator(MapObjectCreator):
     def create_object(
             self, x, y, map_obj: Map, networks: List[ElectricNetwork]
     ):
@@ -68,7 +75,7 @@ class PoleCreator(MapObjectCreator):
             if nearest_generator:
                 created_pole.connect_to_network(nearest_generator.network)
             else:
-                el_net = ElectricNetwork()
+                el_net = ElectricNetwork(map_obj)
                 networks.append(el_net)
                 created_pole.connect_to_network(el_net)
 
@@ -99,12 +106,11 @@ class GeneratorCreator(MapObjectCreator):
             self.object_type.wire_len,
             map_obj,
             ElectricPole,
-            lambda pole: pole.network is None,
         )
         if nearest_pole:
             created_generator.connect_to_network(nearest_pole.network)
         else:
-            el_net = ElectricNetwork()
+            el_net = ElectricNetwork(map_obj)
             networks.append(el_net)
             created_generator.connect_to_network(el_net)
             networks.append(el_net)

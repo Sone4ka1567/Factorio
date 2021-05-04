@@ -34,12 +34,8 @@ class Machine(MapObject, ABC):
     def put_energy(self, *args):
         return self.energy_source.put_energy(*args)
 
-    @abstractmethod
-    def process(self):
-        pass
-
     def disable(self):
         self.energy_source.finish_using()
 
     def __str__(self):
-        return f"input: {self.input}, output: {self.output}, power: {self.energy_source.amount()}"
+        return f"type: {self.__class__.__name__}, input: {self.input}, output: {self.output}, power: {self.energy_source.amount()}"

@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class MapObject(ABC):
@@ -12,6 +12,10 @@ class MapObject(ABC):
 
     def to_json(self):
         return {"type": self.__class__.__name__, "x": self.x, "y": self.y}
+
+    @abstractmethod
+    def process(self):
+        pass
 
 
 class VirtualObject(ABC):

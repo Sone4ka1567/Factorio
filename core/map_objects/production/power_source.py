@@ -72,7 +72,7 @@ class ElectricPowerSource(PowerSource):
         self.power = power
 
     def amount(self):
-        return self.power.power
+        return self.power.power if self.power else 0
 
     def finish_using(self):
         if self.is_used:
