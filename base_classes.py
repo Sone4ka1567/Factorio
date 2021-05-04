@@ -10,6 +10,9 @@ class MapObject(ABC):
         self.x = new_x
         self.y = new_y
 
+    def to_json(self):
+        return {"type": self.__class__.__name__, "x": self.x, "y": self.y}
+
 
 class VirtualObject(ABC):
     def __init__(self, amount):

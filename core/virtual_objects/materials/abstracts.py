@@ -23,6 +23,9 @@ class MaterialBatch(VirtualObject):
     def is_fuel():
         return False
 
+    def to_json(self):
+        return {"type": self.__class__.__name__, "amount": self.amount}
+
 
 class RawMaterial(MaterialBatch):
     ticks_to_produce = 10

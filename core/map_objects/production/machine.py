@@ -3,7 +3,7 @@ from abc import abstractmethod, ABC
 from core.container import Container
 
 from core.map_objects.production.power_source import PowerSource
-from core.map_objects.abstracts import MapObject
+from base_classes import MapObject
 
 
 class Machine(MapObject, ABC):

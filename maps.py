@@ -6,18 +6,42 @@ from core.generators.surface_generator import gen_surface_map
 from core.generators.ores_generator import OresGenerator
 from core.virtual_objects.materials.raw_and_basics import Wood
 import constants as const
+import json as json_lib
+from core.virtual_objects.materials import raw_and_basics
 
 
 class MapCell:
     __slots__ = {"category", "usable_object", "raw_material_batch"}
 
-    def __init__(self, category: str):
-        self.category: str = category
-        self.usable_object = None
-        self.raw_material_batch = None
+    def __init__(self, category="light", json=None):
+        if json:
+            self.category = json["category"]
+            self.raw_material_batch = (
+                None
+                if not json["batch"]
+                else getattr(raw_and_basics, json["batch"]["type"])(
+                    json["batch"]["amount"]
+                )
+            )
+            self.usable_object = None
+        else:
+            self.category: str = category
+            self.usable_object = None
+            self.raw_material_batch = None
 
     def __str__(self):
-        return f"{self.category}, {type(self.raw_material_batch)}"
+        return f"{self.category}, {self.raw_material_batch}, {self.usable_object.__class__.__name__}"
+
+    def to_json(self):
+        return {
+            "category": self.category,
+            "batch": self.raw_material_batch.to_json()
+            if self.raw_material_batch
+            else None,
+            "usable_object": self.usable_object.to_json()
+            if self.usable_object
+            else None,
+        }
 
 
 class Map(ABC):
@@ -40,14 +64,14 @@ class Map(ABC):
         return self.map_matrix
 
     def get_cell(self, x, y):
-        x, y = self.get_mtx_coordinates(x, y)
+        # x, y = self.get_mtx_coordinates(x, y)
         return self.map_objects[self.map_matrix[y][x]]
 
-    def set_cell(self, x, y, cell: MapCell):
-        x, y = self.get_mtx_coordinates(x, y)
-        cell_id = id(cell)
-        self.map_matrix[y][x] = cell_id
-        self.map_objects[cell_id] = cell
+    # def set_cell(self, x, y, cell: MapCell):
+    #     x, y = self.get_mtx_coordinates(x, y)
+    #     cell_id = id(cell)
+    #     self.map_matrix[y][x] = cell_id
+    #     self.map_objects[cell_id] = cell
 
     @staticmethod
     def get_mtx_coordinates(x, y):
@@ -77,6 +101,47 @@ class Map(ABC):
                 cell_id = id(cell)
                 self.map_matrix[y][x] = cell_id
                 self.map_objects[cell_id] = cell
+
+    def serialize(self):
+        res = [[None for _ in range(self.width)] for __ in range(self.height)]
+        for y in range(self.height):
+            for x in range(self.width):
+                res[y][x] = self.map_objects[self.map_matrix[y][x]].to_json()
+        with open("map.json", "w+") as f:
+            json_lib.dump(res, f)
+
+    def load(self, json):
+        for y in range(self.height):
+            for x in range(self.width):
+                cell = MapCell(json=json[y][x])
+                cell_id = id(cell)
+                self.map_objects[cell_id] = cell
+                self.map_matrix[y][x] = cell_id
+
+    def plot(self):
+        import numpy as np
+        import matplotlib.pyplot as plt
+        categories = {'dark': 13, 'light': 15}
+        map_objects = {'Iron': 1, 'Copper': 3, 'Coal': 5, 'Stone': 7, 'Wood': 9,
+                       'Silicon': 11}
+        res = np.zeros((self.height, self.width))
+        for y in range(self.height):
+            for x in range(self.width):
+                cell: MapCell = self.map_objects[self.map_matrix[y][x]]
+                # print(cell)
+                res[y][x] = categories[cell.category]
+                if cell and cell.raw_material_batch:
+                    # res[y][x] = map_objects[cell.raw_material_batch.__class__.__name__]
+                    if cell.raw_material_batch.__class__.__name__ in ['Iron', 'Copper', 'Coal',
+                                                                      'Stone', 'Silicon']:
+                        res[y][x] = cell.raw_material_batch.amount / 100
+                    else:
+                        res[y][x] = map_objects[cell.raw_material_batch.__class__.__name__]
+
+            #     print(b.category, end=' ')
+            # print()
+        plt.imshow(res)
+        plt.show()
 
 
 class EasyMap(Map):
