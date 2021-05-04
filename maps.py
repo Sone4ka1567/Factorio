@@ -118,6 +118,9 @@ class Map(ABC):
                 self.map_objects[cell_id] = cell
                 self.map_matrix[y][x] = cell_id
 
+    def get_usable_object(self, x, y):
+        return self.map_objects[self.map_matrix[y][x]].usable_object
+
     def plot(self):
         import numpy as np
         import matplotlib.pyplot as plt
