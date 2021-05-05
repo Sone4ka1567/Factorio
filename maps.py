@@ -55,7 +55,15 @@ class Map(ABC):
 
     def __init__(self):
         self.map_objects = {}
+        self.networks = []
+        self.roads = []
         self.map_matrix = np.zeros((self.height, self.width), dtype=np.int64)
+
+    def add_network(self, network):
+        self.networks.append(network)
+
+    def add_road(self, road):
+        self.roads.append(road)
 
     def get_map_objects(self):
         return self.map_objects
