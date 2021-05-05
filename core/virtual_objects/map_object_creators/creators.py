@@ -1,4 +1,3 @@
-from typing import List
 from math import sqrt
 from abc import ABC, abstractmethod
 
@@ -29,13 +28,18 @@ class MapObjectCreator(VirtualObject, ABC):
         self.amount -= 1
 
     @abstractmethod
-    def create_object(self, *args):
+    def create_object(self, x, y, real_map: Map):
         pass
 
 
 class MachineCreator(MapObjectCreator):
     def create_object(self, x, y, real_map: Map):
         self.put_map_object(x, y, self.object_type(x, y), real_map)
+
+
+class DrillCreator(MapObjectCreator):
+    def create_object(self, x, y, real_map: Map):
+        self.put_map_object(x, y, self.object_type(x, y, real_map.get_cell(x, y)), real_map)
 
 
 def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: True):
@@ -60,12 +64,12 @@ def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: T
 
 
 class ElectricPoleCreator(MapObjectCreator):
-    def create_object(
-            self, x, y, map_obj: Map, networks: List[ElectricNetwork]
-    ):
+    def create_object(self, x, y, map_obj: Map):
         created_pole: ElectricPole = self.object_type(x, y)
 
-        nearest_pole = find_nearest(x, y, self.object_type.wire_len, map_obj, ElectricPole)
+        nearest_pole = find_nearest(
+            x, y, self.object_type.wire_len, map_obj, ElectricPole
+        )
         if nearest_pole:
             created_pole.connect_to_network(nearest_pole.network)
         else:
@@ -76,7 +80,7 @@ class ElectricPoleCreator(MapObjectCreator):
                 created_pole.connect_to_network(nearest_generator.network)
             else:
                 el_net = ElectricNetwork(map_obj)
-                networks.append(el_net)
+                map_obj.add_network(el_net)
                 created_pole.connect_to_network(el_net)
 
         for dx in range(-created_pole.coverage_rad, created_pole.coverage_rad):
@@ -95,9 +99,7 @@ class ElectricPoleCreator(MapObjectCreator):
 
 
 class GeneratorCreator(MapObjectCreator):
-    def create_object(
-            self, x, y, map_obj: Map, networks: List[ElectricNetwork]
-    ):
+    def create_object(self, x, y, map_obj: Map):
         created_generator = self.object_type(x, y)
 
         nearest_pole = find_nearest(
@@ -111,8 +113,7 @@ class GeneratorCreator(MapObjectCreator):
             created_generator.connect_to_network(nearest_pole.network)
         else:
             el_net = ElectricNetwork(map_obj)
-            networks.append(el_net)
             created_generator.connect_to_network(el_net)
-            networks.append(el_net)
+            map_obj.add_network(el_net)
 
         self.put_map_object(x, y, created_generator, map_obj)

@@ -92,6 +92,8 @@ class MiningDrill(Machine, ABC):
         if not self.energy_source.has_energy():
             return
         self.ticks_per_batch = RawMaterial.ticks_to_produce // self.speed
+        if not self.cell.raw_material_batch:
+            return
         if self.cell.raw_material_batch.amount >= 1:
             self.cell.raw_material_batch -= 1
             self.output.put(self.cell.raw_material_batch.get_n(1))
