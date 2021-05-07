@@ -15,6 +15,7 @@ class Player(PygameSprite):
         self.game = game
         self.groups = self.game.all_sprites
         self.init_sprite_and_group(self.groups)
+        self.category = 'player'
 
         self.bag_capacity = bag_capacity
         self.bag = Container(bag_capacity)

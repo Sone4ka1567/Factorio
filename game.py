@@ -38,7 +38,7 @@ class Game:
             for j in range(const.MAP_H):
                 cur_cell = self.map_obj[self.map_matr[j][i]]
                 if isinstance(cur_cell.raw_material_batch, Wood):
-                    Tree(self, i, j)
+                    Tree(self, i, j, self.map_obj[self.map_matr[j][i]])
 
         self.player = Player(
             self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk]
@@ -179,7 +179,10 @@ class Game:
                            (x_coord + const.CELL_SIZE, y_coord + const.CELL_SIZE))
 
         for sprite in self.all_sprites:
+            if sprite.category == 'tree' and not sprite.map_obj.raw_material_batch:
+                sprite.change_image()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+
         self.gui.flip_display()
 
     def events(self):
