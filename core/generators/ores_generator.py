@@ -96,6 +96,8 @@ class OresGenerator:
         res = np.where(res < 0.7, res, 1)
         res = (1 - res) * 1000  # CONST
         res = np.where(res > 500, res ** 2 / 1000, res ** 3 / 500000)
+        # print(res.dtype)
+        res = np.int64(np.round(res))
         return res
 
     def _gen_circle_rad(self, diagonal) -> int:
@@ -235,5 +237,5 @@ class OresGenerator:
     def create_batch_for_cell(self, x, y):
         for bounds, batch_type, ore_matrix in self.ores_with_types:
             if self._point_on_ore(x, y, bounds):
-                return batch_type(ore_matrix[x - bounds[0][0]][y - bounds[0][1]])
+                return batch_type(int(ore_matrix[x - bounds[0][0]][y - bounds[0][1]]))
         return None
