@@ -95,6 +95,8 @@ class PygameGUI(GUI):
             return "QUIT"
         if event.type == pygame.MOUSEBUTTONDOWN:
             return 'MOUSEBUTTONDOWN'
+        if event.type == pygame.K_e:
+            return 'E'
         # pylint: enable=no-member
         return None
 

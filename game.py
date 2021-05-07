@@ -183,6 +183,23 @@ class Game:
 
     def events(self):
         for event in self.gui.get_events():
+            if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 3:
+
+                if (self.player.rect.x - const.DISPLAY_W // 2) < const.PIXEL_MAP_W - const.DISPLAY_W:
+                    left_border = max(0, self.player.rect.x - const.DISPLAY_W // 2) // const.CELL_SIZE
+                else:
+                    left_border = (const.PIXEL_MAP_W - const.DISPLAY_W) // const.CELL_SIZE
+
+                if (self.player.rect.y - const.DISPLAY_H // 2) < const.PIXEL_MAP_H - const.DISPLAY_H:
+                    top_border = max(0, self.player.rect.y - const.DISPLAY_H // 2) // const.CELL_SIZE
+                else:
+                    top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
+
+                i_ind = event.pos[0] // const.CELL_SIZE + left_border
+                j_ind = event.pos[1] // const.CELL_SIZE + top_border
+                message = self.player.dig(self.map_obj[self.map_matr[j_ind][i_ind]])
+
+                print(message)
             if self.gui.get_event_type(event) == "QUIT":
                 self.quit()
 

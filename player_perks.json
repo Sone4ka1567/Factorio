@@ -1,16 +1,16 @@
 {
   "balanced": {
-    "speed": 40,
+    "speed": 30,
     "bag_capacity": 35,
     "picture": "fast.png"
   },
   "fast": {
-    "speed": 50,
+    "speed": 40,
     "bag_capacity": 30,
     "picture": "fast.png"
   },
   "big_bag": {
-    "speed": 30,
+    "speed": 20,
     "bag_capacity": 40,
     "picture": "fast.png"
   }
