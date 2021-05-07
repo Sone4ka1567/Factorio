@@ -10,13 +10,16 @@ from core.map_objects.production.electricity import (
 )
 from core.map_objects.production.production import Machine
 from core.map_objects.production.power_source import ElectricPowerSource
+from core.virtual_objects.materials.intermediates import Intermediate
+import core.virtual_objects.materials.intermediates as inter
+import core.virtual_objects.materials.raw_and_basics as rnb
 
 
 def create_virtual_object(object_type, n):
     return object_type(n)
 
 
-class MapObjectCreator(VirtualObject, ABC):
+class MapObjectCreator(Intermediate):
     def __init__(self, object_type, amount):
         super().__init__(amount)
         self.object_type = object_type
@@ -39,7 +42,9 @@ class MachineCreator(MapObjectCreator):
 
 class DrillCreator(MapObjectCreator):
     def create_object(self, x, y, real_map: Map):
-        self.put_map_object(x, y, self.object_type(x, y, real_map.get_cell(x, y)), real_map)
+        self.put_map_object(
+            x, y, self.object_type(x, y, real_map.get_cell(x, y)), real_map
+        )
 
 
 def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: True):

@@ -45,7 +45,7 @@ class ElectricNetwork:
 
 class ElectricPole(MapObject):
     wire_len: int = 2
-    coverage_rad: int = 2
+    coverage_rad: int = 4
 
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -60,6 +60,16 @@ class ElectricPole(MapObject):
 
     def __str__(self):
         return f"pole: ({self.x}, {self.y})"
+
+
+class SmallElectricPole(ElectricPole):
+    wire_len: int = 2
+    coverage_rad: int = 2
+
+
+class BigElectricPole(ElectricPole):
+    wire_len: int = 4
+    coverage_rad: int = 8
 
 
 """

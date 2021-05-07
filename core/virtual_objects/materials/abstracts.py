@@ -84,14 +84,15 @@ class BasicMaterial(ProductMaterial):
         return 0
 
 
-class IntermediateMaterial(ProductMaterial):
+class Intermediate(ProductMaterial):
+    required_res: tuple
 
     def __init__(self, amount, required_res=()):
         super().__init__(amount)
         self.required_res = required_res
 
     def copy(self):
-        return IntermediateMaterial(self.amount, self.required_res)
+        return Intermediate(self.amount, self.required_res)
 
     def count_optimal_requirements(self, container: Container):
         res_set = []
