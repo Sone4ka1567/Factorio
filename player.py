@@ -77,7 +77,8 @@ class Player(PygameSprite):
             if not res:
                 return result_error("bag is full")
             cell.raw_material_batch.amount -= 1
+            ok_res = result_ok(f"+1 {cell.raw_material_batch.__class__.__name__}")
             if cell.raw_material_batch.amount == 0:
                 cell.raw_material_batch = None
-            return result_ok(f"+1 {cell.raw_material_batch.__class__.__name__}")
+            return ok_res
         return result_error("nothing to dig here")
