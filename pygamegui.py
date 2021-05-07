@@ -83,6 +83,8 @@ class PygameGUI(GUI):
             lst.append("UP")
         if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
             lst.append("DOWN")
+        if keystate[pygame.K_e]:
+            lst.append("E")
         # pylint: enable=no-member
         return lst
 
@@ -93,10 +95,10 @@ class PygameGUI(GUI):
         # pylint: disable=no-member
         if event.type == pygame.QUIT:
             return "QUIT"
+
         if event.type == pygame.MOUSEBUTTONDOWN:
             return 'MOUSEBUTTONDOWN'
-        if event.type == pygame.K_e:
-            return 'E'
+
         # pylint: enable=no-member
         return None
 

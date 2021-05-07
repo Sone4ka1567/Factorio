@@ -204,15 +204,42 @@ class Game:
                     color = const.RED
                 else:
                     color = const.WHITE
-
                 button_text = self.mini_font.render(message['message'], True, color)
                 self.screen.blit(button_text, (event.pos[0], event.pos[1] - const.CELL_SIZE // 2))
                 self.gui.update_display()
                 time.sleep(0.3)
                 self.gui.tick_fps(self.clock, const.FPS)
 
+            if 'E' in self.gui.get_keystate():
+                self.show_bag()
+
             if self.gui.get_event_type(event) == "QUIT":
                 self.quit()
+
+    def show_bag(self):
+        self.show_bag_playing = True
+
+        while self.show_bag_playing:
+            self.screen.fill(const.BAGCOLOR)
+            text_left = self.small_font.render('Character', True, const.WHITE)
+            text_right = self.small_font.render('Crafting', True,  const.WHITE)
+
+            self.gui.draw_line(self.screen, const.BLACK,
+                               (const.DISPLAY_W // 2, 0), (const.DISPLAY_W // 2, const.DISPLAY_H))
+            self.screen.blit(text_left,
+                             (const.DISPLAY_W // 20, const.DISPLAY_H // 20))
+            self.screen.blit(text_right,
+                             (const.DISPLAY_W // 2 + const.DISPLAY_W // 20, const.DISPLAY_H // 20))
+
+            for event in self.gui.get_events():
+                if self.gui.get_event_type(event) == "QUIT":
+                    self.quit()
+
+                if 'E' in self.gui.get_keystate():
+                    self.show_bag_playing = False
+
+            self.gui.update_display()
+            self.gui.tick_fps(self.clock, const.FPS)
 
     def create_button(
             self, message, x_left, y_top, width, height, hovercolor, defaultcolor, level
