@@ -6,7 +6,7 @@ from maps import EasyMapCreator, HardMapCreator
 from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
 import constants as const
-
+import time
 
 class Game:
     def __init__(self, gui):
@@ -23,6 +23,7 @@ class Game:
         self.big_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 5)
         self.font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 7)
         self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 18)
+        self.mini_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 40)
 
         self.start_screen_playing = True
         self.choose_player_screen_playing, self.choose_map_playing = True, True
@@ -199,7 +200,17 @@ class Game:
                 j_ind = event.pos[1] // const.CELL_SIZE + top_border
                 message = self.player.dig(self.map_obj[self.map_matr[j_ind][i_ind]])
 
-                print(message)
+                if message['message'] == 'bag is full' or message['message'] == 'nothing to dig here':
+                    color = const.RED
+                else:
+                    color = const.WHITE
+
+                button_text = self.mini_font.render(message['message'], True, color)
+                self.screen.blit(button_text, (event.pos[0], event.pos[1] - const.CELL_SIZE // 2))
+                self.gui.update_display()
+                time.sleep(0.3)
+                self.gui.tick_fps(self.clock, const.FPS)
+
             if self.gui.get_event_type(event) == "QUIT":
                 self.quit()
 
