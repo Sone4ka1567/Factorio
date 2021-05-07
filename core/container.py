@@ -23,12 +23,11 @@ class Container:
         return False
 
     def put(self, batch):
-        done = False
         for idx, cur_batch in enumerate(self.data):
             if isinstance(cur_batch, type(batch)):
                 self.data[idx].amount += batch.amount
-                done = True
-        if not done and len(self.data) < self.max_size:
+                return True
+        if len(self.data) < self.max_size:
             self.data.append(batch)
             return True
         return False
