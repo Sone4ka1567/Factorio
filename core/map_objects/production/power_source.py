@@ -58,15 +58,12 @@ class ElectricPowerSource(PowerSource):
     def __init__(self, energy_consumption):
         super().__init__(energy_consumption)
         self.power = None
-        self.is_used = False
 
     def has_energy(self):
         return self.power.power >= self.energy_consumption
 
     def subtract_energy(self):
-        if not self.is_used:
-            self.is_used = True
-            self.power.power -= self.energy_consumption
+        self.power.power -= self.energy_consumption
 
     def put_energy(self, power: Power):
         self.power = power
@@ -75,6 +72,4 @@ class ElectricPowerSource(PowerSource):
         return self.power.power if self.power else 0
 
     def finish_using(self):
-        if self.is_used:
-            self.is_used = False
-            self.power.power += self.energy_consumption
+        self.power.power += self.energy_consumption
