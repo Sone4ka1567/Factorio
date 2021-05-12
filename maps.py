@@ -73,7 +73,7 @@ class Map(ABC):
 
     def get_cell(self, x, y):
         # x, y = self.get_mtx_coordinates(x, y)
-        return self.map_objects[self.map_matrix[y][x]]
+        return self.map_objects[self.map_matrix[min(max(y, 0), self.height)][min(max(x, 0), self.width)]]
 
     # def set_cell(self, x, y, cell: MapCell):
     #     x, y = self.get_mtx_coordinates(x, y)

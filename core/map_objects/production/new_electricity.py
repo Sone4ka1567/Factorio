@@ -1,8 +1,6 @@
 from base_classes import MapObject
 from core.container import Container
-from maps import Map
 from math import sqrt
-from result_func import result_ok, result_error
 
 
 class Power:
@@ -41,7 +39,7 @@ class ElectricPole(MapObject):
     #         return result_ok()
     #
     #     nearest_generator = find_nearest(
-    #         x, y, ElectricPole.wire_len, map_obj, BurnerElectricGenerator
+    #         x, y, ElectricPole.wire_len, map_obj, ElectricGenerator
     #     )
     #     if nearest_generator:
     #         return result_ok()
@@ -51,7 +49,7 @@ class ElectricPole(MapObject):
         super().__init__(x, y, map_obj)
         self.connected_poles = []
         self.power = None
-        self.priority = -1  # not in a network
+        self.priority = -1  # in line with no generator
 
         nearest_pole = find_nearest(
             self.x, self.y, self.wire_len, self.map_obj, ElectricPole
@@ -61,7 +59,7 @@ class ElectricPole(MapObject):
             return
 
         nearest_generator = find_nearest(
-            self.x, self.y, self.wire_len, self.map_obj, BurnerElectricGenerator
+            self.x, self.y, self.wire_len, self.map_obj, ElectricGenerator
         )
         if nearest_generator:
             self.connect_to_generator(nearest_generator)
@@ -70,35 +68,75 @@ class ElectricPole(MapObject):
         self.connected_poles.append(pole)
         pole.connected_poles.append(self)
         self.power = pole.power
-        self.priority = pole.priority + 1
+        self.priority = -1 if pole.priority == -1 else pole.priority + 1
 
     def connect_to_generator(self, generator):
-
-        def dfs(cur_pole: ElectricPole, priority):
+        def dfs(cur_pole: ElectricPole, priority, power):
             cur_pole.priority = priority
+            cur_pole.power = power
             for connected_pole in cur_pole.connected_poles:
-                dfs(connected_pole, priority + 1)
+                dfs(connected_pole, priority + 1, power)
 
-        self.power = generator.power
-        dfs(self, 0)
+        dfs(self, 0, generator.power)
 
     def _disconnect_all(self):
         for pole in self.connected_poles:
             for idx, con_pol in enumerate(pole.connected_poles):
-                pole.connected_poles.pop(idx)
-                if con_pol.priority > self.priority:
-                    pole.power = None
-                    con_pol.priority = -1
+                if con_pol == self:
+                    pole.connected_poles.pop(idx)
+            if pole.priority > self.priority:
+                pole.power = None  # точно так работает?
+                pole.priority = -1
 
     def remove(self):
         self._disconnect_all()
         self._clear_cell()
 
     def is_connected(self):
-        return not (self.power is None)
+        return self.power is not None
 
     def process(self):
         pass
+
+
+class ElectricGenerator(MapObject):
+    def process(self):
+        pass
+
+
+class BurnerElectricGenerator(ElectricGenerator):
+    input_slots_num = 1
+    max_power_output = 900
+    coverage_rad = 10
+
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
+        self.fuel = Container(self.input_slots_num)
+        self.power = Power()
+        self.is_connected_to_pole = False
+
+        nearest_pole = find_nearest(
+            self.x, self.y, self.coverage_rad, self.map_obj, ElectricPole
+        )
+        if nearest_pole:
+            self.connect_to_pole(nearest_pole)
+
+    def connect_to_pole(self, pole: ElectricPole):
+        pole.connect_to_generator(self)
+        self.is_connected_to_pole = True
+
+    def put_energy(self, batch):
+        if batch.is_fuel():
+            self.fuel.put(batch)
+
+    def process(self):
+        self.power.value = 0 if self.fuel.is_empty() else self.max_power_output
+
+    def get_power(self):
+        return self.power
+
+    def is_connected(self):
+        return self.is_connected_to_pole
 
 
 class SmallElectricPole(ElectricPole):
@@ -110,35 +148,6 @@ class BigElectricPole(ElectricPole):
     wire_len: int = 4
     coverage_rad: int = 8
 
-
-class BurnerElectricGenerator(MapObject):
-    input_slots_num = 1
-    max_power_output = 900
-    coverage_rad = 10
-
-    def __init__(self, x, y, map_obj):
-        super().__init__(x, y, map_obj)
-        self.fuel = Container(self.input_slots_num)
-        self.power = Power()
-
-        nearest_pole = find_nearest(
-            self.x, self.y, self.coverage_rad, self.map_obj, ElectricPole
-        )
-        if nearest_pole:
-            self.connect_to_pole(nearest_pole)
-
-    def connect_to_pole(self, pole: ElectricPole):
-        pole.connect_to_generator(self)
-
-    def put_energy(self, batch):
-        if batch.is_fuel():
-            self.fuel.put(batch)
-
-    def process(self):
-        self.power.value = 0 if self.fuel.is_empty() else self.max_power_output
-
-    def get_power(self):
-        return self.power
 
 # if __name__ == '__main__':
 #     class H:
