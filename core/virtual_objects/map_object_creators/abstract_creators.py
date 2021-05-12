@@ -50,54 +50,10 @@ class DrillCreator(MapObjectCreator):
 class ElectricPoleCreator(MapObjectCreator):
     def create_object(self, x, y, map_obj: Map):
         created_pole: ElectricPole = self.object_type(x, y)
-
-        nearest_pole = find_nearest(
-            x, y, self.object_type.wire_len, map_obj, ElectricPole
-        )
-        if nearest_pole:
-            created_pole.connect_to_network(nearest_pole.network)
-        else:
-            nearest_generator = find_nearest(
-                x, y, self.object_type.wire_len, map_obj, BurnerElectricGenerator
-            )
-            if nearest_generator:
-                created_pole.connect_to_network(nearest_generator.network)
-            else:
-                el_net = ElectricNetwork(map_obj)
-                map_obj.add_network(el_net)
-                created_pole.connect_to_network(el_net)
-
-        for dx in range(-created_pole.coverage_rad, created_pole.coverage_rad):
-            for dy in range(-created_pole.coverage_rad, created_pole.coverage_rad):
-                if dx == 0 and dy == 0:
-                    continue
-                obj = map_obj.get_cell(x + dx, y + dy).usable_object
-                if (
-                        isinstance(obj, Machine)
-                        and isinstance(obj.energy_source, ElectricPowerSource)
-                        and obj.energy_source.power is None
-                ):
-                    obj.energy_source.put_energy(created_pole.network.power)
-
         self.put_map_object(x, y, created_pole, map_obj)
 
 
 class GeneratorCreator(MapObjectCreator):
     def create_object(self, x, y, map_obj: Map):
         created_generator = self.object_type(x, y)
-
-        nearest_pole = find_nearest(
-            x,
-            y,
-            self.object_type.wire_len,
-            map_obj,
-            ElectricPole,
-        )
-        if nearest_pole:
-            created_generator.connect_to_network(nearest_pole.network)
-        else:
-            el_net = ElectricNetwork(map_obj)
-            created_generator.connect_to_network(el_net)
-            map_obj.add_network(el_net)
-
         self.put_map_object(x, y, created_generator, map_obj)
