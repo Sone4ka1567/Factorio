@@ -15,8 +15,8 @@ class Machine(MapObject, ABC):
     speed: int = 1
     ticks_per_batch: int = 10
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.input = Container(self.input_slots_num)
         self.output = Container(1)
 

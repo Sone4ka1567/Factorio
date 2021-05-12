@@ -47,27 +47,6 @@ class DrillCreator(MapObjectCreator):
         )
 
 
-def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: True):
-    nearest_objects = {}
-    for dx in range(-max_distance, max_distance):
-        for dy in range(-max_distance, max_distance):
-            if dx == 0 and dy == 0:
-                continue
-            # print(f'finding {object_type}')
-            # print(x+dx, y+dy, map_obj.get_cell(x+dx, y+dy).usable_object.__class__.__name__)
-            obj = map_obj.get_cell(x + dx, y + dy).usable_object
-            # print(isinstance(obj, object_type))
-            # print('-'*20)
-            # if obj:
-            #     print(condition(obj))
-            if isinstance(obj, object_type) and condition(obj):
-                # print('HERE')
-                nearest_objects = {sqrt(dx ** 2 + dy ** 2): obj}
-    if nearest_objects:
-        return nearest_objects[min(nearest_objects.keys())]
-    return None
-
-
 class ElectricPoleCreator(MapObjectCreator):
     def create_object(self, x, y, map_obj: Map):
         created_pole: ElectricPole = self.object_type(x, y)

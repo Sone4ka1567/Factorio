@@ -47,8 +47,8 @@ class ElectricPole(MapObject):
     wire_len: int = 2
     coverage_rad: int = 4
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.network: ElectricNetwork = None
 
     def connect_to_network(self, network: ElectricNetwork):
@@ -86,8 +86,8 @@ class BurnerElectricGenerator(MapObject):
     max_power_output = 900
     wire_len = 2
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.fuel = Container(self.input_slots_num)
         self.power = 0
         self.network: ElectricNetwork = None
