@@ -14,8 +14,8 @@ class Furnace(Machine, ABC):
     input_slots_num = 1
     energy_consumption: int
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.progress = 0
         self.target_type = None
 
@@ -46,8 +46,8 @@ class AssemblingMachine(Machine, ABC):
     input_slots_num = 1
     possible_targets: list
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.progress = 0
         self.target_type = None
 
@@ -84,9 +84,9 @@ class AssemblingMachine(Machine, ABC):
 class MiningDrill(Machine, ABC):
     input_slots_num = 0
 
-    def __init__(self, x, y, cell: MapCell):
-        super().__init__(x, y)
-        self.cell = cell
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
+        self.cell = map_obj.get_cell(x, y)
 
     def process(self):
         if not self.energy_source.has_energy():
@@ -107,8 +107,8 @@ class BurnerFurnace(Furnace):
     energy_consumption = 1
     speed = 1
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.energy_source = BurnerPowerSource(self.energy_consumption)
 
 
@@ -117,8 +117,8 @@ class ElectricFurnace(Furnace):
     energy_consumption = 50
     speed = 2
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.energy_source = ElectricPowerSource(self.energy_consumption)
 
 
@@ -128,8 +128,8 @@ class BurnerAssemblingMachine(AssemblingMachine):
     energy_consumption = 1
     speed = 1
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.energy_source = BurnerPowerSource(self.energy_consumption)
 
 
@@ -149,8 +149,8 @@ class ElectricAssemblingMachine(AssemblingMachine):
     energy_consumption = 40
     speed = 2
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.energy_source = ElectricPowerSource(self.energy_consumption)
 
 
@@ -158,8 +158,8 @@ class BurnerMiningDrill(MiningDrill):
     energy_consumption = 1
     speed = 1
 
-    def __init__(self, x, y, cell: MapCell):
-        super().__init__(x, y, cell)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.energy_source = BurnerPowerSource(self.energy_consumption)
 
 
@@ -167,6 +167,6 @@ class ElectricMiningDrill(MiningDrill):
     energy_consumption = 50
     speed = 2
 
-    def __init__(self, x, y, cell: MapCell):
-        super().__init__(x, y, cell)
+    def __init__(self, x, y, map_obj):
+        super().__init__(x, y, map_obj)
         self.energy_source = ElectricPowerSource(self.energy_consumption)

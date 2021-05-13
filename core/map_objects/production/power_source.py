@@ -20,6 +20,10 @@ class PowerSource(ABC):
         pass
 
     @abstractmethod
+    def remove_energy(self):
+        pass
+
+    @abstractmethod
     def amount(self):
         pass
 
@@ -35,7 +39,7 @@ class BurnerPowerSource(PowerSource):
 
     def has_energy(self):
         return (
-            not self.fuel.is_empty() and self.fuel[0].amount >= self.energy_consumption
+                not self.fuel.is_empty() and self.fuel[0].amount >= self.energy_consumption
         )
 
     def subtract_energy(self):
@@ -46,6 +50,11 @@ class BurnerPowerSource(PowerSource):
         if fuel.is_fuel():
             return self.fuel.put(fuel)
         return False
+
+    def remove_energy(self):
+        f = self.fuel
+        self.fuel = None
+        return f
 
     def amount(self):
         return self.fuel
@@ -60,16 +69,19 @@ class ElectricPowerSource(PowerSource):
         self.power = None
 
     def has_energy(self):
-        return self.power.power >= self.energy_consumption
+        return self.power.value >= self.energy_consumption
 
     def subtract_energy(self):
-        self.power.power -= self.energy_consumption
+        self.power.value -= self.energy_consumption
 
     def put_energy(self, power: Power):
         self.power = power
 
+    def remove_energy(self):
+        self.power = None
+
     def amount(self):
-        return self.power.power if self.power else 0
+        return self.power.value if self.power else 0
 
     def finish_using(self):
-        self.power.power += self.energy_consumption
+        self.power.value += self.energy_consumption

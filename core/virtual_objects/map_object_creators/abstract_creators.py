@@ -20,40 +20,16 @@ def create_virtual_object(object_type, n):
 
 
 class MapObjectCreator(Intermediate):
-    def __init__(self, object_type, amount):
+    def __init__(self, object_type, amount, map_obj: Map):
         super().__init__(amount)
         self.object_type = object_type
+        self.map_obj = map_obj
 
-    def put_map_object(self, x, y, created_object, real_map: Map):
+    def _put_map_object(self, x, y, created_object, real_map: Map):
         cell = real_map.get_cell(x, y)
         cell.usable_object = created_object
         # real_map.set_cell(x, y, cell)
         self.amount -= 1
 
-    @abstractmethod
-    def create_object(self, x, y, real_map: Map):
-        pass
-
-
-class MachineCreator(MapObjectCreator):
-    def create_object(self, x, y, real_map: Map):
-        self.put_map_object(x, y, self.object_type(x, y), real_map)
-
-
-class DrillCreator(MapObjectCreator):
-    def create_object(self, x, y, real_map: Map):
-        self.put_map_object(
-            x, y, self.object_type(x, y, real_map.get_cell(x, y)), real_map
-        )
-
-
-class ElectricPoleCreator(MapObjectCreator):
-    def create_object(self, x, y, map_obj: Map):
-        created_pole: ElectricPole = self.object_type(x, y)
-        self.put_map_object(x, y, created_pole, map_obj)
-
-
-class GeneratorCreator(MapObjectCreator):
-    def create_object(self, x, y, map_obj: Map):
-        created_generator = self.object_type(x, y)
-        self.put_map_object(x, y, created_generator, map_obj)
+    def create_object(self, x, y):
+        self._put_map_object(x, y, self.object_type(x, y), self.map_obj)

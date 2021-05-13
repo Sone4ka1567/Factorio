@@ -105,7 +105,6 @@ class ElectricPole(MapObject):
                         and isinstance(obj.energy_source, ElectricPowerSource)
                         and obj.energy_source.power is None
                 ):
-                    print('qwe')
                     obj.energy_source.put_energy(self.power)
 
     def disconnect_machines(self):
