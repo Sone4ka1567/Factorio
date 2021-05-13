@@ -25,9 +25,3 @@ class MapObject(ABC):
 
     def remove(self):
         self._clear_cell()
-
-
-
-class VirtualObject(ABC):
-    def __init__(self, amount):
-        self.amount = amount

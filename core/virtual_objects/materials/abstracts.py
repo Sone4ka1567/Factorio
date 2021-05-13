@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from collections.abc import Iterable
-from base_classes import VirtualObject
+from virtual_object import VirtualObject
 from core.container import Container
 
 

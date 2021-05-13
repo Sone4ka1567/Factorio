@@ -1,4 +1,4 @@
-from base_classes import MapObject
+from map_object import MapObject
 from core.container import Container
 from math import sqrt
 

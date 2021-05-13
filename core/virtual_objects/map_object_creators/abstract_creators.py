@@ -2,7 +2,7 @@ from math import sqrt
 from abc import ABC, abstractmethod
 
 from maps import Map
-from base_classes import VirtualObject
+from virtual_object import VirtualObject
 from core.map_objects.production.electricity import (
     ElectricPole,
     ElectricNetwork,
