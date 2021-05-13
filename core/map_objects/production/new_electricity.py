@@ -26,6 +26,9 @@ def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: T
     # if object_type == ElectricPole:
     #     exit()
     if nearest_objects:
+        a = nearest_objects[min(nearest_objects.keys())]
+        if isinstance(a, ElectricPole):
+            print(  'nearest: ', a.priority)
         return nearest_objects[min(nearest_objects.keys())]
     return None
 
@@ -120,7 +123,7 @@ class ElectricPole(MapObject):
         pass
 
     def __str__(self):
-        return f'pow: {self.power}, prior: {self.priority}'
+        return f'p: {id(self.power)}, p: {self.priority}'
 
 
 class ElectricGenerator(MapObject):
@@ -142,7 +145,7 @@ class BurnerElectricGenerator(ElectricGenerator):
         nearest_pole = find_nearest(
             self.x, self.y, self.coverage_rad, self.map_obj, ElectricPole
         )
-        if nearest_pole:
+        if nearest_pole and nearest_pole.priority == -1:
             self.connect_to_pole(nearest_pole)
 
     def connect_to_pole(self, pole: ElectricPole):
@@ -166,17 +169,17 @@ class BurnerElectricGenerator(ElectricGenerator):
         return self.is_connected_to_pole
 
     def __str__(self):
-        return f'GEN: pow: {self.power}'
+        return f'G: {id(self.power)}'
 
 
 class SmallElectricPole(ElectricPole):
-    wire_len: int = 20
-    coverage_rad: int = 2
+    wire_len: int = 5
+    coverage_rad: int = 3
 
 
 class BigElectricPole(ElectricPole):
-    wire_len: int = 4
-    coverage_rad: int = 8
+    wire_len: int = 8
+    coverage_rad: int = 5
 
 
 if __name__ == '__main__':
@@ -188,6 +191,7 @@ if __name__ == '__main__':
         map.load(json.load(f))
     Y = 100
     X = 60
+
     cell: MapCell = map.get_cell(X, Y)
     cell.usable_object = BurnerElectricGenerator(X, Y, map)
     for x in range(X + 5, 85, 5):
@@ -195,8 +199,17 @@ if __name__ == '__main__':
         cell: MapCell = map.get_cell(x, Y)
         cell.usable_object = SmallElectricPole(x, Y, map)
 
+    Y2 = Y + 1
+    cell: MapCell = map.get_cell(X + 10, Y2)
+    cell.usable_object = SmallElectricPole(X + 10, Y2, map)
+
     cell: MapCell = map.get_cell(X + 10, Y)
-    cell.usable_object.remove()
+    # cell.usable_object.remove()
+
+    cell1: MapCell = map.get_cell(X, Y + 2)
+    cell1.usable_object = BurnerElectricGenerator(X, Y + 2, map)
+    cell2: MapCell = map.get_cell(X + 5, Y + 2)
+    cell2.usable_object = SmallElectricPole(X + 5, Y + 6, map)
 
 
     #
@@ -204,8 +217,11 @@ if __name__ == '__main__':
     #
     # print(f"|{map.get_cell(x, Y).usable_object}|\t", end='')
     def log():
-        for xx in range(X, 85, 5):
-            print(f"|{map.get_cell(xx, Y).usable_object}|\t", end='')
+        for yy in range(Y, Y + 3):
+            for xx in range(X, 85, 5):
+                s = f"|{map.get_cell(xx, yy).usable_object}|"
+                print(s + ' ' * max(28 - len(s), 0), end='')
+            print()
 
 
     log()
