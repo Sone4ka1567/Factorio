@@ -23,7 +23,7 @@ class ElectricFurnaceCreator(MapObjectCreator):
     def __init__(self, amount, map_obj):
         super().__init__(prod.ElectricFurnace, amount, map_obj)
         self.required_res = (
-            BurnerFurnaceCreator(amount),
+            BurnerFurnaceCreator(amount, map_obj),
             inter.CopperCable(5 * amount),
         )
 
@@ -48,7 +48,7 @@ class ElectricAssemblingMachineCreator(MapObjectCreator):
     def __init__(self, amount, map_obj):
         super().__init__(prod.ElectricAssemblingMachine, amount, map_obj)
         self.required_res = (
-            BurnerAssemblingMachineCreator(amount),
+            BurnerAssemblingMachineCreator(amount, map_obj),
             inter.IronGearWheel(5 * amount),
             inter.ElectricCircuit(3 * amount),
             inter.SteelPlate(2 * amount),
@@ -64,7 +64,7 @@ class BurnerMiningDrillCreator(MapObjectCreator):
         self.required_res = (
             inter.IronPlates(3 * amount),
             inter.IronGearWheel(3 * amount),
-            BurnerFurnaceCreator(amount),
+            BurnerFurnaceCreator(amount, map_obj),
         )
 
 

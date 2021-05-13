@@ -25,3 +25,8 @@ class MapObject(ABC):
 
     def remove(self):
         self._clear_cell()
+
+    @staticmethod
+    def needs_energy():
+        return False
+

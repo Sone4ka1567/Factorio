@@ -2,7 +2,7 @@ from abc import abstractmethod, ABC
 
 from core.container import Container
 
-from core.map_objects.production.power_source import PowerSource
+from core.map_objects.production.power_source import PowerSource, ElectricPowerSource
 from map_object import MapObject
 
 
@@ -34,8 +34,21 @@ class Machine(MapObject, ABC):
     def put_energy(self, *args):
         return self.energy_source.put_energy(*args)
 
+    def remove_energy(self):
+        self.energy_source.remove_energy()
+
     def disable(self):
         self.energy_source.finish_using()
 
+    def has_energy(self):
+        return self.energy_source.has_energy()
+
     def __str__(self):
         return f"type: {self.__class__.__name__}, input: {self.input}, output: {self.output}, power: {self.energy_source.amount()}"
+
+    @staticmethod
+    def needs_energy():
+        return True
+
+    def needs_electric_energy(self):
+        return isinstance(self.energy_source, ElectricPowerSource)

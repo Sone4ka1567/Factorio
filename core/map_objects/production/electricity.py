@@ -1,8 +1,6 @@
 from math import sqrt
 from map_object import MapObject
 from core.container import Container
-from core.map_objects.production.machine import Machine
-from core.map_objects.production.power_source import ElectricPowerSource
 
 
 class Power:
@@ -79,13 +77,8 @@ class ElectricPole(MapObject):
                 if dx == 0 and dy == 0:
                     continue
                 obj = self.map_obj.get_cell(self.x + dx, self.y + dy).usable_object
-                print(self.x + dx, self.y + dy)
-                if (
-                        isinstance(obj, Machine)
-                        and isinstance(obj.energy_source, ElectricPowerSource)
-                        and obj.energy_source.power is None
-                ):
-                    obj.energy_source.put_energy(self.power)
+                if obj.needs_energy() and obj.needs_electric_energy() and not obj.has_energy():
+                    obj.put_energy(self.power)
 
     def disconnect_machines(self):
         for dx in range(-self.coverage_rad, self.coverage_rad):
@@ -93,10 +86,8 @@ class ElectricPole(MapObject):
                 if dx == 0 and dy == 0:
                     continue
                 obj = self.map_obj.get_cell(self.x + dx, self.y + dy).usable_object
-                if isinstance(obj, Machine) and isinstance(
-                        obj.energy_source, ElectricPowerSource
-                ):
-                    obj.energy_source.remove_energy()
+                if obj.needs_energy() and obj.needs_electric_energy():
+                    obj.remove_energy()
 
         for connected_pole in self.connected_poles:
             connected_pole.connect_machines()

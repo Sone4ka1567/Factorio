@@ -1,22 +1,5 @@
-from math import sqrt
-from abc import ABC, abstractmethod
-
 from maps import Map
-from virtual_object import VirtualObject
-from core.map_objects.production.electricity import (
-    ElectricPole,
-    ElectricNetwork,
-    BurnerElectricGenerator,
-)
-from core.map_objects.production.production import Machine
-from core.map_objects.production.power_source import ElectricPowerSource
 from core.virtual_objects.materials.intermediates import Intermediate
-import core.virtual_objects.materials.intermediates as inter
-import core.virtual_objects.materials.raw_and_basics as rnb
-
-
-def create_virtual_object(object_type, n):
-    return object_type(n)
 
 
 class MapObjectCreator(Intermediate):
@@ -32,4 +15,4 @@ class MapObjectCreator(Intermediate):
         self.amount -= 1
 
     def create_object(self, x, y):
-        self._put_map_object(x, y, self.object_type(x, y), self.map_obj)
+        self._put_map_object(x, y, self.object_type(x, y, self.map_obj), self.map_obj)
