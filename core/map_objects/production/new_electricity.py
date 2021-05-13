@@ -1,6 +1,8 @@
 from map_object import MapObject
 from core.container import Container
 from math import sqrt
+from core.map_objects.production.machine import Machine
+from core.map_objects.production.power_source import ElectricPowerSource
 
 
 class Power:
@@ -26,9 +28,6 @@ def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: T
     # if object_type == ElectricPole:
     #     exit()
     if nearest_objects:
-        a = nearest_objects[min(nearest_objects.keys())]
-        if isinstance(a, ElectricPole):
-            print(  'nearest: ', a.priority)
         return nearest_objects[min(nearest_objects.keys())]
     return None
 
@@ -64,19 +63,19 @@ class ElectricPole(MapObject):
         )
         if nearest_pole:
             self.connect_to_pole(nearest_pole)
-            return
-
-        print('not found pole')
-        nearest_generator = find_nearest(
-            self.x, self.y, self.wire_len, self.map_obj, BurnerElectricGenerator
-        )
-        if nearest_generator:
-            print('found gen')
-            self.connect_to_generator(nearest_generator)
         else:
-            print('not found gen')
+            print('not found pole')
+            nearest_generator = find_nearest(
+                self.x, self.y, self.wire_len, self.map_obj, BurnerElectricGenerator
+            )
+            if nearest_generator:
+                print('found gen')
+                self.connect_to_generator(nearest_generator)
+            else:
+                print('not found gen')
 
         # todo: подключить все машины
+        self.connect_machines()
 
     def connect_to_pole(self, pole):
         self.connected_poles.append(pole)
@@ -93,6 +92,36 @@ class ElectricPole(MapObject):
 
         dfs(self, 0, generator.power)
         self.generator = generator
+
+    def connect_machines(self):
+        for dx in range(-self.coverage_rad, self.coverage_rad):
+            for dy in range(-self.coverage_rad, self.coverage_rad):
+                if dx == 0 and dy == 0:
+                    continue
+                obj = self.map_obj.get_cell(self.x + dx, self.y + dy).usable_object
+                print(self.x + dx, self.y + dy)
+                if (
+                        isinstance(obj, Machine)
+                        and isinstance(obj.energy_source, ElectricPowerSource)
+                        and obj.energy_source.power is None
+                ):
+                    print('qwe')
+                    obj.energy_source.put_energy(self.power)
+
+    def disconnect_machines(self):
+        for dx in range(-self.coverage_rad, self.coverage_rad):
+            for dy in range(-self.coverage_rad, self.coverage_rad):
+                if dx == 0 and dy == 0:
+                    continue
+                obj = self.map_obj.get_cell(self.x + dx, self.y + dy).usable_object
+                if (
+                        isinstance(obj, Machine)
+                        and isinstance(obj.energy_source, ElectricPowerSource)
+                ):
+                    obj.energy_source.remove_energy()
+
+        for connected_pole in self.connected_poles:
+            connected_pole.connect_machines()
 
     def _disconnect_all(self):
         for pole in self.connected_poles:
@@ -111,6 +140,8 @@ class ElectricPole(MapObject):
 
         if self.priority == 0:
             self.generator.disconnect_pole()
+
+        self.disconnect_machines()
 
     def remove(self):
         self._disconnect_all()
@@ -206,10 +237,16 @@ if __name__ == '__main__':
     cell: MapCell = map.get_cell(X + 10, Y)
     # cell.usable_object.remove()
 
+    from core.map_objects.production.production import ElectricAssemblingMachine
+
+    cell: MapCell = map.get_cell(X + 5, Y + 1)
+    cell.usable_object = ElectricAssemblingMachine(X + 5, Y + 1, map)
+    #
     cell1: MapCell = map.get_cell(X, Y + 2)
     cell1.usable_object = BurnerElectricGenerator(X, Y + 2, map)
+    print('SUUUUKAAAAA')
     cell2: MapCell = map.get_cell(X + 5, Y + 2)
-    cell2.usable_object = SmallElectricPole(X + 5, Y + 6, map)
+    cell2.usable_object = SmallElectricPole(X + 5, Y + 2, map)
 
 
     #
@@ -218,7 +255,7 @@ if __name__ == '__main__':
     # print(f"|{map.get_cell(x, Y).usable_object}|\t", end='')
     def log():
         for yy in range(Y, Y + 3):
-            for xx in range(X, 85, 5):
+            for xx in range(X, 85, 1):
                 s = f"|{map.get_cell(xx, yy).usable_object}|"
                 print(s + ' ' * max(28 - len(s), 0), end='')
             print()
