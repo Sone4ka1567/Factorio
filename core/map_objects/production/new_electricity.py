@@ -13,14 +13,18 @@ def euclidean_dist(dx, dy):
 
 
 def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: True):
+    # print(object_type)
     nearest_objects = {}
     for dx in range(-max_distance, max_distance):
         for dy in range(-max_distance, max_distance):
             if dx == 0 and dy == 0:
                 continue
             obj = map_obj.get_cell(x + dx, y + dy).usable_object
+            # print(obj)
             if isinstance(obj, object_type) and condition(obj):
                 nearest_objects = {euclidean_dist(dx, dy): obj}
+    # if object_type == ElectricPole:
+    #     exit()
     if nearest_objects:
         return nearest_objects[min(nearest_objects.keys())]
     return None
@@ -50,6 +54,7 @@ class ElectricPole(MapObject):
         self.connected_poles = []
         self.power = None
         self.priority = -1  # in line with no generator
+        self.generator = None
 
         nearest_pole = find_nearest(
             self.x, self.y, self.wire_len, self.map_obj, ElectricPole
@@ -58,11 +63,17 @@ class ElectricPole(MapObject):
             self.connect_to_pole(nearest_pole)
             return
 
+        print('not found pole')
         nearest_generator = find_nearest(
-            self.x, self.y, self.wire_len, self.map_obj, ElectricGenerator
+            self.x, self.y, self.wire_len, self.map_obj, BurnerElectricGenerator
         )
         if nearest_generator:
+            print('found gen')
             self.connect_to_generator(nearest_generator)
+        else:
+            print('not found gen')
+
+        # todo: подключить все машины
 
     def connect_to_pole(self, pole):
         self.connected_poles.append(pole)
@@ -78,15 +89,25 @@ class ElectricPole(MapObject):
                 dfs(connected_pole, priority + 1, power)
 
         dfs(self, 0, generator.power)
+        self.generator = generator
 
     def _disconnect_all(self):
         for pole in self.connected_poles:
             for idx, con_pol in enumerate(pole.connected_poles):
                 if con_pol == self:
                     pole.connected_poles.pop(idx)
-            if pole.priority > self.priority:
-                pole.power = None  # точно так работает?
-                pole.priority = -1
+
+        def dfs(cur_pole: ElectricPole, priority):
+            cur_pole.power = None
+            cur_pole.priority = -1
+            for connected_pole in cur_pole.connected_poles:
+                if connected_pole.priority > priority:
+                    dfs(connected_pole, priority)
+
+        dfs(self, self.priority)
+
+        if self.priority == 0:
+            self.generator.disconnect_pole()
 
     def remove(self):
         self._disconnect_all()
@@ -97,6 +118,9 @@ class ElectricPole(MapObject):
 
     def process(self):
         pass
+
+    def __str__(self):
+        return f'pow: {self.power}, prior: {self.priority}'
 
 
 class ElectricGenerator(MapObject):
@@ -125,6 +149,9 @@ class BurnerElectricGenerator(ElectricGenerator):
         pole.connect_to_generator(self)
         self.is_connected_to_pole = True
 
+    def disconnect_pole(self):
+        self.is_connected_to_pole = False
+
     def put_energy(self, batch):
         if batch.is_fuel():
             self.fuel.put(batch)
@@ -138,9 +165,12 @@ class BurnerElectricGenerator(ElectricGenerator):
     def is_connected(self):
         return self.is_connected_to_pole
 
+    def __str__(self):
+        return f'GEN: pow: {self.power}'
+
 
 class SmallElectricPole(ElectricPole):
-    wire_len: int = 2
+    wire_len: int = 20
     coverage_rad: int = 2
 
 
@@ -149,7 +179,37 @@ class BigElectricPole(ElectricPole):
     coverage_rad: int = 8
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    from maps import EasyMap, MapCell
+    import json
+
+    map = EasyMap()
+    with open(r'C:\Users\79161\PycharmProjects\patterns-project\map.json', 'r+') as f:
+        map.load(json.load(f))
+    Y = 100
+    X = 60
+    cell: MapCell = map.get_cell(X, Y)
+    cell.usable_object = BurnerElectricGenerator(X, Y, map)
+    for x in range(X + 5, 85, 5):
+        # x = X + 1
+        cell: MapCell = map.get_cell(x, Y)
+        cell.usable_object = SmallElectricPole(x, Y, map)
+
+    cell: MapCell = map.get_cell(X + 10, Y)
+    cell.usable_object.remove()
+
+
+    #
+    # print(f"|{map.get_cell(X, Y).usable_object}|\t", end='')
+    #
+    # print(f"|{map.get_cell(x, Y).usable_object}|\t", end='')
+    def log():
+        for xx in range(X, 85, 5):
+            print(f"|{map.get_cell(xx, Y).usable_object}|\t", end='')
+
+
+    log()
+
 #     class H:
 #         def __init__(self, link):
 #             self.linked = link
