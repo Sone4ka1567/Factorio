@@ -115,6 +115,9 @@ class PygameGUI(GUI):
     def get_font(self, name, size):
         return pygame.font.Font(name, size)
 
+    def get_sys_font(self, name, size):
+        return pygame.font.SysFont(name, size)
+
     def flip_display(self):
         pygame.display.flip()
 

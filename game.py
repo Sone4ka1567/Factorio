@@ -25,6 +25,7 @@ class Game:
         self.font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 7)
         self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 18)
         self.mini_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 40)
+        self.additional_mini_font = self.gui.get_sys_font("arial", const.DISPLAY_H // 40)
 
         self.start_screen_playing = True
         self.choose_player_screen_playing, self.choose_map_playing = True, True
@@ -199,7 +200,7 @@ class Game:
         cur_cell = self.map_obj[self.map_matr[j_ind][i_ind]]
         if cur_cell.raw_material_batch:
             message = str(cur_cell.raw_material_batch)
-            text = self.mini_font.render(message, True, const.WHITE)
+            text = self.additional_mini_font.render(message, True, const.WHITE)
             self.gui.draw_rect(
                 self.screen, const.BAGCOLOR,
                 (const.DISPLAY_W - const.CELL_SIZE * 3, 0,
