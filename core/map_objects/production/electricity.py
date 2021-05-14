@@ -1,6 +1,7 @@
 from map_object import MapObject
 from core.container import Container
 from basic_geometry import euclidean_dist
+from result_func import result_ok, result_error
 
 
 class Power:
@@ -137,12 +138,22 @@ class BurnerElectricGenerator(ElectricGenerator):
         self.fuel = Container(self.input_slots_num)
         self.power = Power()
         self.is_connected_to_pole = False
+        self.power_scheme = {1: 0.2,
+                             2: 0.5,
+                             3: 0.8}
 
         nearest_pole = find_nearest(
             self.x, self.y, self.coverage_rad, self.map_obj, ElectricPole
         )
         if nearest_pole and nearest_pole.priority == -1:
             self.connect_to_pole(nearest_pole)
+
+    def power_func(self):
+        if self.fuel.is_empty():
+            return 0
+        if self.fuel[0].amount > max(self.power_scheme.keys()):
+            return self.max_power_output
+        return int(self.power_scheme[self.fuel[0].amount] * self.max_power_output)
 
     def connect_to_pole(self, pole: ElectricPole):
         pole.connect_to_generator(self)
@@ -154,9 +165,11 @@ class BurnerElectricGenerator(ElectricGenerator):
     def put_energy(self, batch):
         if batch.is_fuel():
             self.fuel.put(batch)
+            return result_ok()
+        return result_error('not a fuel')
 
     def process(self):
-        self.power.value = 0 if self.fuel.is_empty() else self.max_power_output
+        self.power.value = self.power_func()
 
     def get_power(self):
         return self.power

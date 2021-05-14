@@ -2,7 +2,6 @@ from abc import ABC
 
 from core.virtual_objects.materials.raw_and_basics import RawMaterial, Iron, Copper, Silicon
 import core.virtual_objects.materials.intermediates as inter
-from maps import MapCell
 from core.map_objects.production.power_source import (
     ElectricPowerSource,
     BurnerPowerSource,
@@ -22,6 +21,7 @@ class Furnace(Machine, ABC):
     def process(self):
         if not self.energy_source.has_energy():
             return
+        self.energy_source.subtract_energy(self.progress)
         if self.progress == 0:
             if self.input.is_empty():
                 return
@@ -30,7 +30,6 @@ class Furnace(Machine, ABC):
             self.ticks_per_batch = self.target_type.ticks_to_produce // self.speed
             self.input.remove(input_batch.get_n(1))
             self.progress += 1
-            self.energy_source.subtract_energy()
         else:
             if self.progress == self.ticks_per_batch:
                 putting_res = self.output.put(self.target_type(1))
@@ -60,6 +59,7 @@ class AssemblingMachine(Machine, ABC):
     def process(self):
         if not self.energy_source.has_energy():
             return
+        self.energy_source.subtract_energy(self.progress)
         if self.progress == 0:
             if self.input.is_empty() or not self.target_type:
                 return
@@ -69,7 +69,6 @@ class AssemblingMachine(Machine, ABC):
                 if not self.input.contains(r):
                     return
                 self.input.remove(r)
-            self.energy_source.subtract_energy()
             self.progress += 1
         elif self.progress == self.ticks_per_batch:
             putting_res = self.output.put(self.target_type(1))
