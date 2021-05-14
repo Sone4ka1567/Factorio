@@ -270,6 +270,8 @@ class Game:
             self.screen.blit(text_right,
                              (const.DISPLAY_W // 2 + const.DISPLAY_W // 20, const.DISPLAY_H // 20))
 
+            # LEFT SIDE
+
             y_start = const.DISPLAY_H // 6
             x_start = const.DISPLAY_W // 20
             for i in range((self.player.bag_capacity + 5) // 5):
@@ -304,6 +306,31 @@ class Game:
                         y_start + i_ind * 2 * const.CELL_SIZE + const.CELL_SIZE // 2,
                     ),
                 )
+
+            # RIGHT SIDE
+
+            y_start = const.DISPLAY_H // 6
+            x_start = const.DISPLAY_W // 20 + const.DISPLAY_W // 2
+
+            self.gui.draw_rect(
+                self.screen, const.LIGHT_GREY,
+                (x_start, y_start,
+                 2 * const.CELL_SIZE, 2 * const.CELL_SIZE)
+            )
+
+            self.gui.draw_rect(
+                self.screen, const.LIGHT_GREY,
+                (x_start + 3 * const.CELL_SIZE, y_start,
+                 2 * const.CELL_SIZE, 2 * const.CELL_SIZE)
+            )
+
+            self.gui.draw_rect(
+                self.screen, const.LIGHT_GREY,
+                (x_start + 6 * const.CELL_SIZE, y_start,
+                 2 * const.CELL_SIZE, 2 * const.CELL_SIZE)
+            )
+
+            # End of Bag
 
             for event in self.gui.get_events():
                 if self.gui.get_event_type(event) == "QUIT":
