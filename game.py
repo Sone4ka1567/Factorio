@@ -13,7 +13,7 @@ class Game:
     def __init__(self, gui):
         self.gui = gui
         self.gui.start()
-        const.DISPLAY_W, const.DISPLAY_H = 1200, 864  # self.gui.get_display_info()
+        const.DISPLAY_W, const.DISPLAY_H = 1408, 864  # self.gui.get_display_info()
         self.screen = self.gui.set_screen(
             const.DISPLAY_W, const.DISPLAY_H,
             self.gui.get_hwsurface(), self.gui.get_double_buffer())
@@ -305,90 +305,30 @@ class Game:
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
 
-    def create_button(
-            self, message, x_left, y_top, width, height, hovercolor, defaultcolor, level
-    ):
-        mouse = self.gui.get_mouse_pos()
-        if x_left + width > mouse[0] > x_left and y_top + height > mouse[1] > y_top:
-            self.gui.draw_rect(self.screen, hovercolor, (x_left, y_top, width, height))
-            for event in self.gui.get_events():
-                if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
-                    if level == "start":
-                        self.start_screen_playing = False
-                    elif level == "exit":
-                        self.quit()
-                        sys.exit()
-                    elif level in ("fast", "balanced", "big_bag"):
-                        self.player_perk = level
-                        self.choose_player_screen_playing = False
-                    elif level in ("easy", "hard"):
-                        if level == "easy":
-                            creator = EasyMapCreator()
-                        else:
-                            creator = HardMapCreator()
-                        self.map = creator.gen_map()
-                        self.map_matr = self.map.get_map_matrix()
-                        self.map_obj = self.map.get_map_objects()
-                        self.choose_map_playing = False
-        else:
-            self.gui.draw_rect(
-                self.screen, defaultcolor, (x_left, y_top, width, height)
-            )
-
-        self.button_text = self.small_font.render(message, True, const.BLACK)
-        self.screen.blit(
-            self.button_text,
-            (
-                x_left + (width - self.button_text.get_width()) / 2,
-                y_top + (height - self.button_text.get_height()) / 2,
-            ),
-        )
-
     def show_start_screen(self):
-        self.start_text = self.big_font.render("ENDustrial", True, const.ORANGE_GREY)
 
         while self.start_screen_playing:
-            self.screen.fill(const.BG_COLOR)
-            self.screen.blit(
-                self.start_text,
-                (
-                    (const.DISPLAY_W - self.start_text.get_width()) / 2,
-                    const.DISPLAY_H // 8,
-                ),
-            )
+            background_image = self.gui.get_image('welcome_screen/screen_1/background_1.xcf')
+            self.screen.blit(background_image, (0, 0))
 
-            self.create_button(
-                "START",
-                const.DISPLAY_W / 2 - const.DISPLAY_W // 12,
-                const.DISPLAY_H / 2,
-                const.DISPLAY_W // 6,
-                const.DISPLAY_H // 12,
-                const.WHITE,
-                const.ORANGE_GREY,
-                "start",
-            )
+            start_image = self.gui.get_image('welcome_screen/screen_1/start_button.xcf')
+            credits_image = self.gui.get_image('welcome_screen/screen_1/credits_button.xcf')
+            close_image = self.gui.get_image('welcome_screen/screen_1/close_button.xcf')
 
-            self.create_button(
-                "CREDITS",
-                const.DISPLAY_W / 2 - const.DISPLAY_W // 12,
-                const.DISPLAY_H / 2 + const.DISPLAY_H // 6,
-                const.DISPLAY_W // 6,
-                const.DISPLAY_H // 12,
-                const.WHITE,
-                const.ORANGE_GREY,
-                "credits",
-            )
+            self.screen.blit(start_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2))
+            self.screen.blit(credits_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 100))
+            self.screen.blit(close_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 200))
 
-            self.create_button(
-                "EXIT",
-                const.DISPLAY_W / 2 - const.DISPLAY_W // 12,
-                const.DISPLAY_H / 2 + const.DISPLAY_H // 3,
-                const.DISPLAY_W // 6,
-                const.DISPLAY_H // 12,
-                const.WHITE,
-                const.ORANGE_GREY,
-                "exit",
-            )
+            mouse = self.gui.get_mouse_pos()
+            if const.DISPLAY_W // 2 + 265 / 2 > mouse[0] > const.DISPLAY_W // 2 - 265 / 2:
+                for event in self.gui.get_events():
+                    if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
+                        if const.DISPLAY_H // 2 + 82 > mouse[1] > const.DISPLAY_H // 2:
+                            self.start_screen_playing = False
+                        elif const.DISPLAY_H // 2 + 182 > mouse[1] > const.DISPLAY_H // 2 + 100:
+                            pass
+                        elif const.DISPLAY_H // 2 + 282 > mouse[1] > const.DISPLAY_H // 2 +200:
+                            self.quit()
 
             self.events()
 
@@ -396,52 +336,32 @@ class Game:
             self.gui.tick_fps(self.clock, const.FPS)
 
     def choose_player_screen(self):
-        self.choose_player_text = self.font.render(
-            "Choose a player", True, const.ORANGE_GREY
-        )
 
         while self.choose_player_screen_playing:
-            self.screen.fill(const.BG_COLOR)
-            self.screen.blit(
-                self.choose_player_text,
-                (
-                    (const.DISPLAY_W - self.choose_player_text.get_width()) / 2,
-                    const.DISPLAY_H // 8,
-                ),
-            )
+            background_image = self.gui.get_image('welcome_screen/screen_2/background_2.xcf')
+            self.screen.blit(background_image, (0, 0))
 
-            self.create_button(
-                "FAST",
-                const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
-                const.DISPLAY_H / 2,
-                const.DISPLAY_W // 5,
-                const.DISPLAY_H // 12,
-                const.WHITE,
-                const.ORANGE_GREY,
-                "fast",
-            )
+            builder_image = self.gui.get_image('welcome_screen/screen_2/builder_button.xcf')
+            usual_image = self.gui.get_image('welcome_screen/screen_2/usual_button.xcf')
+            warrior_image = self.gui.get_image('welcome_screen/screen_2/warrior_button.xcf')
 
-            self.create_button(
-                "BALANCED",
-                const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
-                const.DISPLAY_H / 2 + const.DISPLAY_H // 6,
-                const.DISPLAY_W // 5,
-                const.DISPLAY_H // 12,
-                const.WHITE,
-                const.ORANGE_GREY,
-                "balanced",
-            )
+            self.screen.blit(builder_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2))
+            self.screen.blit(usual_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 100))
+            self.screen.blit(warrior_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 200))
 
-            self.create_button(
-                "BIG BAG",
-                const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
-                const.DISPLAY_H / 2 + const.DISPLAY_H // 3,
-                const.DISPLAY_W // 5,
-                const.DISPLAY_H // 12,
-                const.WHITE,
-                const.ORANGE_GREY,
-                "big_bag",
-            )
+            mouse = self.gui.get_mouse_pos()
+            if const.DISPLAY_W // 2 + 265 / 2 > mouse[0] > const.DISPLAY_W // 2 - 265 / 2:
+                for event in self.gui.get_events():
+                    if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
+                        if const.DISPLAY_H // 2 + 82 > mouse[1] > const.DISPLAY_H // 2:
+                            self.player_perk = 'big_bag'
+                            self.choose_player_screen_playing = False
+                        elif const.DISPLAY_H // 2 + 182 > mouse[1] > const.DISPLAY_H // 2 + 100:
+                            self.player_perk = 'balanced'
+                            self.choose_player_screen_playing = False
+                        elif const.DISPLAY_H // 2 + 282 > mouse[1] > const.DISPLAY_H // 2 + 200:
+                            self.player_perk = 'fast'
+                            self.choose_player_screen_playing = False
 
             self.events()
 
@@ -449,41 +369,33 @@ class Game:
             self.gui.tick_fps(self.clock, const.FPS)
 
     def choose_map_screen(self):
-        self.choose_map_text = self.font.render(
-            "Choose difficulty", True, const.ORANGE_GREY
-        )
 
         while self.choose_map_playing:
-            self.screen.fill(const.BG_COLOR)
-            self.screen.blit(
-                self.choose_map_text,
-                (
-                    (const.DISPLAY_W - self.choose_map_text.get_width()) / 2,
-                    const.DISPLAY_H // 8,
-                ),
-            )
+            background_image = self.gui.get_image('welcome_screen/screen_3/background_3.xcf')
+            self.screen.blit(background_image, (0, 0))
 
-            self.create_button(
-                "EASY",
-                const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
-                const.DISPLAY_H / 2,
-                const.DISPLAY_W // 5,
-                const.DISPLAY_H // 12,
-                const.WHITE,
-                const.ORANGE_GREY,
-                "easy",
-            )
+            normal_image = self.gui.get_image('welcome_screen/screen_3/normal_button.xcf')
+            hard_image = self.gui.get_image('welcome_screen/screen_3/hard_button.xcf')
 
-            self.create_button(
-                "HARD",
-                const.DISPLAY_W / 2 - const.DISPLAY_W // 10,
-                const.DISPLAY_H / 2 + const.DISPLAY_H // 6,
-                const.DISPLAY_W // 5,
-                const.DISPLAY_H // 12,
-                const.WHITE,
-                const.ORANGE_GREY,
-                "hard",
-            )
+            self.screen.blit(normal_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 100))
+            self.screen.blit(hard_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 250))
+
+            mouse = self.gui.get_mouse_pos()
+            if const.DISPLAY_W // 2 + 265 / 2 > mouse[0] > const.DISPLAY_W // 2 - 265 / 2:
+                for event in self.gui.get_events():
+                    if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
+                        if const.DISPLAY_H // 2 + 182 > mouse[1] > const.DISPLAY_H // 2 + 100:
+                            creator = EasyMapCreator()
+                            self.map = creator.gen_map()
+                            self.map_matr = self.map.get_map_matrix()
+                            self.map_obj = self.map.get_map_objects()
+                            self.choose_map_playing = False
+                        elif const.DISPLAY_H // 2 + 332 > mouse[1] > const.DISPLAY_H // 2 + 250:
+                            creator = HardMapCreator()
+                            self.map = creator.gen_map()
+                            self.map_matr = self.map.get_map_matrix()
+                            self.map_obj = self.map.get_map_objects()
+                            self.choose_map_playing = False
 
             self.events()
 
