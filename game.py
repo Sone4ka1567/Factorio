@@ -234,6 +234,18 @@ class Game:
             self.screen.blit(text_right,
                              (const.DISPLAY_W // 2 + const.DISPLAY_W // 20, const.DISPLAY_H // 20))
 
+            y_start = const.DISPLAY_H // 6
+            x_start = const.DISPLAY_W // 20
+            for i in range((self.player.bag_capacity + 5) // 5):
+                for j in range(5):
+                    if i * 5 + j >= self.player.bag_capacity:
+                        break
+                    self.gui.draw_rect(
+                        self.screen, const.LIGHT_GREY,
+                        (x_start + j * 2 * const.CELL_SIZE, y_start + i * 2 * const.CELL_SIZE,
+                         const.CELL_SIZE, const.CELL_SIZE)
+                    )
+
             for event in self.gui.get_events():
                 if self.gui.get_event_type(event) == "QUIT":
                     self.quit()
