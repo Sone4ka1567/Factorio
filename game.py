@@ -252,11 +252,20 @@ class Game:
                 j_ind = x % 5
 
                 cell_image = self.gui.get_image(  # todo
-                    "dirt_and_ore/dark_dirt_with_silicon.xcf"
+                    "dirt_and_ore/light_dirt.png"
                 ).convert_alpha()
 
                 self.screen.blit(cell_image,
                                  (x_start + j_ind * 2 * const.CELL_SIZE, y_start + i_ind * 2 * const.CELL_SIZE))
+
+                batch_amount = self.mini_font.render(str(batches[x].amount), True, const.WHITE)
+                self.screen.blit(
+                    batch_amount,
+                    (
+                        x_start + j_ind * 2 * const.CELL_SIZE,
+                        y_start + i_ind * 2 * const.CELL_SIZE + const.CELL_SIZE // 2,
+                    ),
+                )
 
             for event in self.gui.get_events():
                 if self.gui.get_event_type(event) == "QUIT":
