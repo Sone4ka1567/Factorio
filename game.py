@@ -238,7 +238,7 @@ class Game:
                 if self.gui.get_event_type(event) == "QUIT":
                     self.quit()
 
-                if 'E' in self.gui.get_keystate():
+                if 'ESCAPE' in self.gui.get_keystate():
                     self.show_bag_playing = False
 
             self.gui.update_display()

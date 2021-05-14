@@ -85,6 +85,8 @@ class PygameGUI(GUI):
             lst.append("DOWN")
         if keystate[pygame.K_e]:
             lst.append("E")
+        if keystate[pygame.K_ESCAPE]:
+            lst.append("ESCAPE")
         # pylint: enable=no-member
         return lst
 
