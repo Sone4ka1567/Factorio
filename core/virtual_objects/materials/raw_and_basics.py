@@ -64,7 +64,7 @@ class StoneBricks(BasicMaterial):
 
 
 class Silicon(RawMaterial):
-    relative_icon_path = '../../../img/icons/materials/raw/silicon.png'
+    relative_icon_path = '../../../img/icons/materials/raw/silicon.xcf'
 
     def __init__(self, amount=int(1e5)):
         super().__init__(amount)

@@ -213,6 +213,7 @@ class Game:
                     cur_cell.raw_material_batch.get_icon_path()
                 ).convert_alpha()
             cell_image.set_colorkey(const.BLACK)
+
             self.screen.blit(cell_image, ((const.DISPLAY_W - const.CELL_SIZE * 3) +
                                     (const.CELL_SIZE * 3 - cell_image.get_width()) / 2, const.CELL_SIZE * 0.25))
             self.screen.blit(text, ((const.DISPLAY_W - const.CELL_SIZE * 3) +
