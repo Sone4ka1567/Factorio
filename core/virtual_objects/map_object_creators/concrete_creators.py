@@ -10,6 +10,7 @@ from core.virtual_objects.map_object_creators.abstract_creators import (
 class BurnerFurnaceCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
+    icon_path = '../../../img/icons/creators/production/stone-furnace.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerFurnace, amount, map_obj)
@@ -19,6 +20,7 @@ class BurnerFurnaceCreator(MapObjectCreator):
 class ElectricFurnaceCreator(MapObjectCreator):
     ticks_to_produce = 20
     producing_time = 1.0
+    icon_path = '../../../img/icons/creators/production/electric-furnace.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.ElectricFurnace, amount, map_obj)
@@ -31,6 +33,7 @@ class ElectricFurnaceCreator(MapObjectCreator):
 class BurnerAssemblingMachineCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
+    icon_path = '../../../img/icons/creators/production/assembling-machine-1.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerAssemblingMachine, amount, map_obj)
@@ -44,6 +47,7 @@ class BurnerAssemblingMachineCreator(MapObjectCreator):
 class ElectricAssemblingMachineCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
+    icon_path = '../../../img/icons/creators/production/assembling-machine-2.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.ElectricAssemblingMachine, amount, map_obj)
@@ -58,6 +62,7 @@ class ElectricAssemblingMachineCreator(MapObjectCreator):
 class BurnerMiningDrillCreator(MapObjectCreator):
     ticks_to_produce = 20
     producing_time = 1.0
+    icon_path = '../../../img/icons/creators/production/burner-mining-drill.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerMiningDrill, amount, map_obj)
@@ -74,6 +79,7 @@ class BurnerMiningDrillCreator(MapObjectCreator):
 class ElectricMiningDrillCreator(MapObjectCreator):
     ticks_to_produce = 40
     producing_time = 2.0
+    icon_path = '../../../img/icons/creators/production/electric-mining-drill.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.ElectricMiningDrill, amount, map_obj)
@@ -87,6 +93,7 @@ class ElectricMiningDrillCreator(MapObjectCreator):
 class SmallElectricPoleCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
+    icon_path = '../../../img/icons/creators/electricity/small-electric-pole.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(el.SmallElectricPole, amount, map_obj)
@@ -99,6 +106,7 @@ class SmallElectricPoleCreator(MapObjectCreator):
 class BigElectricPoleCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
+    icon_path = '../../../img/icons/creators/electricity/big-electric-pole.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(el.BigElectricPole, amount, map_obj)
@@ -112,6 +120,7 @@ class BigElectricPoleCreator(MapObjectCreator):
 class BurnerElectricGenerator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
+    icon_path = '../../../img/icons/creators/electricity/burner-generator.xcf'
 
     def __init__(self, amount, map_obj):
         super().__init__(el.BurnerElectricGenerator, amount, map_obj)
@@ -119,4 +128,18 @@ class BurnerElectricGenerator(MapObjectCreator):
             inter.Pipe(10 * amount),
             inter.IronGearWheel(12 * amount),
             inter.IronPlate(15 * amount),
+        )
+
+
+class RadarCreator(MapObjectCreator):
+    ticks_to_produce = 140
+    producing_time = 6.0
+    icon_path = '../../../img/icons/radar.png'
+
+    def __init__(self, amount):
+        super().__init__(amount)
+        self.required_res = (
+            inter.ControlUnit(amount * 3),
+            inter.SteelPlate(amount * 25),
+            inter.IronGearWheel(amount * 15),
         )
