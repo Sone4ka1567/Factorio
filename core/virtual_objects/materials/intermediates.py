@@ -96,17 +96,3 @@ class ControlUnit(Intermediate):
     def __init__(self, amount):
         super().__init__(amount)
         self.required_res = (IntegratedCircuit(amount * 5), Transistor(amount * 5))
-
-
-class Radar(Intermediate):
-    ticks_to_produce = 140
-    producing_time = 6.0
-    icon_path = '../../../img/icons/radar.png'
-
-    def __init__(self, amount):
-        super().__init__(amount)
-        self.required_res = (
-            ControlUnit(amount * 3),
-            SteelPlate(amount * 25),
-            IronGearWheel(amount * 15),
-        )
