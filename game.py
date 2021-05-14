@@ -257,6 +257,7 @@ class Game:
 
     def show_bag(self):
         self.show_bag_playing = True
+        self.module_playing = 'production'
 
         while self.show_bag_playing:
             self.screen.fill(const.BAGCOLOR)
@@ -311,39 +312,56 @@ class Game:
 
             y_start = const.DISPLAY_H // 6
             x_start = const.DISPLAY_W // 20 + const.DISPLAY_W // 2
+            production_image = self.gui.get_image('icons/modules/production.png').convert_alpha()
+            production_image.set_colorkey(const.BLACK)
+            inter_products_image = self.gui.get_image('icons/modules/intermediate-products.png').convert_alpha()
+            inter_products_image.set_colorkey(const.BLACK)
+            logistics_image = self.gui.get_image('icons/modules/logistics.png').convert_alpha()
+            logistics_image.set_colorkey(const.BLACK)
 
-            self.gui.draw_rect(
-                self.screen, const.LIGHT_GREY,
+            production_color = const.LIGHT_GREY
+            logistics_color = const.LIGHT_GREY
+            inter_products_color = const.LIGHT_GREY
+
+            if self.module_playing == 'production':
+                production_color = const.ORANGE_GREY
+                pass
+            elif self.module_playing == 'logistics':
+                logistics_color = const.ORANGE_GREY
+                pass
+            else:
+                inter_products_color = const.ORANGE_GREY
+                pass
+
+            self.gui.draw_rect(  # production
+                self.screen, production_color,
                 (x_start, y_start,
                  2 * const.CELL_SIZE, 2 * const.CELL_SIZE)
             )
-            logistics_image = self.gui.get_image('icons/modules/logistics.png').convert_alpha()
-            logistics_image.set_colorkey(const.BLACK)
-            self.screen.blit(logistics_image,
-                             (x_start + const.CELL_SIZE - logistics_image.get_width() // 2,
-                              y_start + const.CELL_SIZE - logistics_image.get_height() // 2))
 
-            self.gui.draw_rect(
-                self.screen, const.LIGHT_GREY,
+            self.screen.blit(production_image,
+                             (x_start + const.CELL_SIZE - production_image.get_width() // 2,
+                              y_start + const.CELL_SIZE - production_image.get_height() // 2))
+
+            self.gui.draw_rect(  # inter-products
+                self.screen, inter_products_color,
                 (x_start + 3 * const.CELL_SIZE, y_start,
                  2 * const.CELL_SIZE, 2 * const.CELL_SIZE)
             )
-            inter_products_image = self.gui.get_image('icons/modules/intermediate-products.png').convert_alpha()
-            inter_products_image.set_colorkey(const.BLACK)
+
             self.screen.blit(inter_products_image,
                              (x_start + 4 * const.CELL_SIZE - inter_products_image.get_width() // 2,
                               y_start + const.CELL_SIZE - inter_products_image.get_height() // 2))
 
-            self.gui.draw_rect(
-                self.screen, const.LIGHT_GREY,
+            self.gui.draw_rect(  # logistics
+                self.screen, logistics_color,
                 (x_start + 6 * const.CELL_SIZE, y_start,
                  2 * const.CELL_SIZE, 2 * const.CELL_SIZE)
             )
-            production_image = self.gui.get_image('icons/modules/production.png').convert_alpha()
-            production_image.set_colorkey(const.BLACK)
-            self.screen.blit(production_image,
-                             (x_start + 7 * const.CELL_SIZE - production_image.get_width() // 2,
-                              y_start + const.CELL_SIZE - production_image.get_height() // 2))
+
+            self.screen.blit(logistics_image,
+                             (x_start + 7 * const.CELL_SIZE - logistics_image.get_width() // 2,
+                              y_start + const.CELL_SIZE - logistics_image.get_height() // 2))
 
             # End of Bag
 
@@ -353,6 +371,16 @@ class Game:
 
                 if 'ESCAPE' in self.gui.get_keystate():
                     self.show_bag_playing = False
+
+                if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 1:
+                    # Переключение вкладок
+                    if y_start + 2 * const.CELL_SIZE > event.pos[1] > y_start:
+                        if x_start < event.pos[0] < x_start + 2 * const.CELL_SIZE:
+                            self.module_playing = 'production'
+                        elif x_start + 3 * const.CELL_SIZE < event.pos[0] < x_start + 5 * const.CELL_SIZE:
+                            self.module_playing = 'inter-products'
+                        elif x_start + 6 * const.CELL_SIZE < event.pos[0] < x_start + 8 * const.CELL_SIZE:
+                            self.module_playing = 'logistics'
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
