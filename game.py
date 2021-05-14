@@ -20,6 +20,7 @@ class Game:
 
         self.gui.set_caption("ENDustrial")
         self.clock = self.gui.set_clock()
+        self.gui.set_music('sounds/welcome_music.wav')
 
         self.big_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 5)
         self.font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 7)
@@ -33,6 +34,7 @@ class Game:
         self.player_perk, self.choose_map_text = None, None
 
     def new(self):
+        self.gui.stop_music()
         self.all_sprites = self.gui.group_sprites()
         self.trees = self.gui.group_sprites()
 

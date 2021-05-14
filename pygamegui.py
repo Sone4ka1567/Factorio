@@ -32,6 +32,14 @@ class PygameGUI(GUI):
     def set_screen(self, width, height, hwsurf, double_buffer):
         return pygame.display.set_mode((width, height), hwsurf | double_buffer)
 
+    def set_music(self, file):
+        pygame.mixer.init()
+        pygame.mixer.music.load(file)
+        pygame.mixer.music.play(-1)
+
+    def stop_music(self):
+        pygame.mixer.music.stop()
+
     def fill_screen(self, screen, color):
         screen.fill(color)
 

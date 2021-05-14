@@ -16,6 +16,14 @@ class GUI(ABC):
         pass
 
     @abstractmethod
+    def set_music(self, file):
+        pass
+
+    @abstractmethod
+    def stop_music(self):
+        pass
+
+    @abstractmethod
     def fill_screen(self, screen, color):
         pass
 
