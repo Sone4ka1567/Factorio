@@ -5,6 +5,7 @@ from tree_sprite import Tree
 from maps import EasyMapCreator, HardMapCreator, EasyMap, HardMap
 from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
+from basic_geometry import euclidean_dist
 import constants as const
 import time
 import json
@@ -210,12 +211,12 @@ class Game:
                  const.CELL_SIZE * 3, const.CELL_SIZE * 2)
             )
             cell_image = self.gui.get_image(
-                    cur_cell.raw_material_batch.get_icon_path()
-                ).convert_alpha()
+                cur_cell.raw_material_batch.get_icon_path()
+            ).convert_alpha()
             cell_image.set_colorkey(const.BLACK)
 
             self.screen.blit(cell_image, ((const.DISPLAY_W - const.CELL_SIZE * 3) +
-                                    (const.CELL_SIZE * 3 - cell_image.get_width()) / 2, const.CELL_SIZE * 0.25))
+                                          (const.CELL_SIZE * 3 - cell_image.get_width()) / 2, const.CELL_SIZE * 0.25))
             self.screen.blit(text, ((const.DISPLAY_W - const.CELL_SIZE * 3) +
                                     (const.CELL_SIZE * 3 - text.get_width()) / 2, const.CELL_SIZE * 1.25))
 

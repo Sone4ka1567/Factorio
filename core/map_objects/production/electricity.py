@@ -1,15 +1,11 @@
-from math import sqrt
 from map_object import MapObject
 from core.container import Container
+from basic_geometry import euclidean_dist
 
 
 class Power:
     def __init__(self):
         self.value = 0
-
-
-def euclidean_dist(dx, dy):
-    return sqrt(dx ** 2 + dy ** 2)
 
 
 def find_nearest(x, y, max_distance, map_obj, object_type, condition=lambda x: True):
