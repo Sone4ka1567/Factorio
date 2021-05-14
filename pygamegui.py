@@ -1,4 +1,6 @@
 import os
+import sys
+
 import pygame
 from facade import GUI
 
@@ -113,6 +115,9 @@ class PygameGUI(GUI):
     def get_font(self, name, size):
         return pygame.font.Font(name, size)
 
+    def get_sys_font(self, name, size):
+        return pygame.font.SysFont(name, size)
+
     def flip_display(self):
         pygame.display.flip()
 
@@ -128,4 +133,5 @@ class PygameGUI(GUI):
     def quit_game(self):
         # pylint: disable=no-member
         pygame.quit()
+        sys.exit()
         # pylint: enable=no-member

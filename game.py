@@ -8,6 +8,7 @@ from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
 import constants as const
 import time
 
+
 class Game:
     def __init__(self, gui):
         self.gui = gui
@@ -24,6 +25,7 @@ class Game:
         self.font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 7)
         self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 18)
         self.mini_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 40)
+        self.additional_mini_font = self.gui.get_sys_font("arial", const.DISPLAY_H // 40)
 
         self.start_screen_playing = True
         self.choose_player_screen_playing, self.choose_map_playing = True, True
@@ -182,6 +184,30 @@ class Game:
             if sprite.category == 'tree' and not sprite.map_obj.raw_material_batch:
                 sprite.change_image()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+
+        if (self.player.rect.x - const.DISPLAY_W // 2) < const.PIXEL_MAP_W - const.DISPLAY_W:
+            left_border = max(0, self.player.rect.x - const.DISPLAY_W // 2) // const.CELL_SIZE
+        else:
+            left_border = (const.PIXEL_MAP_W - const.DISPLAY_W) // const.CELL_SIZE
+
+        if (self.player.rect.y - const.DISPLAY_H // 2) < const.PIXEL_MAP_H - const.DISPLAY_H:
+            top_border = max(0, self.player.rect.y - const.DISPLAY_H // 2) // const.CELL_SIZE
+        else:
+            top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
+
+        i_ind = mouse[0] // const.CELL_SIZE + left_border
+        j_ind = mouse[1] // const.CELL_SIZE + top_border
+        cur_cell = self.map_obj[self.map_matr[j_ind][i_ind]]
+        if cur_cell.raw_material_batch:
+            message = str(cur_cell.raw_material_batch)
+            text = self.additional_mini_font.render(message, True, const.WHITE)
+            self.gui.draw_rect(
+                self.screen, const.BAGCOLOR,
+                (const.DISPLAY_W - const.CELL_SIZE * 3, 0,
+                 const.CELL_SIZE * 3, const.CELL_SIZE * 2)
+            )
+            self.screen.blit(text, ((const.DISPLAY_W - const.CELL_SIZE * 3) +
+                                    (const.CELL_SIZE * 3 - text.get_width()) / 2, const.CELL_SIZE * 1.25))
 
         self.gui.flip_display()
 

@@ -10,7 +10,7 @@
     "picture": "fast.png"
   },
   "big_bag": {
-    "speed": 20,
+    "speed": 25,
     "bag_capacity": 20,
     "picture": "fast.png"
   }

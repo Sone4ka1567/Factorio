@@ -76,6 +76,10 @@ class GUI(ABC):
         pass
 
     @abstractmethod
+    def get_sys_font(self, name, size):
+        pass
+
+    @abstractmethod
     def get_rect(self, x_border, y_border, width, height):
         pass
 
