@@ -27,7 +27,7 @@ class Game:
         self.font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 7)
         self.small_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 18)
         self.mini_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 40)
-        self.additional_mini_font = self.gui.get_font("fonts/Roboto-Italic.ttf", const.DISPLAY_H // 40)
+        self.additional_mini_font = self.gui.get_font("fonts/Roboto-Bold.ttf", const.DISPLAY_H // 40)
 
         self.start_screen_playing = True
         self.choose_player_screen_playing, self.choose_map_playing = True, True

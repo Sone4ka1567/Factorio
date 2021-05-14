@@ -1,4 +1,5 @@
 from copy import deepcopy
+from result_func import result_ok, result_error
 
 
 class Container:
@@ -48,20 +49,20 @@ class Container:
 
     def produce_inside(self, target_batch):
         if len(self.data) == self.max_size:
-            return False
+            return result_error('bag is full')
         res = target_batch.get_producing_result(self)
         if not res:
-            return False
+            return result_error('not enough resources')
         self.data = res[0].data
         self.put(target_batch)
-        return res[1]
+        return result_ok(content=res[1])
 
     def produce_outside(self, target_batch):
         res = target_batch.get_producing_result(self)
         if not res:
-            return False
+            return result_error('not enough resources')
         self.data = res[0].data
-        return res[1]
+        return result_ok(content=res[1])
 
     def __getitem__(self, item):
         return self.data[item]
@@ -70,3 +71,14 @@ class Container:
         if self.data:
             return str([str(batch) for batch in self.data])
         return "EMPTY BAG"
+
+
+if __name__ == '__main__':
+    from core.virtual_objects.map_object_creators.concrete_creators import BurnerAssemblingMachineCreator
+    from maps import EasyMap
+
+    map = EasyMap()
+    player_bag = Container(10)
+    # player_bag.put()
+    r = player_bag.produce_inside(BurnerAssemblingMachineCreator(2, map))
+    print(r)

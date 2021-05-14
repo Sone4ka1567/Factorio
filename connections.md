@@ -1,7 +1,7 @@
 Связи между фронтом и ядром:
 план:
 * SafeCreator для создания объекта на карте creator'ом
-* 
+* обращение к player.bag с методом produce_inside
 
 есть:
 ! костыльные ифы с isinstance в game - убрать
