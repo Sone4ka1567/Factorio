@@ -23,11 +23,11 @@ class Game:
         self.clock = self.gui.set_clock()
         # self.gui.set_music('sounds/welcome_music.wav') todo
 
-        self.big_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 5)
-        self.font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 7)
-        self.small_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 18)
-        self.mini_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 40)
-        self.additional_mini_font = self.gui.get_sys_font("arial", const.DISPLAY_H // 40)
+        self.big_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 5)
+        self.font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 7)
+        self.small_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 18)
+        self.mini_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 40)
+        self.additional_mini_font = self.gui.get_font("fonts/Roboto-Italic.ttf", const.DISPLAY_H // 40)
 
         self.start_screen_playing = True
         self.choose_player_screen_playing, self.choose_map_playing = True, True
@@ -236,7 +236,7 @@ class Game:
                     color = const.RED
                 else:
                     color = const.WHITE
-                button_text = self.mini_font.render(message['message'], True, color)
+                button_text = self.additional_mini_font.render(message['message'], True, color)
                 self.screen.blit(button_text, (event.pos[0], event.pos[1] - const.CELL_SIZE // 2))
                 self.gui.update_display()
                 time.sleep(0.3)
@@ -289,11 +289,11 @@ class Game:
                 self.screen.blit(cell_image,
                                  (x_start + j_ind * 2 * const.CELL_SIZE, y_start + i_ind * 2 * const.CELL_SIZE))
 
-                batch_amount = self.mini_font.render(str(batches[x].amount), True, const.WHITE)
+                batch_amount = self.additional_mini_font.render(str(batches[x].amount), True, const.WHITE)
                 self.screen.blit(
                     batch_amount,
                     (
-                        x_start + j_ind * 2 * const.CELL_SIZE,
+                        x_start + j_ind * 2 * const.CELL_SIZE + const.CELL_SIZE - batch_amount.get_width(),
                         y_start + i_ind * 2 * const.CELL_SIZE + const.CELL_SIZE // 2,
                     ),
                 )
