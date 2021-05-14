@@ -17,9 +17,7 @@ class MaterialBatch(VirtualObject):
     relative_icon_path: str
 
     def get_icon_path(self):
-        x = abspath(self.relative_icon_path.replace('../', ''))
-        print(x)
-        return x
+        return abspath(self.relative_icon_path.replace('../', ''))
 
     def __str__(self):
         return f"{self.__class__.__name__}: {self.amount}"
