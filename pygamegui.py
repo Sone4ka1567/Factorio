@@ -1,4 +1,6 @@
 import os
+import sys
+
 import pygame
 from facade import GUI
 
@@ -128,4 +130,5 @@ class PygameGUI(GUI):
     def quit_game(self):
         # pylint: disable=no-member
         pygame.quit()
+        sys.exit()
         # pylint: enable=no-member
