@@ -117,7 +117,7 @@ class BigElectricPoleCreator(MapObjectCreator):
         )
 
 
-class BurnerElectricGenerator(MapObjectCreator):
+class BurnerElectricGeneratorCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
     relative_icon_path = '../../../img/icons/creators/electricity/burner-generator.xcf'
