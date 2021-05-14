@@ -35,7 +35,7 @@ class BurnerAssemblingMachineCreator(MapObjectCreator):
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerAssemblingMachine, amount, map_obj)
         self.required_res = (
-            inter.IronPlates(9 * amount),
+            inter.IronPlate(9 * amount),
             inter.IronGearWheel(5 * amount),
             inter.ElectricCircuit(3 * amount),
         )
@@ -62,7 +62,7 @@ class BurnerMiningDrillCreator(MapObjectCreator):
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerMiningDrill, amount, map_obj)
         self.required_res = (
-            inter.IronPlates(3 * amount),
+            inter.IronPlate(3 * amount),
             inter.IronGearWheel(3 * amount),
             BurnerFurnaceCreator(amount, map_obj),
         )
@@ -100,9 +100,9 @@ class BigElectricPoleCreator(MapObjectCreator):
     def __init__(self, amount, map_obj):
         super().__init__(el.BigElectricPole, amount, map_obj)
         self.required_res = (
-            inter.CopperPlates(5 * amount),
+            inter.CopperPlate(5 * amount),
             inter.CopperCable(3 * amount),
-            inter.IronPlates(amount),
+            inter.IronPlate(amount),
         )
 
 
@@ -115,5 +115,5 @@ class BurnerElectricGenerator(MapObjectCreator):
         self.required_res = (
             inter.Pipe(10 * amount),
             inter.IronGearWheel(12 * amount),
-            inter.IronPlates(15 * amount),
+            inter.IronPlate(15 * amount),
         )

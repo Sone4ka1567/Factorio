@@ -123,7 +123,7 @@ class ElectricFurnace(Furnace):
 
 
 class BurnerAssemblingMachine(AssemblingMachine):
-    valid_input = (inter.IronPlates, inter.CopperPlates, inter.WoodenPlate)
+    valid_input = (inter.IronPlate, inter.CopperPlate, inter.WoodenPlate)
     possible_targets = (inter.CopperCable, inter.SteelPlate, inter.Pipe, inter.IronGearWheel)
     energy_consumption = 1
     speed = 1

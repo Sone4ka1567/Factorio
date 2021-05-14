@@ -13,6 +13,8 @@ def flatten(lst):
 
 
 class MaterialBatch(VirtualObject):
+    icon_path: str
+
     def __str__(self):
         return f"{self.__class__.__name__}: {self.amount}"
 
