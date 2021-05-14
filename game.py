@@ -222,6 +222,13 @@ class Game:
 
         self.gui.flip_display()
 
+    def show_message(self, text, color, event):
+        button_text = self.additional_mini_font.render(text, True, color)
+        self.screen.blit(button_text, (event.pos[0], event.pos[1] - const.CELL_SIZE // 2))
+        self.gui.update_display()
+        time.sleep(0.3)
+        self.gui.tick_fps(self.clock, const.FPS)
+
     def events(self):
         for event in self.gui.get_events():
             if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 3:
@@ -238,17 +245,14 @@ class Game:
 
                 i_ind = event.pos[0] // const.CELL_SIZE + left_border
                 j_ind = event.pos[1] // const.CELL_SIZE + top_border
-                message = self.player.dig(self.map_obj[self.map_matr[j_ind][i_ind]])
 
-                if message['message'] == 'bag is full' or message['message'] == 'nothing to dig here':
-                    color = const.RED
+                if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
+                                  j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
+                    message = self.player.dig(self.map_obj[self.map_matr[j_ind][i_ind]])
+                    color = const.WHITE if message['ok'] else const.RED
+                    self.show_message(message['message'], color, event)
                 else:
-                    color = const.WHITE
-                button_text = self.additional_mini_font.render(message['message'], True, color)
-                self.screen.blit(button_text, (event.pos[0], event.pos[1] - const.CELL_SIZE // 2))
-                self.gui.update_display()
-                time.sleep(0.3)
-                self.gui.tick_fps(self.clock, const.FPS)
+                    self.show_message('too far, come closer', const.RED, event)
 
             if 'E' in self.gui.get_keystate():
                 self.show_bag()
@@ -263,7 +267,7 @@ class Game:
         while self.show_bag_playing:
             self.screen.fill(const.BAGCOLOR)
             text_left = self.small_font.render('Character', True, const.WHITE)
-            text_right = self.small_font.render('Crafting', True,  const.WHITE)
+            text_right = self.small_font.render('Crafting', True, const.WHITE)
 
             self.gui.draw_line(self.screen, const.BLACK,
                                (const.DISPLAY_W // 2, 0), (const.DISPLAY_W // 2, const.DISPLAY_H))
@@ -408,7 +412,7 @@ class Game:
                             self.start_screen_playing = False
                         elif const.DISPLAY_H // 2 + 182 > mouse[1] > const.DISPLAY_H // 2 + 100:
                             pass
-                        elif const.DISPLAY_H // 2 + 282 > mouse[1] > const.DISPLAY_H // 2 +200:
+                        elif const.DISPLAY_H // 2 + 282 > mouse[1] > const.DISPLAY_H // 2 + 200:
                             self.quit()
 
             self.events()
