@@ -43,6 +43,9 @@ class MapCell:
             else None,
         }
 
+    def is_occupied(self):
+        return bool(self.usable_object or isinstance(self.raw_material_batch, Wood))
+
 
 class Map(ABC):
     height = const.MAP_H

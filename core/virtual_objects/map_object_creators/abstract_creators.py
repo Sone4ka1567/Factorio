@@ -1,4 +1,4 @@
-from maps import Map
+from maps import Map, MapCell
 from core.virtual_objects.materials.intermediates import Intermediate
 
 
@@ -16,3 +16,6 @@ class MapObjectCreator(Intermediate):
 
     def create_object(self, x, y):
         self._put_map_object(x, y, self.object_type(x, y, self.map_obj), self.map_obj)
+
+    def matches_with_cell(self, cell: MapCell):
+        return True

@@ -67,6 +67,9 @@ class BurnerMiningDrillCreator(MapObjectCreator):
             BurnerFurnaceCreator(amount, map_obj),
         )
 
+    def matches_with_cell(self, cell):
+        return bool(cell.raw_material_batch and cell.raw_material_batch != 0)
+
 
 class ElectricMiningDrillCreator(MapObjectCreator):
     ticks_to_produce = 40
