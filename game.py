@@ -2,11 +2,12 @@ import sys
 from player import Player, player_perks
 from camera import Camera
 from tree_sprite import Tree
-from maps import EasyMapCreator, HardMapCreator
+from maps import EasyMapCreator, HardMapCreator, EasyMap, HardMap
 from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
 import constants as const
 import time
+import json
 
 
 class Game:
@@ -20,7 +21,7 @@ class Game:
 
         self.gui.set_caption("ENDustrial")
         self.clock = self.gui.set_clock()
-        self.gui.set_music('sounds/welcome_music.wav')
+        # self.gui.set_music('sounds/welcome_music.wav') todo
 
         self.big_font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 5)
         self.font = self.gui.get_font("sylar_stencil.ttf", const.DISPLAY_H // 7)
@@ -34,7 +35,7 @@ class Game:
         self.player_perk, self.choose_map_text = None, None
 
     def new(self):
-        self.gui.stop_music()
+        # self.gui.stop_music() todo
         self.all_sprites = self.gui.group_sprites()
         self.trees = self.gui.group_sprites()
 
@@ -283,6 +284,8 @@ class Game:
                     batches[x].get_icon_path()
                 ).convert_alpha()
 
+                cell_image.set_colorkey(const.BLACK)
+
                 self.screen.blit(cell_image,
                                  (x_start + j_ind * 2 * const.CELL_SIZE, y_start + i_ind * 2 * const.CELL_SIZE))
 
@@ -385,14 +388,20 @@ class Game:
                 for event in self.gui.get_events():
                     if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
                         if const.DISPLAY_H // 2 + 182 > mouse[1] > const.DISPLAY_H // 2 + 100:
-                            creator = EasyMapCreator()
-                            self.map = creator.gen_map()
+                            # creator = EasyMapCreator()
+                            # self.map = creator.gen_map()
+                            self.map = EasyMap()
+                            with open('map.json', 'r+') as f:
+                                self.map.load(json.load(f))
                             self.map_matr = self.map.get_map_matrix()
                             self.map_obj = self.map.get_map_objects()
                             self.choose_map_playing = False
                         elif const.DISPLAY_H // 2 + 332 > mouse[1] > const.DISPLAY_H // 2 + 250:
-                            creator = HardMapCreator()
-                            self.map = creator.gen_map()
+                            # creator = HardMapCreator()
+                            # self.map = creator.gen_map()
+                            self.map = HardMap()
+                            with open('map.json', 'r+') as f:
+                                self.map.load(json.load(f))
                             self.map_matr = self.map.get_map_matrix()
                             self.map_obj = self.map.get_map_objects()
                             self.choose_map_playing = False
