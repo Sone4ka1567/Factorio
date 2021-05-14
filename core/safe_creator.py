@@ -51,8 +51,8 @@ class CreatingHandler(AbstractHandler):
 
 class SafeCreator:
     def __init__(self, map_obj):
-        self.handler = OccupiedHandler(map_obj)
-        h2 = LowAmountHandler(map_obj)
+        self.handler = LowAmountHandler(map_obj)
+        h2 = OccupiedHandler(map_obj)
         h3 = CreatingHandler(map_obj)
         self.handler.set_next(h2).set_next(h3)
 
@@ -77,7 +77,9 @@ if __name__ == '__main__':
 
     burn_drill_creator = BurnerMiningDrillCreator(1, map_object)
     poll_creator = SmallElectricPoleCreator(2, map_object)
-    generator_creator = BurnerElectricGenerator(1, map_object)
+    generator_creator = BurnerElectricGenerator(2, map_object)
 
     object_creator1 = SafeCreator(map_object)
+    print(object_creator1.create_object(generator_creator, 0, 0))
+    print(generator_creator)
     print(object_creator1.create_object(generator_creator, 0, 0))
