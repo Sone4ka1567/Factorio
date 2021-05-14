@@ -317,18 +317,33 @@ class Game:
                 (x_start, y_start,
                  2 * const.CELL_SIZE, 2 * const.CELL_SIZE)
             )
+            logistics_image = self.gui.get_image('icons/modules/logistics.png').convert_alpha()
+            logistics_image.set_colorkey(const.BLACK)
+            self.screen.blit(logistics_image,
+                             (x_start + const.CELL_SIZE - logistics_image.get_width() // 2,
+                              y_start + const.CELL_SIZE - logistics_image.get_height() // 2))
 
             self.gui.draw_rect(
                 self.screen, const.LIGHT_GREY,
                 (x_start + 3 * const.CELL_SIZE, y_start,
                  2 * const.CELL_SIZE, 2 * const.CELL_SIZE)
             )
+            inter_products_image = self.gui.get_image('icons/modules/intermediate-products.png').convert_alpha()
+            inter_products_image.set_colorkey(const.BLACK)
+            self.screen.blit(inter_products_image,
+                             (x_start + 4 * const.CELL_SIZE - inter_products_image.get_width() // 2,
+                              y_start + const.CELL_SIZE - inter_products_image.get_height() // 2))
 
             self.gui.draw_rect(
                 self.screen, const.LIGHT_GREY,
                 (x_start + 6 * const.CELL_SIZE, y_start,
                  2 * const.CELL_SIZE, 2 * const.CELL_SIZE)
             )
+            production_image = self.gui.get_image('icons/modules/production.png').convert_alpha()
+            production_image.set_colorkey(const.BLACK)
+            self.screen.blit(production_image,
+                             (x_start + 7 * const.CELL_SIZE - production_image.get_width() // 2,
+                              y_start + const.CELL_SIZE - production_image.get_height() // 2))
 
             # End of Bag
 
@@ -414,14 +429,14 @@ class Game:
             normal_image = self.gui.get_image('welcome_screen/screen_3/normal_button.xcf')
             hard_image = self.gui.get_image('welcome_screen/screen_3/hard_button.xcf')
 
-            self.screen.blit(normal_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 100))
-            self.screen.blit(hard_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 250))
+            self.screen.blit(normal_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2))
+            self.screen.blit(hard_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 150))
 
             mouse = self.gui.get_mouse_pos()
             if const.DISPLAY_W // 2 + 265 / 2 > mouse[0] > const.DISPLAY_W // 2 - 265 / 2:
                 for event in self.gui.get_events():
                     if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
-                        if const.DISPLAY_H // 2 + 182 > mouse[1] > const.DISPLAY_H // 2 + 100:
+                        if const.DISPLAY_H // 2 + 82 > mouse[1] > const.DISPLAY_H // 2:
                             # creator = EasyMapCreator()
                             # self.map = creator.gen_map()
                             self.map = EasyMap()
@@ -430,7 +445,7 @@ class Game:
                             self.map_matr = self.map.get_map_matrix()
                             self.map_obj = self.map.get_map_objects()
                             self.choose_map_playing = False
-                        elif const.DISPLAY_H // 2 + 332 > mouse[1] > const.DISPLAY_H // 2 + 250:
+                        elif const.DISPLAY_H // 2 + 232 > mouse[1] > const.DISPLAY_H // 2 + 150:
                             # creator = HardMapCreator()
                             # self.map = creator.gen_map()
                             self.map = HardMap()
