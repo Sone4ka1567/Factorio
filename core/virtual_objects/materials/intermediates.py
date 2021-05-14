@@ -10,7 +10,7 @@ from core.virtual_objects.materials.raw_and_basics import (
 class CopperCable(Intermediate):
     ticks_to_produce = 10
     producing_time = 0.5
-    icon_path = '../../../img/icons/materials/intermediate/copper-cable.png'
+    relative_icon_path = '../../../img/icons/materials/intermediate/copper-cable.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -20,7 +20,7 @@ class CopperCable(Intermediate):
 class SteelPlate(Intermediate):
     ticks_to_produce = 20
     producing_time = 1.0
-    icon_path = '../../../img/icons/materials/intermediate/steel-plate.png'
+    relative_icon_path = '../../../img/icons/materials/intermediate/steel-plate.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -30,7 +30,7 @@ class SteelPlate(Intermediate):
 class Pipe(Intermediate):
     ticks_to_produce = 20
     producing_time = 1.0
-    icon_path = '../../../img/icons/materials/intermediate/pipe.png'
+    relative_icon_path = '../../../img/icons/materials/intermediate/pipe.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -40,7 +40,7 @@ class Pipe(Intermediate):
 class IronGearWheel(Intermediate):
     ticks_to_produce = 40
     producing_time = 2.0
-    icon_path = '../../../img/icons/materials/intermediate/iron-gear-wheel.png'
+    relative_icon_path = '../../../img/icons/materials/intermediate/iron-gear-wheel.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -50,7 +50,7 @@ class IronGearWheel(Intermediate):
 class ElectricCircuit(Intermediate):
     ticks_to_produce = 10
     producing_time = 0.5
-    icon_path = '../../../img/icons/materials/intermediate/electric-circuit.png'
+    relative_icon_path = '../../../img/icons/materials/intermediate/electric-circuit.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -60,7 +60,7 @@ class ElectricCircuit(Intermediate):
 class Resistor(Intermediate):
     ticks_to_produce = 20
     producing_time = 1.0
-    icon_path = '../../../img/icons/materials/intermediate/resistor.xcf'
+    relative_icon_path = '../../../img/icons/materials/intermediate/resistor.xcf'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -71,7 +71,7 @@ class Resistor(Intermediate):
 class Transistor(Intermediate):
     ticks_to_produce = 40
     producing_time = 2.0
-    icon_path = '../../../img/icons/materials/intermediate/transistor.xcf'
+    relative_icon_path = '../../../img/icons/materials/intermediate/transistor.xcf'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -81,7 +81,7 @@ class Transistor(Intermediate):
 class IntegratedCircuit(Intermediate):
     ticks_to_produce = 60
     producing_time = 3.0
-    icon_path = '../../../img/icons/materials/intermediate/integrated-circuit.png'
+    relative_icon_path = '../../../img/icons/materials/intermediate/integrated-circuit.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -91,7 +91,7 @@ class IntegratedCircuit(Intermediate):
 class ControlUnit(Intermediate):
     ticks_to_produce = 100
     producing_time = 5.0
-    icon_path = '../../../img/icons/materials/intermediate/control-unit.png'
+    relative_icon_path = '../../../img/icons/materials/intermediate/control-unit.png'
 
     def __init__(self, amount):
         super().__init__(amount)

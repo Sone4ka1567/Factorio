@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from os.path import abspath
 from collections.abc import Iterable
 from virtual_object import VirtualObject
 from core.container import Container
@@ -13,7 +14,12 @@ def flatten(lst):
 
 
 class MaterialBatch(VirtualObject):
-    icon_path: str
+    relative_icon_path: str
+
+    def get_icon_path(self):
+        x = abspath(self.relative_icon_path.replace('../', ''))
+        print(x)
+        return x
 
     def __str__(self):
         return f"{self.__class__.__name__}: {self.amount}"

@@ -2,7 +2,7 @@ from core.virtual_objects.materials.abstracts import RawMaterial, BasicMaterial
 
 
 class Iron(RawMaterial):
-    icon_path = '../../../img/icons/materials/raw/iron-ore.png'
+    relative_icon_path = '../../../img/icons/materials/raw/iron-ore.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -12,7 +12,7 @@ class Iron(RawMaterial):
 class IronPlate(BasicMaterial):
     ticks_to_produce = 10
     producing_time = 0.5
-    icon_path = '../../../img/icons/materials/basic/iron-plate.png'
+    relative_icon_path = '../../../img/icons/materials/basic/iron-plate.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -20,7 +20,7 @@ class IronPlate(BasicMaterial):
 
 
 class Copper(RawMaterial):
-    icon_path = '../../../img/icons/materials/raw/copper-ore.png'
+    relative_icon_path = '../../../img/icons/materials/raw/copper-ore.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -30,7 +30,7 @@ class Copper(RawMaterial):
 class CopperPlate(BasicMaterial):
     ticks_to_produce = 10
     producing_time = 0.5
-    icon_path = '../../../img/icons/materials/basic/copper-plate.png'
+    relative_icon_path = '../../../img/icons/materials/basic/copper-plate.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -38,7 +38,7 @@ class CopperPlate(BasicMaterial):
 
 
 class Coal(RawMaterial):
-    icon_path = '../../../img/icons/materials/raw/coal.png'
+    relative_icon_path = '../../../img/icons/materials/raw/coal.png'
 
     @staticmethod
     def is_fuel():
@@ -46,7 +46,7 @@ class Coal(RawMaterial):
 
 
 class Stone(RawMaterial):
-    icon_path = '../../../img/icons/materials/raw/stone.png'
+    relative_icon_path = '../../../img/icons/materials/raw/stone.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -56,7 +56,7 @@ class Stone(RawMaterial):
 class StoneBricks(BasicMaterial):
     ticks_to_produce = 10
     producing_time = 0.5
-    icon_path = '../../../img/icons/materials/basic/stone-brick.png'
+    relative_icon_path = '../../../img/icons/materials/basic/stone-brick.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -64,7 +64,7 @@ class StoneBricks(BasicMaterial):
 
 
 class Silicon(RawMaterial):
-    icon_path = '../../../img/icons/materials/raw/silicon.png'
+    relative_icon_path = '../../../img/icons/materials/raw/silicon.png'
 
     def __init__(self, amount=int(1e5)):
         super().__init__(amount)
@@ -74,7 +74,7 @@ class Silicon(RawMaterial):
 class SiliconPlate(BasicMaterial):
     ticks_to_produce = 15
     producing_time = 0.5
-    icon_path = '../../../img/icons/materials/basic/silicon-plate.png'
+    relative_icon_path = '../../../img/icons/materials/basic/silicon-plate.png'
 
     def __init__(self, amount):
         super().__init__(amount)
@@ -82,13 +82,13 @@ class SiliconPlate(BasicMaterial):
 
 
 class Wood(RawMaterial):
-    icon_path = '../../../img/icons/materials/raw/wood.png'
+    relative_icon_path = '../../../img/icons/materials/raw/wood.png'
 
 
 class WoodenPlate(BasicMaterial):
     ticks_to_produce = 10
     producing_time = 0.5
-    icon_path = '../../../img/icons/materials/basic/wooden-plate.xcf'
+    relative_icon_path = '../../../img/icons/materials/basic/wooden-plate.xcf'
 
     def __init__(self, amount):
         super().__init__(amount)

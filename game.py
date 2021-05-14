@@ -280,7 +280,7 @@ class Game:
                 j_ind = x % 5
 
                 cell_image = self.gui.get_image(  # todo
-                    "dirt_and_ore/light_dirt.png"
+                    batches[x].get_icon_path()
                 ).convert_alpha()
 
                 self.screen.blit(cell_image,
