@@ -45,7 +45,7 @@ class Container:
         return self.data
 
     def copy(self):
-        return Container(deepcopy(self.data))
+        return Container(max_size=self.max_size, data=deepcopy(self.data))
 
     def produce_inside(self, target_batch):
         if len(self.data) == self.max_size:
