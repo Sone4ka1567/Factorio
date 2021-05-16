@@ -44,3 +44,5 @@ UML'ек)*
 От декоратора отказались, поскольку в нашей игре нет такого понятия как "апгрейд" объекта - поведение всех объектов
 заранее определено. В некотором смысле вместо него используется Мост для того, чтоб не делать множественное
 наследование.
+[Цепочка обязанностей](https://github.com/EgorVoron/patterns-project/blob/8c26ee0c013d728448bb9bfb4e3122f37f8eb8aa/core/safe_creator.py#L5)  
+[Модифицированный наблюдатель](https://github.com/EgorVoron/patterns-project/blob/8c26ee0c013d728448bb9bfb4e3122f37f8eb8aa/core/map_objects/production/electricity.py#L26)
