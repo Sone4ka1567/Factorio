@@ -332,44 +332,50 @@ class Game:
 
             if self.module_playing == 'production':
                 production_color = const.ORANGE_GREY
-                pass
+
+                img = self.gui.get_image('icons/creators/production/burner-mining-drill.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/creators/production/electric-mining-drill.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 2 * const.CELL_SIZE, sub_y_start,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/creators/production/assembling-machine-1.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start + 2 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/creators/production/assembling-machine-2.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 2 * const.CELL_SIZE, sub_y_start + 2 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/creators/production/electric-furnace.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start + 4 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/creators/production/stone-furnace.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 2 * const.CELL_SIZE, sub_y_start + 4 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/radar.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start + 6 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
             elif self.module_playing == 'logistics':
                 logistics_color = const.ORANGE_GREY
 
-                self.gui.draw_rect(  # small elec pole
-                    self.screen, const.LIGHT_GREY,
-                    (x_start, sub_y_start,
-                     const.CELL_SIZE, const.CELL_SIZE)
-                )
                 img = self.gui.get_image('icons/creators/electricity/small-electric-pole.png').convert_alpha()
-                img.set_colorkey(const.BLACK)
-                self.screen.blit(img,
-                                 (x_start + (const.CELL_SIZE - img.get_width()) // 2,
-                                  sub_y_start + (const.CELL_SIZE - img.get_height()) // 2))
-
-                self.gui.draw_rect(  # big elec pole
-                    self.screen, const.LIGHT_GREY,
-                    (x_start + 2 * const.CELL_SIZE, sub_y_start,
-                     const.CELL_SIZE, const.CELL_SIZE)
-                )
+                self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
 
                 img = self.gui.get_image('icons/creators/electricity/big-electric-pole.png').convert_alpha()
-                img.set_colorkey(const.BLACK)
-                self.screen.blit(img,
-                                 (x_start + 2 * const.CELL_SIZE + (const.CELL_SIZE - img.get_width()) // 2,
-                                  sub_y_start + (const.CELL_SIZE - img.get_height()) // 2))
-
-                self.gui.draw_rect(  # burner
-                    self.screen, const.LIGHT_GREY,
-                    (x_start, sub_y_start + 2 * const.CELL_SIZE,
-                     const.CELL_SIZE, const.CELL_SIZE)
-                )
+                self.draw_icon(const.LIGHT_GREY, x_start + 2 * const.CELL_SIZE, sub_y_start,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
 
                 img = self.gui.get_image('icons/creators/electricity/burner-generator.xcf').convert_alpha()
-                img.set_colorkey(const.BLACK)
-                self.screen.blit(img,
-                                 (x_start + (const.CELL_SIZE - img.get_width()) // 2,
-                                  sub_y_start + 2 * const.CELL_SIZE + (const.CELL_SIZE - img.get_height()) // 2))
+                self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start + 2 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
             else:
                 inter_products_color = const.ORANGE_GREY
                 pass
@@ -425,6 +431,16 @@ class Game:
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
+
+    def draw_icon(self, color, x, y, width, height, img):
+        self.gui.draw_rect(
+            self.screen, color,
+            (x, y, width, height)
+        )
+        img.set_colorkey(const.BLACK)
+        self.screen.blit(img,
+                         (x + (const.CELL_SIZE - img.get_width()) // 2,
+                          y + (const.CELL_SIZE - img.get_height()) // 2))
 
     def show_start_screen(self):
 
