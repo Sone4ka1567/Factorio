@@ -378,7 +378,42 @@ class Game:
 
             else:
                 inter_products_color = const.ORANGE_GREY
-                pass
+
+                img = self.gui.get_image('icons/materials/intermediate/copper-cable.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/materials/intermediate/steel-plate.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 2 * const.CELL_SIZE, sub_y_start,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/materials/intermediate/pipe.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 4 * const.CELL_SIZE, sub_y_start,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/materials/intermediate/iron-gear-wheel.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start + 2 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/materials/intermediate/electric-circuit.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 2 * const.CELL_SIZE, sub_y_start + 2 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/materials/intermediate/resistor.xcf').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 4 * const.CELL_SIZE, sub_y_start + 2 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/materials/intermediate/transistor.xcf').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start + 4 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/materials/intermediate/integrated-circuit.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 2 * const.CELL_SIZE, sub_y_start + 4 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
+                img = self.gui.get_image('icons/materials/intermediate/control-unit.png').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 4 * const.CELL_SIZE, sub_y_start + 4 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
 
             self.gui.draw_rect(  # production
                 self.screen, production_color,
