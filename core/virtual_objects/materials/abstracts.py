@@ -53,7 +53,7 @@ class ProductMaterial(MaterialBatch):
     ticks_to_produce: int
 
     @abstractmethod
-    def count_optimal_requirements(self, container: Container):
+    def count_optimal_requirements(self, container: Container, count=0):
         pass
 
     @abstractmethod
@@ -77,7 +77,7 @@ class BasicMaterial(ProductMaterial):
     def copy(self):
         return BasicMaterial(self.amount, self.associated_raw)
 
-    def count_optimal_requirements(self, container: Container):
+    def count_optimal_requirements(self, container: Container, count=0):
         print("-" * 20)
         print("B: need: ", self)
         print("B: it has: ", container.contains(self))
@@ -100,17 +100,17 @@ class Intermediate(ProductMaterial):
     def copy(self):
         return Intermediate(self.amount, self.required_res)
 
-    def count_optimal_requirements(self, container: Container):
+    def count_optimal_requirements(self, container: Container, count=0):
         res_set = []
         print("-" * 20)
         print("I: need: ", self)
         print("I: it has: ", container.contains(self))
-        if container.contains(self):
+        if container.contains(self) and count != 0:
             container.remove(self)
             print("I: ch container:", container)
             return [self]
         for child in self.required_res:
-            cur_res = child.count_optimal_requirements(container)
+            cur_res = child.count_optimal_requirements(container, 1)
             if cur_res:
                 res_set.append(flatten(cur_res[0]))
             else:
