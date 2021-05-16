@@ -328,12 +328,48 @@ class Game:
             logistics_color = const.LIGHT_GREY
             inter_products_color = const.LIGHT_GREY
 
+            sub_y_start = y_start + 3 * const.CELL_SIZE
+
             if self.module_playing == 'production':
                 production_color = const.ORANGE_GREY
                 pass
             elif self.module_playing == 'logistics':
                 logistics_color = const.ORANGE_GREY
-                pass
+
+                self.gui.draw_rect(  # small elec pole
+                    self.screen, const.LIGHT_GREY,
+                    (x_start, sub_y_start,
+                     const.CELL_SIZE, const.CELL_SIZE)
+                )
+                img = self.gui.get_image('icons/creators/electricity/small-electric-pole.png').convert_alpha()
+                img.set_colorkey(const.BLACK)
+                self.screen.blit(img,
+                                 (x_start + (const.CELL_SIZE - img.get_width()) // 2,
+                                  sub_y_start + (const.CELL_SIZE - img.get_height()) // 2))
+
+                self.gui.draw_rect(  # big elec pole
+                    self.screen, const.LIGHT_GREY,
+                    (x_start + 2 * const.CELL_SIZE, sub_y_start,
+                     const.CELL_SIZE, const.CELL_SIZE)
+                )
+
+                img = self.gui.get_image('icons/creators/electricity/big-electric-pole.png').convert_alpha()
+                img.set_colorkey(const.BLACK)
+                self.screen.blit(img,
+                                 (x_start + 2 * const.CELL_SIZE + (const.CELL_SIZE - img.get_width()) // 2,
+                                  sub_y_start + (const.CELL_SIZE - img.get_height()) // 2))
+
+                self.gui.draw_rect(  # burner
+                    self.screen, const.LIGHT_GREY,
+                    (x_start, sub_y_start + 2 * const.CELL_SIZE,
+                     const.CELL_SIZE, const.CELL_SIZE)
+                )
+
+                img = self.gui.get_image('icons/creators/electricity/burner-generator.xcf').convert_alpha()
+                img.set_colorkey(const.BLACK)
+                self.screen.blit(img,
+                                 (x_start + (const.CELL_SIZE - img.get_width()) // 2,
+                                  sub_y_start + 2 * const.CELL_SIZE + (const.CELL_SIZE - img.get_height()) // 2))
             else:
                 inter_products_color = const.ORANGE_GREY
                 pass
