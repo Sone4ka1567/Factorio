@@ -3,11 +3,10 @@ from player import Player, player_perks
 from camera import Camera
 from tree_sprite import Tree
 from usable_object_sprite import UsableObjectSprite
-from maps import EasyMapCreator, HardMapCreator, EasyMap, HardMap
+from maps import EasyMapCreator, HardMapCreator  # , EasyMap, HardMap
 from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
-from core.virtual_objects.map_object_creators.concrete_creators import BurnerFurnaceCreator, BurnerMiningDrillCreator, \
-    obj2creator
+from core.virtual_objects.map_object_creators.concrete_creators import BurnerMiningDrillCreator, obj2creator
 from basic_geometry import euclidean_dist
 import core.virtual_objects.materials.intermediates as inter
 import core.virtual_objects.map_object_creators.concrete_creators as concrete
@@ -63,7 +62,7 @@ class Game:
         self.player = Player(
             self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk]
         )
-        self.player.bag.put(BurnerFurnaceCreator(1, self.map))
+        self.player.bag.put(BurnerMiningDrillCreator(1, self.map))
         self.player.bag.put(Coal(1))
 
         self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H, self.gui)
@@ -517,8 +516,9 @@ class Game:
                                 self.bearing_item = None
 
                 if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 3:
-                    if object.__class__.__name__ == 'BurnerMiningDrill' and x_coord + 5.5 * const.CELL_SIZE - output_text.get_width() < event.pos[
-                        0] < x_coord + 5.5 * const.CELL_SIZE - output_text.get_width() + const.CELL_SIZE and y_coord + 1.5 * const.CELL_SIZE < \
+                    if object.__class__.__name__ == 'BurnerMiningDrill' and x_coord + 5.5 * const.CELL_SIZE - output_text.get_width() < \
+                            event.pos[
+                                0] < x_coord + 5.5 * const.CELL_SIZE - output_text.get_width() + const.CELL_SIZE and y_coord + 1.5 * const.CELL_SIZE < \
                             event.pos[1] < y_coord + 2.5 * const.CELL_SIZE:
                         if not object.output.is_empty():
                             res = object.get_output()
