@@ -42,11 +42,13 @@ class Game:
         self.choose_player_screen_playing, self.choose_map_playing = True, True
         self.choose_player_text, self.start_text, self.button_text = None, None, None
         self.player_perk, self.choose_map_text = None, None
+        self.bearing_item = None
 
         self.dict_sprites_usable_objects = {}
 
     def new(self):
         self.gui.stop_music()
+        self.gui.set_music('sounds/background_music.wav')
         self.all_sprites = self.gui.group_sprites()
         self.trees = self.gui.group_sprites()
         self.usable_objects = self.gui.group_sprites()
@@ -62,6 +64,7 @@ class Game:
         )
         self.player.bag.put(BurnerFurnaceCreator(1, self.map))
         self.player.bag.put(BurnerMiningDrillCreator(1, self.map))
+        self.player.bag.put(Coal(1))
 
         self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H, self.gui)
 
@@ -313,6 +316,7 @@ class Game:
 
     def show_usable_objects_menu(self, object, x_coord, y_coord):
         self.show_usable_objects_menu_playing = True
+        fuel_image = None
 
         while self.show_usable_objects_menu_playing:
             self.gui.draw_rect(self.screen, const.BAGCOLOR,
@@ -411,15 +415,66 @@ class Game:
                 if cnt % 2 == 1:
                     y_delta += 1.5 * const.CELL_SIZE
                 else:
-                    y_delta = y_delta = y_coord + 0.5 * const.CELL_SIZE
-                    x_delta +=const.CELL_SIZE
+                    y_delta = y_coord + 0.5 * const.CELL_SIZE
+                    x_delta += const.CELL_SIZE
 
+            if fuel_image:
+                self.screen.blit(fuel_image,
+                                 (x_coord + const.CELL_SIZE // 2, y_coord + 1.5 * const.CELL_SIZE))
 
+            x_start = x_coord + const.CELL_SIZE // 2
+            y_start = y_coord + 5.5 * const.CELL_SIZE
             for event in self.gui.get_events():
 
                 if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 1:
-                    if not (x_coord < event.pos[0] < x_coord + 6 * const.CELL_SIZE) or not(y_coord < event.pos[1] < x_coord + 8 * const.CELL_SIZE):
+                    if not (x_coord < event.pos[0] < x_coord + 6 * const.CELL_SIZE) or not(y_coord < event.pos[1] < y_coord + 10 * const.CELL_SIZE):
                         self.show_usable_objects_menu_playing = False
+
+                    if x_start < event.pos[0] < x_start + 5 * const.CELL_SIZE and y_start < event.pos[1] < y_start + const.CELL_SIZE * (len(batches) + 5) // 5:
+                        j_ind = int((event.pos[0] - x_start) // const.CELL_SIZE)
+                        i_ind = int((event.pos[1] - y_start) // const.CELL_SIZE)
+                        if i_ind * 5 + j_ind >= len(batches):
+                            break
+                        self.bearing_item = batches[i_ind * 5 + j_ind]
+                        self.gui.draw_rect(
+                            self.screen, const.HIGHLIGHT,
+                            (x_start + j_ind * const.CELL_SIZE, y_start + i_ind * const.CELL_SIZE,
+                             const.CELL_SIZE, const.CELL_SIZE)
+                        )
+
+                        image = self.gui.get_image(
+                            batches[i_ind * 5 + j_ind].get_icon_path()
+                        ).convert_alpha()
+
+                        image.set_colorkey(const.BLACK)
+
+                        self.screen.blit(image,
+                                         (x_start + j_ind * const.CELL_SIZE, y_start + i_ind * const.CELL_SIZE))
+
+                        batch_amount = self.additional_mini_font.render(str(batches[i_ind * 5 + j_ind].amount), True,
+                                                                        const.WHITE)
+                        self.screen.blit(
+                            batch_amount,
+                            (
+                                x_start + j_ind * const.CELL_SIZE + const.CELL_SIZE - batch_amount.get_width(),
+                                y_start + i_ind * const.CELL_SIZE + const.CELL_SIZE // 2,
+                            ),
+                        )
+
+                    if self.bearing_item:  # todo
+                        if object.__class__.__name__ == 'BurnerMiningDrill' and x_coord + const.CELL_SIZE // 2 < event.pos[0] < x_coord + const.CELL_SIZE // 2 + const.CELL_SIZE and y_coord + 1.5 * const.CELL_SIZE < event.pos[1] < y_coord + 2.5 * const.CELL_SIZE:
+                            if object.put_energy(self.bearing_item):
+                                fuel_image = self.gui.get_image(
+                                    self.bearing_item.get_icon_path()
+                                ).convert_alpha()
+
+                                fuel_image.set_colorkey(const.BLACK)
+
+                                self.screen.blit(fuel_image,
+                                                 (x_coord + const.CELL_SIZE // 2, y_coord + 1.5 * const.CELL_SIZE))
+                                self.player.bag.remove(self.bearing_item)
+                                self.bearing_item = None
+
 
                 if self.gui.get_event_type(event) == "QUIT":
                     self.quit()
@@ -847,21 +902,15 @@ class Game:
                 for event in self.gui.get_events():
                     if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
                         if const.DISPLAY_H // 2 + 82 > mouse[1] > const.DISPLAY_H // 2:
-                            # creator = EasyMapCreator()
-                            # self.map = creator.gen_map()
-                            self.map = EasyMap()
-                            with open('map.json', 'r+') as f:
-                                self.map.load(json.load(f))
+                            creator = EasyMapCreator()
+                            self.map = creator.gen_map()
                             self.map_matr = self.map.get_map_matrix()
                             self.map_obj = self.map.get_map_objects()
                             self.safe_creator = SafeCreator(self.map)
                             self.choose_map_playing = False
                         elif const.DISPLAY_H // 2 + 232 > mouse[1] > const.DISPLAY_H // 2 + 150:
-                            # creator = HardMapCreator()
-                            # self.map = creator.gen_map()
-                            self.map = HardMap()
-                            with open('map.json', 'r+') as f:
-                                self.map.load(json.load(f))
+                            creator = HardMapCreator()
+                            self.map = creator.gen_map()
                             self.map_matr = self.map.get_map_matrix()
                             self.map_obj = self.map.get_map_objects()
                             self.safe_creator = SafeCreator(self.map)
