@@ -1,4 +1,4 @@
-import sys
+import time
 from player import Player, player_perks
 from camera import Camera
 from tree_sprite import Tree
@@ -13,8 +13,7 @@ import core.virtual_objects.map_object_creators.concrete_creators as concrete
 from core.safe_creator import SafeCreator
 from core.night import run_night
 import constants as const
-import time
-import json
+
 
 
 class Game:
