@@ -35,6 +35,7 @@ class Game:
         self.small_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 18)
         self.mini_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 40)
         self.additional_mini_font = self.gui.get_font("fonts/Roboto-Bold.ttf", const.DISPLAY_H // 40)
+        self.additional_supermini_font = self.gui.get_font("fonts/Roboto-Bold.ttf", const.DISPLAY_H // 50)
         self.additional_font = self.gui.get_font("fonts/Roboto-Bold.ttf", const.DISPLAY_H // 30)
 
         self.start_screen_playing = True
@@ -295,9 +296,12 @@ class Game:
 
                 if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
                                   j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
-                    message = self.show_bag(True, i_ind, j_ind)
-                    if message:
-                        self.show_message(message, const.RED, event, self.additional_font)
+                    if self.map.get_cell(i_ind, j_ind).usable_object: #todo
+                        self.show_usable_objects_menu(self.map.get_cell(i_ind, j_ind).usable_object, event.pos[0], event.pos[1])
+                    else:
+                        message = self.show_bag(True, i_ind, j_ind)
+                        if message:
+                            self.show_message(message, const.RED, event, self.additional_font)
                 else:
                     self.show_message('too far, come closer', const.RED, event, self.additional_mini_font)
 
@@ -306,6 +310,123 @@ class Game:
 
             if self.gui.get_event_type(event) == "QUIT":
                 self.quit()
+
+    def show_usable_objects_menu(self, object, x_coord, y_coord):
+        self.show_usable_objects_menu_playing = True
+
+        while self.show_usable_objects_menu_playing:
+            self.gui.draw_rect(self.screen, const.BAGCOLOR,
+                               (x_coord, y_coord, 6 * const.CELL_SIZE, 10 * const.CELL_SIZE))
+
+            self.gui.draw_line(self.screen, const.BLACK,
+                               (x_coord, y_coord),
+                               (x_coord, y_coord + 10 * const.CELL_SIZE))
+            self.gui.draw_line(self.screen, const.BLACK,
+                               (x_coord, y_coord),
+                               (x_coord + 6 * const.CELL_SIZE, y_coord))
+            self.gui.draw_line(self.screen, const.BLACK,
+                               (x_coord, y_coord + 10 * const.CELL_SIZE),
+                               (x_coord + 6 * const.CELL_SIZE, y_coord + 10 * const.CELL_SIZE))
+            self.gui.draw_line(self.screen, const.BLACK,
+                               (x_coord + 6 * const.CELL_SIZE, y_coord),
+                               (x_coord + 6 * const.CELL_SIZE, y_coord + 10 * const.CELL_SIZE))
+            self.gui.draw_line(self.screen, const.BLACK,
+                               (x_coord, y_coord + 5 * const.CELL_SIZE),
+                               (x_coord + 6 * const.CELL_SIZE, y_coord + 5 * const.CELL_SIZE))
+
+            text_upper_part = self.additional_mini_font.render(object.__class__.__name__, True, const.WHITE)
+            text_lower_part = self.additional_mini_font.render('Inventory', True, const.WHITE)
+
+            self.screen.blit(text_upper_part, (x_coord + const.CELL_SIZE // 2, y_coord))
+            self.screen.blit(text_lower_part, (x_coord + const.CELL_SIZE // 2, y_coord + 5 * const.CELL_SIZE))
+
+            dict_object_left_cell = {'BurnerFurnace': ('input', 'fuel'),
+                                      'BurnerMiningDrill': ('fuel',)}
+
+            # отрисуем инвентарь
+            x_start = x_coord + const.CELL_SIZE // 2
+            y_start = y_coord + 5.5 * const.CELL_SIZE
+            batches = self.player.bag.get_data()
+            for i in range((self.player.bag_capacity + 5) // 5):
+                for j in range(5):
+                    if i * 5 + j >= len(batches):
+                        break
+                    self.gui.draw_rect(
+                        self.screen, const.LIGHT_GREY,
+                        (x_start + j * const.CELL_SIZE, y_start + i * const.CELL_SIZE,
+                         const.CELL_SIZE, const.CELL_SIZE)
+                    )
+                    self.gui.draw_line(self.screen, const.BLACK,
+                                       (x_start + (j + 1) * const.CELL_SIZE, y_start + i * const.CELL_SIZE),
+                                       (x_start + (j + 1) * const.CELL_SIZE, y_start + (i + 1) * const.CELL_SIZE))
+                    self.gui.draw_line(self.screen, const.BLACK,
+                                       (x_start + j * const.CELL_SIZE, y_start + i * const.CELL_SIZE),
+                                       (x_start + j * const.CELL_SIZE, y_start + (i + 1) * const.CELL_SIZE))
+                    self.gui.draw_line(self.screen, const.BLACK,
+                                       (x_start + j * const.CELL_SIZE, y_start + i * const.CELL_SIZE),
+                                       (x_start + (j + 1) * const.CELL_SIZE, y_start + i * const.CELL_SIZE))
+                    self.gui.draw_line(self.screen, const.BLACK,
+                                       (x_start + j * const.CELL_SIZE, y_start + (i + 1) * const.CELL_SIZE),
+                                       (x_start + (j + 1) * const.CELL_SIZE, y_start + (i + 1) * const.CELL_SIZE))
+
+                    image = self.gui.get_image(
+                        batches[i * 5 + j].get_icon_path()
+                    ).convert_alpha()
+
+                    image.set_colorkey(const.BLACK)
+
+                    self.screen.blit(image,
+                                     (x_start + j * const.CELL_SIZE, y_start + i * const.CELL_SIZE))
+
+                    batch_amount = self.additional_mini_font.render(str(batches[i * 5 + j].amount), True, const.WHITE)
+                    self.screen.blit(
+                        batch_amount,
+                        (
+                            x_start + j * const.CELL_SIZE + const.CELL_SIZE - batch_amount.get_width(),
+                            y_start + i * const.CELL_SIZE + const.CELL_SIZE // 2,
+                        ),
+                    )
+
+            # отрисуем верхнюю часть
+
+            output_text = self.additional_supermini_font.render('output', True, const.WHITE)
+            self.screen.blit(output_text,
+                             (x_coord + 5.5 * const.CELL_SIZE - output_text.get_width(), y_coord + const.CELL_SIZE))
+            self.gui.draw_rect(self.screen, const.LIGHT_GREY,
+                               (x_coord + 5.5 * const.CELL_SIZE - output_text.get_width(), y_coord + 1.5 * const.CELL_SIZE,
+                               const.CELL_SIZE, const.CELL_SIZE))
+
+            x_delta = x_coord + const.CELL_SIZE // 2
+            y_delta = y_coord + const.CELL_SIZE
+            cnt = 0
+            for field in dict_object_left_cell[object.__class__.__name__]:
+                text = self.additional_supermini_font.render(field, True, const.WHITE)
+                self.screen.blit(text,
+                                 (x_delta, y_delta))
+                self.gui.draw_rect(self.screen, const.LIGHT_GREY,
+                                   (x_delta,
+                                    y_delta + 0.5 * const.CELL_SIZE,
+                                    const.CELL_SIZE, const.CELL_SIZE))
+                cnt += 1
+                if cnt % 2 == 1:
+                    y_delta += 1.5 * const.CELL_SIZE
+                else:
+                    y_delta = y_delta = y_coord + 0.5 * const.CELL_SIZE
+                    x_delta +=const.CELL_SIZE
+
+
+            for event in self.gui.get_events():
+
+                if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 1:
+                    if not (x_coord < event.pos[0] < x_coord + 6 * const.CELL_SIZE) or not(y_coord < event.pos[1] < x_coord + 8 * const.CELL_SIZE):
+                        self.show_usable_objects_menu_playing = False
+
+                if self.gui.get_event_type(event) == "QUIT":
+                    self.quit()
+
+            self.gui.update_display()
+            self.gui.tick_fps(self.clock, const.FPS)
+
 
     def show_bag(self, is_clicking=False, x_ind=0, y_ind=0):
         self.show_bag_playing = True
