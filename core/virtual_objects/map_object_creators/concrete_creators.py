@@ -99,7 +99,6 @@ class SmallElectricPoleCreator(MapObjectCreator):
         super().__init__(el.SmallElectricPole, amount, map_obj)
         self.required_res = (
             inter.CopperCable(2 * amount),
-            rnb.Wood(amount),
         )
 
 
