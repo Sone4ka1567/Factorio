@@ -95,7 +95,7 @@ class MiningDrill(Machine, ABC):
             return
         if self.cell.raw_material_batch.amount >= 1:
             self.cell.raw_material_batch -= 1
-            self.output.put(self.cell.raw_material_batch.get_n(1))
+            self.output.put(self.cell.raw_material_batch.get_n(4))
             self.energy_source.subtract_energy()
         if self.cell.raw_material_batch and self.cell.raw_material_batch.amount == 0:
             self.cell.raw_material_batch = None
