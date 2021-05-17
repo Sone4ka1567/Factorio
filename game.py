@@ -743,7 +743,7 @@ class Game:
                                 if res['ok']:
                                     sprite = UsableObjectSprite(self, x_ind, y_ind,
                                                                 self.map_obj[self.map_matr[y_ind][x_ind]],
-                                                                left_elem_dictionary[key].get_icon_path())
+                                                                left_elem_dictionary[key].get_image_path())
 
                                     self.dict_sprites_usable_objects[(x_ind, y_ind)] = sprite
                                 else:
