@@ -18,5 +18,5 @@ class UsableObjectSprite(PygameSprite):
 
         self.x_spawn = x_spawn
         self.y_spawn = y_spawn
-        self.rect.x = self.x_spawn * const.CELL_SIZE
-        self.rect.y = self.y_spawn * const.CELL_SIZE
+        self.rect.centerx = self.x_spawn * const.CELL_SIZE + const.CELL_SIZE // 2
+        self.rect.bottom = (self.y_spawn + 1) * const.CELL_SIZE
