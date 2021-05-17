@@ -2,7 +2,6 @@ from core.virtual_objects.materials.abstracts import Intermediate
 from core.virtual_objects.materials.raw_and_basics import (
     CopperPlate,
     IronPlate,
-    WoodenPlate,
     SiliconPlate,
 )
 
@@ -54,7 +53,7 @@ class ElectricCircuit(Intermediate):
 
     def __init__(self, amount):
         super().__init__(amount)
-        self.required_res = (CopperCable(amount * 3), WoodenPlate(amount))
+        self.required_res = (CopperCable(amount * 3),)
 
 
 class Resistor(Intermediate):
