@@ -28,7 +28,7 @@ class Game:
 
         self.gui.set_caption("ENDustrial")
         self.clock = self.gui.set_clock()
-        # self.gui.set_music('sounds/welcome_music.wav') todo
+        self.gui.set_music('sounds/welcome_music.wav')
 
         self.big_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 5)
         self.font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 7)
@@ -46,7 +46,7 @@ class Game:
         self.dict_sprites_usable_objects = {}
 
     def new(self):
-        # self.gui.stop_music() todo
+        self.gui.stop_music()
         self.all_sprites = self.gui.group_sprites()
         self.trees = self.gui.group_sprites()
         self.usable_objects = self.gui.group_sprites()
@@ -296,7 +296,7 @@ class Game:
 
                 if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
                                   j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
-                    if self.map.get_cell(i_ind, j_ind).usable_object: #todo
+                    if self.map.get_cell(i_ind, j_ind).usable_object:
                         self.show_usable_objects_menu(self.map.get_cell(i_ind, j_ind).usable_object, event.pos[0], event.pos[1])
                     else:
                         message = self.show_bag(True, i_ind, j_ind)
