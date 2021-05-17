@@ -12,6 +12,7 @@ from basic_geometry import euclidean_dist
 import core.virtual_objects.materials.intermediates as inter
 import core.virtual_objects.map_object_creators.concrete_creators as concrete
 from core.safe_creator import SafeCreator
+from core.night import run_night
 import constants as const
 import time
 import json
@@ -63,7 +64,6 @@ class Game:
             self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk]
         )
         self.player.bag.put(BurnerFurnaceCreator(1, self.map))
-        self.player.bag.put(BurnerMiningDrillCreator(1, self.map))
         self.player.bag.put(Coal(1))
 
         self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H, self.gui)
@@ -250,73 +250,87 @@ class Game:
         self.gui.tick_fps(self.clock, const.FPS)
 
     def events(self):
-        for event in self.gui.get_events():
+        try:
+            for event in self.gui.get_events():
 
-            if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 3:
+                if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 3:
 
-                if (self.player.rect.x - const.DISPLAY_W // 2) < const.PIXEL_MAP_W - const.DISPLAY_W:
-                    left_border = max(0, self.player.rect.x - const.DISPLAY_W // 2) // const.CELL_SIZE
-                else:
-                    left_border = (const.PIXEL_MAP_W - const.DISPLAY_W) // const.CELL_SIZE
-
-                if (self.player.rect.y - const.DISPLAY_H // 2) < const.PIXEL_MAP_H - const.DISPLAY_H:
-                    top_border = max(0, self.player.rect.y - const.DISPLAY_H // 2) // const.CELL_SIZE
-                else:
-                    top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
-
-                i_ind = (event.pos[0] + self.player.delta_x) // const.CELL_SIZE + left_border
-                j_ind = (event.pos[1] + self.player.delta_y) // const.CELL_SIZE + top_border
-
-                if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
-                                  j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
-
-                    cur_usable_object = self.map.get_cell(i_ind, j_ind).usable_object
-                    if cur_usable_object:
-                        self.player.bag.put(obj2creator[cur_usable_object.__class__](1, self.map))
-                        self.safe_creator.remove_object(i_ind, j_ind)
-                        self.dict_sprites_usable_objects[(i_ind, j_ind)].kill()
+                    if (self.player.rect.x - const.DISPLAY_W // 2) < const.PIXEL_MAP_W - const.DISPLAY_W:
+                        left_border = max(0, self.player.rect.x - const.DISPLAY_W // 2) // const.CELL_SIZE
                     else:
-                        message = self.player.dig(self.map.get_cell(i_ind, j_ind))
-                        color = const.WHITE if message['ok'] else const.RED
-                        self.show_message(message['message'], color, event, self.additional_mini_font)
-                else:
-                    self.show_message('too far, come closer', const.RED, event, self.additional_mini_font)
+                        left_border = (const.PIXEL_MAP_W - const.DISPLAY_W) // const.CELL_SIZE
 
-            elif self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 1:
-
-                if (self.player.rect.x - const.DISPLAY_W // 2) < const.PIXEL_MAP_W - const.DISPLAY_W:
-                    left_border = max(0, self.player.rect.x - const.DISPLAY_W // 2) // const.CELL_SIZE
-                else:
-                    left_border = (const.PIXEL_MAP_W - const.DISPLAY_W) // const.CELL_SIZE
-
-                if (self.player.rect.y - const.DISPLAY_H // 2) < const.PIXEL_MAP_H - const.DISPLAY_H:
-                    top_border = max(0, self.player.rect.y - const.DISPLAY_H // 2) // const.CELL_SIZE
-                else:
-                    top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
-
-                i_ind = (event.pos[0] + self.player.delta_x) // const.CELL_SIZE + left_border
-                j_ind = (event.pos[1] + self.player.delta_y) // const.CELL_SIZE + top_border
-
-                if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
-                                  j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
-                    if self.map.get_cell(i_ind, j_ind).usable_object:
-                        self.show_usable_objects_menu(self.map.get_cell(i_ind, j_ind).usable_object, event.pos[0], event.pos[1])
+                    if (self.player.rect.y - const.DISPLAY_H // 2) < const.PIXEL_MAP_H - const.DISPLAY_H:
+                        top_border = max(0, self.player.rect.y - const.DISPLAY_H // 2) // const.CELL_SIZE
                     else:
-                        message = self.show_bag(True, i_ind, j_ind)
-                        if message:
-                            self.show_message(message, const.RED, event, self.additional_font)
-                else:
-                    self.show_message('too far, come closer', const.RED, event, self.additional_mini_font)
+                        top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
 
-            if 'E' in self.gui.get_keystate():
-                self.show_bag()
+                    i_ind = (event.pos[0] + self.player.delta_x) // const.CELL_SIZE + left_border
+                    j_ind = (event.pos[1] + self.player.delta_y) // const.CELL_SIZE + top_border
 
-            if self.gui.get_event_type(event) == "QUIT":
-                self.quit()
+                    if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
+                                      j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
+
+                        cur_usable_object = self.map.get_cell(i_ind, j_ind).usable_object
+                        if cur_usable_object:
+                            self.player.bag.put(obj2creator[cur_usable_object.__class__](1, self.map))
+                            self.safe_creator.remove_object(i_ind, j_ind)
+                            self.dict_sprites_usable_objects[(i_ind, j_ind)].kill()
+                        else:
+                            message = self.player.dig(self.map.get_cell(i_ind, j_ind))
+                            color = const.WHITE if message['ok'] else const.RED
+                            self.show_message(message['message'], color, event, self.additional_mini_font)
+                    else:
+                        self.show_message('too far, come closer', const.RED, event, self.additional_mini_font)
+
+                elif self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 1:
+
+                    if (self.player.rect.x - const.DISPLAY_W // 2) < const.PIXEL_MAP_W - const.DISPLAY_W:
+                        left_border = max(0, self.player.rect.x - const.DISPLAY_W // 2) // const.CELL_SIZE
+                    else:
+                        left_border = (const.PIXEL_MAP_W - const.DISPLAY_W) // const.CELL_SIZE
+
+                    if (self.player.rect.y - const.DISPLAY_H // 2) < const.PIXEL_MAP_H - const.DISPLAY_H:
+                        top_border = max(0, self.player.rect.y - const.DISPLAY_H // 2) // const.CELL_SIZE
+                    else:
+                        top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
+
+                    i_ind = (event.pos[0] + self.player.delta_x) // const.CELL_SIZE + left_border
+                    j_ind = (event.pos[1] + self.player.delta_y) // const.CELL_SIZE + top_border
+
+                    if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
+                                      j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
+                        if self.map.get_cell(i_ind, j_ind).usable_object:
+                            self.show_usable_objects_menu(self.map.get_cell(i_ind, j_ind).usable_object, event.pos[0],
+                                                          event.pos[1])
+                        else:
+                            message = self.show_bag(True, i_ind, j_ind)
+                            if message:
+                                self.show_message(message, const.RED, event, self.additional_font)
+                    else:
+                        self.show_message('too far, come closer', const.RED, event, self.additional_mini_font)
+
+                if 'E' in self.gui.get_keystate():
+                    self.show_bag()
+
+                if 'N' in self.gui.get_keystate():
+                    st_time = time.time()
+                    run_night(self.map)
+                    night_image = self.gui.get_image('night.jpg').convert_alpha()
+                    self.screen.blit(night_image, (0, 0))
+                    self.gui.update_display()
+                    time.sleep(max(0, const.NIGHT_TIME - (time.time() - st_time)))
+
+                if self.gui.get_event_type(event) == "QUIT":
+                    self.quit()
+        except Exception as ex:
+            print(ex)
 
     def show_usable_objects_menu(self, object, x_coord, y_coord):
         self.show_usable_objects_menu_playing = True
-        fuel_image = None
+        fuel_image = self.gui.get_image('icons/materials/raw/coal.png').convert_alpha()
+
+        fuel_image.set_colorkey(const.BLACK)
 
         while self.show_usable_objects_menu_playing:
             self.gui.draw_rect(self.screen, const.BAGCOLOR,
@@ -345,7 +359,7 @@ class Game:
             self.screen.blit(text_lower_part, (x_coord + const.CELL_SIZE // 2, y_coord + 5 * const.CELL_SIZE))
 
             dict_object_left_cell = {'BurnerFurnace': ('input', 'fuel'),
-                                      'BurnerMiningDrill': ('fuel',)}
+                                     'BurnerMiningDrill': ('fuel',)}
 
             # отрисуем инвентарь
             x_start = x_coord + const.CELL_SIZE // 2
@@ -397,8 +411,30 @@ class Game:
             self.screen.blit(output_text,
                              (x_coord + 5.5 * const.CELL_SIZE - output_text.get_width(), y_coord + const.CELL_SIZE))
             self.gui.draw_rect(self.screen, const.LIGHT_GREY,
-                               (x_coord + 5.5 * const.CELL_SIZE - output_text.get_width(), y_coord + 1.5 * const.CELL_SIZE,
-                               const.CELL_SIZE, const.CELL_SIZE))
+                               (x_coord + 5.5 * const.CELL_SIZE - output_text.get_width(),
+                                y_coord + 1.5 * const.CELL_SIZE,
+                                const.CELL_SIZE, const.CELL_SIZE))
+
+            if not object.output.is_empty():
+                batch = object.output
+                image = self.gui.get_image(
+                    batch[0].get_icon_path()
+                ).convert_alpha()
+
+                image.set_colorkey(const.BLACK)
+
+                self.screen.blit(image,
+                                 (x_coord + 5.5 * const.CELL_SIZE - output_text.get_width(),
+                                  y_coord + 1.5 * const.CELL_SIZE))
+
+                batch_amount = self.additional_mini_font.render(str(batch[0].amount), True, const.WHITE)
+                self.screen.blit(
+                    batch_amount,
+                    (
+                        x_coord + 5.5 * const.CELL_SIZE - output_text.get_width() + const.CELL_SIZE - batch_amount.get_width(),
+                        y_coord + 1.5 * const.CELL_SIZE + const.CELL_SIZE // 2,
+                    ),
+                )
 
             x_delta = x_coord + const.CELL_SIZE // 2
             y_delta = y_coord + const.CELL_SIZE
@@ -418,7 +454,7 @@ class Game:
                     y_delta = y_coord + 0.5 * const.CELL_SIZE
                     x_delta += const.CELL_SIZE
 
-            if fuel_image:
+            if object.has_energy():
                 self.screen.blit(fuel_image,
                                  (x_coord + const.CELL_SIZE // 2, y_coord + 1.5 * const.CELL_SIZE))
 
@@ -427,10 +463,12 @@ class Game:
             for event in self.gui.get_events():
 
                 if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 1:
-                    if not (x_coord < event.pos[0] < x_coord + 6 * const.CELL_SIZE) or not(y_coord < event.pos[1] < y_coord + 10 * const.CELL_SIZE):
+                    if not (x_coord < event.pos[0] < x_coord + 6 * const.CELL_SIZE) or not (
+                            y_coord < event.pos[1] < y_coord + 10 * const.CELL_SIZE):
                         self.show_usable_objects_menu_playing = False
 
-                    if x_start < event.pos[0] < x_start + 5 * const.CELL_SIZE and y_start < event.pos[1] < y_start + const.CELL_SIZE * (len(batches) + 5) // 5:
+                    if x_start < event.pos[0] < x_start + 5 * const.CELL_SIZE and y_start < event.pos[
+                        1] < y_start + const.CELL_SIZE * (len(batches) + 5) // 5:
                         j_ind = int((event.pos[0] - x_start) // const.CELL_SIZE)
                         i_ind = int((event.pos[1] - y_start) // const.CELL_SIZE)
                         if i_ind * 5 + j_ind >= len(batches):
@@ -462,7 +500,10 @@ class Game:
                         )
 
                     if self.bearing_item:  # todo
-                        if object.__class__.__name__ == 'BurnerMiningDrill' and x_coord + const.CELL_SIZE // 2 < event.pos[0] < x_coord + const.CELL_SIZE // 2 + const.CELL_SIZE and y_coord + 1.5 * const.CELL_SIZE < event.pos[1] < y_coord + 2.5 * const.CELL_SIZE:
+                        if object.__class__.__name__ == 'BurnerMiningDrill' and x_coord + const.CELL_SIZE // 2 < \
+                                event.pos[
+                                    0] < x_coord + const.CELL_SIZE // 2 + const.CELL_SIZE and y_coord + 1.5 * const.CELL_SIZE < \
+                                event.pos[1] < y_coord + 2.5 * const.CELL_SIZE:
                             if object.put_energy(self.bearing_item):
                                 fuel_image = self.gui.get_image(
                                     self.bearing_item.get_icon_path()
@@ -475,13 +516,20 @@ class Game:
                                 self.player.bag.remove(self.bearing_item)
                                 self.bearing_item = None
 
+                if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 3:
+                    if object.__class__.__name__ == 'BurnerMiningDrill' and x_coord + 5.5 * const.CELL_SIZE - output_text.get_width() < event.pos[
+                        0] < x_coord + 5.5 * const.CELL_SIZE - output_text.get_width() + const.CELL_SIZE and y_coord + 1.5 * const.CELL_SIZE < \
+                            event.pos[1] < y_coord + 2.5 * const.CELL_SIZE:
+                        if not object.output.is_empty():
+                            res = object.get_output()
+                            self.player.bag.put(res[0])
+                            object.clear_output()
 
                 if self.gui.get_event_type(event) == "QUIT":
                     self.quit()
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
-
 
     def show_bag(self, is_clicking=False, x_ind=0, y_ind=0):
         self.show_bag_playing = True
@@ -860,22 +908,22 @@ class Game:
             usual_image = self.gui.get_image('welcome_screen/screen_2/usual_button.xcf')
             warrior_image = self.gui.get_image('welcome_screen/screen_2/warrior_button.xcf')
 
-            self.screen.blit(builder_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2))
+            self.screen.blit(warrior_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2))
             self.screen.blit(usual_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 100))
-            self.screen.blit(warrior_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 200))
+            self.screen.blit(builder_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 200))
 
             mouse = self.gui.get_mouse_pos()
             if const.DISPLAY_W // 2 + 265 / 2 > mouse[0] > const.DISPLAY_W // 2 - 265 / 2:
                 for event in self.gui.get_events():
                     if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
                         if const.DISPLAY_H // 2 + 82 > mouse[1] > const.DISPLAY_H // 2:
-                            self.player_perk = 'big_bag'
+                            self.player_perk = 'fast'
                             self.choose_player_screen_playing = False
                         elif const.DISPLAY_H // 2 + 182 > mouse[1] > const.DISPLAY_H // 2 + 100:
                             self.player_perk = 'balanced'
                             self.choose_player_screen_playing = False
                         elif const.DISPLAY_H // 2 + 282 > mouse[1] > const.DISPLAY_H // 2 + 200:
-                            self.player_perk = 'fast'
+                            self.player_perk = 'big_bag'
                             self.choose_player_screen_playing = False
 
             for event in self.gui.get_events():
