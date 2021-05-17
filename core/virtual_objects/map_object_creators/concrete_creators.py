@@ -142,3 +142,11 @@ class RadarCreator(MapObjectCreator):
             inter.SteelPlate(amount * 25),
             inter.IronGearWheel(amount * 15),
         )
+
+
+obj2creator = {prod.BurnerFurnace: BurnerFurnaceCreator, prod.ElectricFurnace: ElectricFurnaceCreator,
+               prod.BurnerAssemblingMachine: BurnerAssemblingMachineCreator,
+               prod.ElectricAssemblingMachine: ElectricAssemblingMachineCreator,
+               prod.BurnerMiningDrill: BurnerMiningDrillCreator, prod.ElectricMiningDrill: ElectricMiningDrillCreator,
+               el.SmallElectricPole: SmallElectricPoleCreator, el.BigElectricPole: BigElectricPoleCreator,
+               el.BurnerElectricGenerator: BurnerElectricGeneratorCreator}

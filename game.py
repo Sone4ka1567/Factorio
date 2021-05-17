@@ -6,7 +6,8 @@ from usable_object_sprite import UsableObjectSprite
 from maps import EasyMapCreator, HardMapCreator, EasyMap, HardMap
 from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
-from core.virtual_objects.map_object_creators.concrete_creators import BurnerFurnaceCreator, BurnerMiningDrillCreator
+from core.virtual_objects.map_object_creators.concrete_creators import BurnerFurnaceCreator, BurnerMiningDrillCreator, \
+    obj2creator
 from basic_geometry import euclidean_dist
 import core.virtual_objects.materials.intermediates as inter
 import core.virtual_objects.map_object_creators.concrete_creators as concrete
@@ -177,7 +178,8 @@ class Game:
                     ).convert_alpha()
 
                 self.screen.blit(cell_image,
-                                 ((i - left_border) * const.CELL_SIZE - self.player.delta_x, (j - top_border) * const.CELL_SIZE - self.player.delta_y))
+                                 ((i - left_border) * const.CELL_SIZE - self.player.delta_x,
+                                  (j - top_border) * const.CELL_SIZE - self.player.delta_y))
 
     def draw(self):
         self.gui.fill_screen(self.screen, const.BG_COLOR)
@@ -262,7 +264,10 @@ class Game:
 
                 if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
                                   j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
-                    if self.map.get_cell(i_ind, j_ind).usable_object:
+
+                    cur_usable_object = self.map.get_cell(i_ind, j_ind).usable_object
+                    if cur_usable_object:
+                        self.player.bag.put(obj2creator[cur_usable_object.__class__](1, self.map))
                         self.safe_creator.remove_object(i_ind, j_ind)
                         self.dict_sprites_usable_objects[(i_ind, j_ind)].kill()
                     else:
@@ -607,9 +612,14 @@ class Game:
                         for key in left_elem_dictionary.keys():
                             if key[0][0] < event.pos[0] < key[1][0] and key[0][1] < event.pos[1] < key[1][1]:
 
-                                res = self.safe_creator.create_object(left_elem_dictionary[key], x_ind, y_ind)
+                                cur_batch = left_elem_dictionary[key]
+                                res = self.safe_creator.create_object(cur_batch, x_ind, y_ind)
+                                if cur_batch.amount == 0:
+                                    self.player.bag.remove(cur_batch)
                                 if res['ok']:
-                                    sprite = UsableObjectSprite(self, x_ind, y_ind, self.map_obj[self.map_matr[y_ind][x_ind]], left_elem_dictionary[key].get_icon_path())
+                                    sprite = UsableObjectSprite(self, x_ind, y_ind,
+                                                                self.map_obj[self.map_matr[y_ind][x_ind]],
+                                                                left_elem_dictionary[key].get_icon_path())
                                     self.dict_sprites_usable_objects[(x_ind, y_ind)] = sprite
                                 self.show_bag_playing = False
 
