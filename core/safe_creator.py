@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from result_func import result_ok, result_error
+from core.virtual_objects.map_object_creators.abstract_creators import MapObjectCreator
 
 
 class Handler(ABC):

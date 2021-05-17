@@ -40,6 +40,8 @@ class Game:
         self.choose_player_text, self.start_text, self.button_text = None, None, None
         self.player_perk, self.choose_map_text = None, None
 
+        self.dict_sprites_usable_objects = {}
+
     def new(self):
         # self.gui.stop_music() todo
         self.all_sprites = self.gui.group_sprites()
@@ -260,9 +262,13 @@ class Game:
 
                 if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
                                   j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
-                    message = self.player.dig(self.map_obj[self.map_matr[j_ind][i_ind]])
-                    color = const.WHITE if message['ok'] else const.RED
-                    self.show_message(message['message'], color, event)
+                    if self.map.get_cell(i_ind, j_ind).usable_object:
+                        self.safe_creator.remove_object(i_ind, j_ind)
+                        self.dict_sprites_usable_objects[(i_ind, j_ind)].kill()
+                    else:
+                        message = self.player.dig(self.map.get_cell(i_ind, j_ind))
+                        color = const.WHITE if message['ok'] else const.RED
+                        self.show_message(message['message'], color, event)
                 else:
                     self.show_message('too far, come closer', const.RED, event)
 
@@ -283,9 +289,7 @@ class Game:
 
                 if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
                                   j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
-                    print(j_ind, i_ind)
                     self.show_bag(True, i_ind, j_ind)
-                    # todo
                 else:
                     self.show_message('too far, come closer', const.RED, event)
 
@@ -603,9 +607,10 @@ class Game:
                         for key in left_elem_dictionary.keys():
                             if key[0][0] < event.pos[0] < key[1][0] and key[0][1] < event.pos[1] < key[1][1]:
 
-                                print(self.safe_creator.create_object(left_elem_dictionary[key], x_ind, y_ind))
-
-                                UsableObjectSprite(self, x_ind, y_ind, self.map_obj[self.map_matr[y_ind][x_ind]], left_elem_dictionary[key].get_icon_path())
+                                res = self.safe_creator.create_object(left_elem_dictionary[key], x_ind, y_ind)
+                                if res['ok']:
+                                    sprite = UsableObjectSprite(self, x_ind, y_ind, self.map_obj[self.map_matr[y_ind][x_ind]], left_elem_dictionary[key].get_icon_path())
+                                    self.dict_sprites_usable_objects[(x_ind, y_ind)] = sprite
                                 self.show_bag_playing = False
 
             self.gui.update_display()
