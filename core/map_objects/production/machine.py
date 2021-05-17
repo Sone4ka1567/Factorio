@@ -25,11 +25,17 @@ class Machine(MapObject, ABC):
             return self.input.put(batch)
         return False
 
+    def get_output(self):
+        return self.output
+
     def remove_input(self, batch):
         self.input.remove(batch)
 
     def remove_output(self, batch):
         self.output.remove(batch)
+
+    def clear_output(self):
+        self.output = Container(1)
 
     def put_energy(self, *args):
         return self.energy_source.put_energy(*args)
