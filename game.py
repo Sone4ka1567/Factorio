@@ -240,6 +240,7 @@ class Game:
 
     def events(self):
         for event in self.gui.get_events():
+
             if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 3:
 
                 if (self.player.rect.x - const.DISPLAY_W // 2) < const.PIXEL_MAP_W - const.DISPLAY_W:
@@ -263,13 +264,35 @@ class Game:
                 else:
                     self.show_message('too far, come closer', const.RED, event)
 
+            elif self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 1:
+
+                if (self.player.rect.x - const.DISPLAY_W // 2) < const.PIXEL_MAP_W - const.DISPLAY_W:
+                    left_border = max(0, self.player.rect.x - const.DISPLAY_W // 2) // const.CELL_SIZE
+                else:
+                    left_border = (const.PIXEL_MAP_W - const.DISPLAY_W) // const.CELL_SIZE
+
+                if (self.player.rect.y - const.DISPLAY_H // 2) < const.PIXEL_MAP_H - const.DISPLAY_H:
+                    top_border = max(0, self.player.rect.y - const.DISPLAY_H // 2) // const.CELL_SIZE
+                else:
+                    top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
+
+                i_ind = (event.pos[0] + self.player.delta_x) // const.CELL_SIZE + left_border
+                j_ind = (event.pos[1] + self.player.delta_y) // const.CELL_SIZE + top_border
+
+                if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
+                                  j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
+                    self.show_bag(True)
+                    # todo
+                else:
+                    self.show_message('too far, come closer', const.RED, event)
+
             if 'E' in self.gui.get_keystate():
                 self.show_bag()
 
             if self.gui.get_event_type(event) == "QUIT":
                 self.quit()
 
-    def show_bag(self):
+    def show_bag(self, is_clicking=False):
         self.show_bag_playing = True
         self.module_playing = 'production'
 
@@ -443,7 +466,7 @@ class Game:
                                    concrete.ElectricFurnaceCreator(1, self.map_obj),
                                ((x_start, sub_y_start + 6 * const.CELL_SIZE),
                                 (x_start + const.CELL_SIZE, sub_y_start + 7 * const.CELL_SIZE)):
-                                   concrete.BurnerFurnaceCreator(1, self.map_obj),
+                                   concrete.RadarCreator(1, self.map_obj),
                                }
             dict_intermediate = {((x_start, sub_y_start), (x_start + const.CELL_SIZE, sub_y_start + const.CELL_SIZE)):
                                      inter.CopperCable(1),
@@ -632,6 +655,11 @@ class Game:
                             if sub_y_start + 7 * const.CELL_SIZE > event.pos[1] > sub_y_start + 6 * const.CELL_SIZE:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # radar
                                     self.player.bag.produce_inside(concrete.RadarCreator(1, self.map_obj))
+
+                    if is_clicking:
+                        pass
+
+
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
