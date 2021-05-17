@@ -8,14 +8,13 @@ class MapObjectCreator(Intermediate):
         self.object_type = object_type
         self.map_obj = map_obj
 
-    def _put_map_object(self, x, y, created_object, real_map: Map):
-        cell = real_map.get_cell(x, y)
+    def _put_map_object(self, x, y, created_object):
+        cell = self.map_obj.get_cell(x, y)
         cell.usable_object = created_object
-        # real_map.set_cell(x, y, cell)
         self.amount -= 1
 
     def create_object(self, x, y):
-        self._put_map_object(x, y, self.object_type(x, y, self.map_obj), self.map_obj)
+        self._put_map_object(x, y, self.object_type(x, y, self.map_obj))
 
     def matches_with_cell(self, cell: MapCell):
         return True

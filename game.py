@@ -2,6 +2,7 @@ import sys
 from player import Player, player_perks
 from camera import Camera
 from tree_sprite import Tree
+from usable_object_sprite import UsableObjectSprite
 from maps import EasyMapCreator, HardMapCreator, EasyMap, HardMap
 from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
@@ -9,6 +10,7 @@ from core.virtual_objects.map_object_creators.concrete_creators import BurnerFur
 from basic_geometry import euclidean_dist
 import core.virtual_objects.materials.intermediates as inter
 import core.virtual_objects.map_object_creators.concrete_creators as concrete
+from core.safe_creator import SafeCreator
 import constants as const
 import time
 import json
@@ -53,8 +55,8 @@ class Game:
         self.player = Player(
             self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk]
         )
-        self.player.bag.put(BurnerFurnaceCreator(1, self.map_obj))
-        self.player.bag.put(BurnerMiningDrillCreator(1, self.map_obj))
+        self.player.bag.put(BurnerFurnaceCreator(1, self.map))
+        self.player.bag.put(BurnerMiningDrillCreator(1, self.map))
 
         self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H, self.gui)
 
@@ -281,7 +283,8 @@ class Game:
 
                 if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
                                   j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
-                    self.show_bag(True)
+                    print(j_ind, i_ind)
+                    self.show_bag(True, i_ind, j_ind)
                     # todo
                 else:
                     self.show_message('too far, come closer', const.RED, event)
@@ -292,7 +295,7 @@ class Game:
             if self.gui.get_event_type(event) == "QUIT":
                 self.quit()
 
-    def show_bag(self, is_clicking=False):
+    def show_bag(self, is_clicking=False, x_ind=0, y_ind=0):
         self.show_bag_playing = True
         self.module_playing = 'production'
 
@@ -312,6 +315,8 @@ class Game:
 
             y_start = const.DISPLAY_H // 6
             x_start = const.DISPLAY_W // 20
+
+            left_elem_dictionary = {}
             for i in range((self.player.bag_capacity + 5) // 5):
                 for j in range(5):
                     if i * 5 + j >= self.player.bag_capacity:
@@ -335,6 +340,10 @@ class Game:
 
                 self.screen.blit(cell_image,
                                  (x_start + j_ind * 2 * const.CELL_SIZE, y_start + i_ind * 2 * const.CELL_SIZE))
+
+                left_elem_dictionary[((x_start + j_ind * 2 * const.CELL_SIZE, y_start + i_ind * 2 * const.CELL_SIZE),
+                                      (x_start + j_ind * 2 * const.CELL_SIZE + const.CELL_SIZE,
+                                       y_start + i_ind * 2 * const.CELL_SIZE + const.CELL_SIZE))] = batches[x]
 
                 batch_amount = self.additional_mini_font.render(str(batches[x].amount), True, const.WHITE)
                 self.screen.blit(
@@ -585,81 +594,19 @@ class Game:
                         elif x_start + 6 * const.CELL_SIZE < event.pos[0] < x_start + 8 * const.CELL_SIZE:
                             self.module_playing = 'logistics'
 
-                    else:
-                        if self.module_playing == 'inter-products':
-                            if sub_y_start + const.CELL_SIZE > event.pos[1] > sub_y_start:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # copper-cable
-                                    self.player.bag.produce_inside(inter.CopperCable(1))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 3 * const.CELL_SIZE:  # steel-plate
-                                    self.player.bag.produce_inside(inter.SteelPlate(1))
-                                elif x_start + 4 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 5 * const.CELL_SIZE:  # pipe
-                                    self.player.bag.produce_inside(inter.Pipe(1))
-
-                            if sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # iron-gear-wheel
-                                    self.player.bag.produce_inside(inter.IronGearWheel(1))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 3 * const.CELL_SIZE:  # elec circuit
-                                    self.player.bag.produce_inside(inter.ElectricCircuit(1))
-                                elif x_start + 4 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 5 * const.CELL_SIZE:  # resistor
-                                    self.player.bag.produce_inside(inter.Resistor(1))
-
-                            if sub_y_start + 5 * const.CELL_SIZE > event.pos[1] > sub_y_start + 4 * const.CELL_SIZE:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # transistor
-                                    self.player.bag.produce_inside(inter.Transistor(1))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 3 * const.CELL_SIZE:  # integrated circuit
-                                    self.player.bag.produce_inside(inter.IntegratedCircuit(1))
-                                elif x_start + 4 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 5 * const.CELL_SIZE:  # control-unit
-                                    self.player.bag.produce_inside(inter.ControlUnit(1))
-                        elif self.module_playing == 'logistics':
-                            if sub_y_start + const.CELL_SIZE > event.pos[1] > sub_y_start:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # small pole
-                                    self.player.bag.produce_inside(concrete.SmallElectricPoleCreator(1, self.map_obj))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 3 * const.CELL_SIZE:  # big pole
-                                    self.player.bag.produce_inside(concrete.BigElectricPoleCreator(1, self.map_obj))
-                            elif sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # burner
-                                    self.player.bag.produce_inside(
-                                        concrete.BurnerElectricGeneratorCreator(1, self.map_obj))
-
-                        else:
-                            if sub_y_start + const.CELL_SIZE > event.pos[1] > sub_y_start:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # burner-mining-drill
-                                    self.player.bag.produce_inside(concrete.BurnerMiningDrillCreator(1, self.map_obj))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 3 * const.CELL_SIZE:  # electric-mining-drill
-                                    self.player.bag.produce_inside(concrete.ElectricMiningDrillCreator(1, self.map_obj))
-
-                            if sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # assembling-machine-1
-                                    self.player.bag.produce_inside(
-                                        concrete.BurnerAssemblingMachineCreator(1, self.map_obj))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 3 * const.CELL_SIZE:  # assembling-machine-2
-                                    self.player.bag.produce_inside(
-                                        concrete.ElectricAssemblingMachineCreator(1, self.map_obj))
-
-                            if sub_y_start + 5 * const.CELL_SIZE > event.pos[1] > sub_y_start + 4 * const.CELL_SIZE:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # stone furnace
-                                    self.player.bag.produce_inside(concrete.BurnerFurnaceCreator(1, self.map_obj))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[
-                                    0] < x_start + 3 * const.CELL_SIZE:  # electric furnace
-                                    self.player.bag.produce_inside(concrete.ElectricFurnaceCreator(1, self.map_obj))
-
-                            if sub_y_start + 7 * const.CELL_SIZE > event.pos[1] > sub_y_start + 6 * const.CELL_SIZE:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # radar
-                                    self.player.bag.produce_inside(concrete.RadarCreator(1, self.map_obj))
+                    for key in icons.keys():
+                        if key[0][0] < event.pos[0] < key[1][0] and key[0][1] < event.pos[1] < key[1][1]:
+                            self.player.bag.produce_inside(icons[key])
 
                     if is_clicking:
-                        pass
 
+                        for key in left_elem_dictionary.keys():
+                            if key[0][0] < event.pos[0] < key[1][0] and key[0][1] < event.pos[1] < key[1][1]:
 
+                                print(self.safe_creator.create_object(left_elem_dictionary[key], x_ind, y_ind))
+
+                                UsableObjectSprite(self, x_ind, y_ind, self.map_obj[self.map_matr[y_ind][x_ind]], left_elem_dictionary[key].get_icon_path())
+                                self.show_bag_playing = False
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
@@ -699,7 +646,9 @@ class Game:
                         elif const.DISPLAY_H // 2 + 282 > mouse[1] > const.DISPLAY_H // 2 + 200:
                             self.quit()
 
-            self.events()
+            for event in self.gui.get_events():
+                if self.gui.get_event_type(event) == "QUIT":
+                    self.quit()
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
@@ -732,7 +681,9 @@ class Game:
                             self.player_perk = 'fast'
                             self.choose_player_screen_playing = False
 
-            self.events()
+            for event in self.gui.get_events():
+                if self.gui.get_event_type(event) == "QUIT":
+                    self.quit()
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
@@ -761,6 +712,7 @@ class Game:
                                 self.map.load(json.load(f))
                             self.map_matr = self.map.get_map_matrix()
                             self.map_obj = self.map.get_map_objects()
+                            self.safe_creator = SafeCreator(self.map)
                             self.choose_map_playing = False
                         elif const.DISPLAY_H // 2 + 232 > mouse[1] > const.DISPLAY_H // 2 + 150:
                             # creator = HardMapCreator()
@@ -770,9 +722,12 @@ class Game:
                                 self.map.load(json.load(f))
                             self.map_matr = self.map.get_map_matrix()
                             self.map_obj = self.map.get_map_objects()
+                            self.safe_creator = SafeCreator(self.map)
                             self.choose_map_playing = False
 
-            self.events()
+            for event in self.gui.get_events():
+                if self.gui.get_event_type(event) == "QUIT":
+                    self.quit()
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)

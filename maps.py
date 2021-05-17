@@ -44,6 +44,8 @@ class MapCell:
         }
 
     def is_occupied(self):
+        print(self.usable_object)
+        print(self.raw_material_batch)
         return bool(self.usable_object or isinstance(self.raw_material_batch, Wood))
 
 

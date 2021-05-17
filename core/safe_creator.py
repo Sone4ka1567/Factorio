@@ -61,6 +61,7 @@ class SafeCreator:
         res = self.handler.handle(object_creator, x, y)
         if res['ok']:
             object_creator.create_object(x, y)
+            print('created at ', x, y)
         return res
 
     def remove_object(self, x, y):

@@ -55,7 +55,7 @@ class Player(PygameSprite):
         self.delta_y += (self.speed_y + const.CELL_SIZE)
         self.delta_y %= const.CELL_SIZE
 
-        print(self.rect.x, self.rect.y)
+        # print(self.rect.x, self.rect.y)
 
         if self.rect.right > const.PIXEL_MAP_W:
             self.rect.right = const.PIXEL_MAP_W
