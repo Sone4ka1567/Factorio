@@ -19,3 +19,6 @@ class MapObjectCreator(Intermediate):
 
     def matches_with_cell(self, cell: MapCell):
         return True
+
+    def get_displayable_name(self):
+        return self.object_type.__name__

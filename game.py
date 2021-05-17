@@ -393,10 +393,6 @@ class Game:
                 self.draw_icon(const.LIGHT_GREY, x_start + 4 * const.CELL_SIZE, sub_y_start,
                                const.CELL_SIZE, const.CELL_SIZE, img)
 
-                img = self.gui.get_image('icons/materials/basic/wooden-plate.xcf').convert_alpha()
-                self.draw_icon(const.LIGHT_GREY, x_start + 6 * const.CELL_SIZE, sub_y_start,
-                               const.CELL_SIZE, const.CELL_SIZE, img)
-
                 img = self.gui.get_image('icons/materials/intermediate/iron-gear-wheel.png').convert_alpha()
                 self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start + 2 * const.CELL_SIZE,
                                const.CELL_SIZE, const.CELL_SIZE, img)
@@ -421,12 +417,94 @@ class Game:
                 self.draw_icon(const.LIGHT_GREY, x_start + 4 * const.CELL_SIZE, sub_y_start + 4 * const.CELL_SIZE,
                                const.CELL_SIZE, const.CELL_SIZE, img)
 
+            dict_production = {((x_start, sub_y_start), (x_start + const.CELL_SIZE, sub_y_start + const.CELL_SIZE)):
+                                   concrete.BurnerMiningDrillCreator(1, self.map_obj),
+                               ((x_start + 2 * const.CELL_SIZE, sub_y_start),
+                                (x_start + 3 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE)):
+                                   concrete.ElectricMiningDrillCreator(1, self.map_obj),
+                               ((x_start, sub_y_start + 2 * const.CELL_SIZE),
+                                (x_start + const.CELL_SIZE, sub_y_start + 3 * const.CELL_SIZE)):
+                                   concrete.BurnerAssemblingMachineCreator(1, self.map_obj),
+                               ((x_start + 2 * const.CELL_SIZE, sub_y_start + 2 * const.CELL_SIZE),
+                                (x_start + 3 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE + 3 * const.CELL_SIZE)):
+                                   concrete.ElectricAssemblingMachineCreator(1, self.map_obj),
+                               ((x_start, sub_y_start + 4 * const.CELL_SIZE),
+                                (x_start + const.CELL_SIZE, sub_y_start + 5 * const.CELL_SIZE)):
+                                   concrete.BurnerFurnaceCreator(1, self.map_obj),
+                               ((x_start + 2 * const.CELL_SIZE, sub_y_start + 4 * const.CELL_SIZE),
+                                (x_start + 3 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE + 5 * const.CELL_SIZE)):
+                                   concrete.ElectricFurnaceCreator(1, self.map_obj),
+                               ((x_start, sub_y_start + 6 * const.CELL_SIZE),
+                                (x_start + const.CELL_SIZE, sub_y_start + 7 * const.CELL_SIZE)):
+                                   concrete.BurnerFurnaceCreator(1, self.map_obj),
+                               }
+            dict_intermediate = {((x_start, sub_y_start), (x_start + const.CELL_SIZE, sub_y_start + const.CELL_SIZE)):
+                                     inter.CopperCable(1),
+                                 ((x_start + 2 * const.CELL_SIZE, sub_y_start),
+                                  (x_start + 3 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE)):
+                                     inter.SteelPlate(1),
+                                 ((x_start + 4 * const.CELL_SIZE, sub_y_start),
+                                  (x_start + 5 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE)):
+                                     inter.Pipe(1),
+                                 ((x_start, sub_y_start + 2 * const.CELL_SIZE),
+                                  (x_start + const.CELL_SIZE, sub_y_start + 3 * const.CELL_SIZE)):
+                                     inter.IronGearWheel(1),
+                                 ((x_start + 2 * const.CELL_SIZE, sub_y_start + 2 * const.CELL_SIZE),
+                                  (x_start + 3 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE + 3 * const.CELL_SIZE)):
+                                     inter.ElectricCircuit(1),
+                                 ((x_start + 4 * const.CELL_SIZE, sub_y_start + 2 * const.CELL_SIZE),
+                                  (x_start + 5 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE + 3 * const.CELL_SIZE)):
+                                     inter.Resistor(1),
+                                 ((x_start, sub_y_start + 4 * const.CELL_SIZE),
+                                  (x_start + const.CELL_SIZE, sub_y_start + 5 * const.CELL_SIZE)):
+                                     inter.Transistor(1),
+                                 ((x_start + 2 * const.CELL_SIZE, sub_y_start + 4 * const.CELL_SIZE),
+                                  (x_start + 3 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE + 5 * const.CELL_SIZE)):
+                                     inter.IntegratedCircuit(1),
+                                 ((x_start + 4 * const.CELL_SIZE, sub_y_start + 4 * const.CELL_SIZE),
+                                  (x_start + 5 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE + 5 * const.CELL_SIZE)):
+                                     inter.ControlUnit(1),
+                                 }
+            dict_logistics = {((x_start, sub_y_start), (x_start + const.CELL_SIZE, sub_y_start + const.CELL_SIZE)):
+                                  concrete.SmallElectricPoleCreator(1, self.map_obj),
+                              ((x_start + 2 * const.CELL_SIZE, sub_y_start),
+                               (x_start + 3 * const.CELL_SIZE, sub_y_start + const.CELL_SIZE)):
+                                  concrete.BigElectricPoleCreator(1, self.map_obj),
+                              ((x_start, sub_y_start + 2 * const.CELL_SIZE),
+                               (x_start + const.CELL_SIZE, sub_y_start + 3 * const.CELL_SIZE)):
+                                  concrete.BurnerElectricGeneratorCreator(1, self.map_obj),
+                              }
+
             # отрисовка окна с количеством необходимого
             self.gui.draw_rect(self.screen, const.REQCOLOR,
-                               (const.DISPLAY_W - const.CELL_SIZE * 6, const.DISPLAY_H - const.CELL_SIZE * 6,
-                                const.CELL_SIZE * 6, const.CELL_SIZE * 6))
-            text = self.additional_mini_font.render('Requirements for:', True, const.WHITE)
-            self.screen.blit(text, (const.DISPLAY_W - const.CELL_SIZE * 5.5, const.DISPLAY_H - const.CELL_SIZE * 5.5))
+                               (const.DISPLAY_W - const.CELL_SIZE * 7, const.DISPLAY_H - const.CELL_SIZE * 6,
+                                const.CELL_SIZE * 7, const.CELL_SIZE * 6))
+            text = self.additional_mini_font.render('Requirements for', True, const.WHITE)
+            self.screen.blit(text, (const.DISPLAY_W - const.CELL_SIZE * 6.5, const.DISPLAY_H - const.CELL_SIZE * 5.5))
+
+            mouse = self.gui.get_mouse_pos()
+            if self.module_playing == 'production':
+                icons = dict_production
+            elif self.module_playing == 'logistics':
+                icons = dict_logistics
+            else:
+                icons = dict_intermediate
+
+            for key in icons.keys():
+                if key[0][0] < mouse[0] < key[1][0] and key[0][1] < mouse[1] < key[1][1]:
+                    text = self.additional_mini_font.render(icons[key].get_displayable_name(), True,
+                                                            const.WHITE)
+                    self.screen.blit(text, (
+                        const.DISPLAY_W - const.CELL_SIZE * 6.5, const.DISPLAY_H - const.CELL_SIZE * 5))
+                    y_for_elem = const.DISPLAY_H - const.CELL_SIZE * 4
+                    for elem in icons[key].required_res:
+                        text_elem = self.additional_mini_font.render(
+                            elem.get_displayable_name() + ':' + str(elem.amount), True, const.WHITE)
+                        self.screen.blit(text_elem, (
+                            const.DISPLAY_W - const.CELL_SIZE * 6.5, y_for_elem))
+                        y_for_elem += const.CELL_SIZE
+
+            # конец
 
             self.gui.draw_rect(  # production
                 self.screen, production_color,
@@ -482,59 +560,70 @@ class Game:
                             if sub_y_start + const.CELL_SIZE > event.pos[1] > sub_y_start:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # copper-cable
                                     self.player.bag.produce_inside(inter.CopperCable(1))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # steel-plate
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 3 * const.CELL_SIZE:  # steel-plate
                                     self.player.bag.produce_inside(inter.SteelPlate(1))
-                                elif x_start + 4 * const.CELL_SIZE < event.pos[0] < x_start + 5 * const.CELL_SIZE:  # pipe
+                                elif x_start + 4 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 5 * const.CELL_SIZE:  # pipe
                                     self.player.bag.produce_inside(inter.Pipe(1))
-                                elif x_start + 6 * const.CELL_SIZE < event.pos[0] < x_start + 7 * const.CELL_SIZE:  # pipe
-                                    self.player.bag.produce_inside(inter.WoodenPlate(1))
 
                             if sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # iron-gear-wheel
                                     self.player.bag.produce_inside(inter.IronGearWheel(1))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # elec circuit
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 3 * const.CELL_SIZE:  # elec circuit
                                     self.player.bag.produce_inside(inter.ElectricCircuit(1))
-                                elif x_start + 4 * const.CELL_SIZE < event.pos[0] < x_start + 5 * const.CELL_SIZE:  # resistor
+                                elif x_start + 4 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 5 * const.CELL_SIZE:  # resistor
                                     self.player.bag.produce_inside(inter.Resistor(1))
 
                             if sub_y_start + 5 * const.CELL_SIZE > event.pos[1] > sub_y_start + 4 * const.CELL_SIZE:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # transistor
                                     self.player.bag.produce_inside(inter.Transistor(1))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # integrated circuit
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 3 * const.CELL_SIZE:  # integrated circuit
                                     self.player.bag.produce_inside(inter.IntegratedCircuit(1))
-                                elif x_start + 4 * const.CELL_SIZE < event.pos[0] < x_start + 5 * const.CELL_SIZE:  # control-unit
+                                elif x_start + 4 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 5 * const.CELL_SIZE:  # control-unit
                                     self.player.bag.produce_inside(inter.ControlUnit(1))
                         elif self.module_playing == 'logistics':
                             if sub_y_start + const.CELL_SIZE > event.pos[1] > sub_y_start:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # small pole
                                     self.player.bag.produce_inside(concrete.SmallElectricPoleCreator(1, self.map_obj))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # big pole
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 3 * const.CELL_SIZE:  # big pole
                                     self.player.bag.produce_inside(concrete.BigElectricPoleCreator(1, self.map_obj))
                             elif sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # burner
-                                    self.player.bag.produce_inside(concrete.BurnerElectricGeneratorCreator(1, self.map_obj))
+                                    self.player.bag.produce_inside(
+                                        concrete.BurnerElectricGeneratorCreator(1, self.map_obj))
 
                         else:
                             if sub_y_start + const.CELL_SIZE > event.pos[1] > sub_y_start:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # burner-mining-drill
                                     self.player.bag.produce_inside(concrete.BurnerMiningDrillCreator(1, self.map_obj))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # electric-mining-drill
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 3 * const.CELL_SIZE:  # electric-mining-drill
                                     self.player.bag.produce_inside(concrete.ElectricMiningDrillCreator(1, self.map_obj))
 
                             if sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # assembling-machine-1
-                                    self.player.bag.produce_inside(concrete.BurnerAssemblingMachineCreator(1, self.map_obj))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # assembling-machine-2
-                                    self.player.bag.produce_inside(concrete.ElectricAssemblingMachineCreator(1, self.map_obj))
+                                    self.player.bag.produce_inside(
+                                        concrete.BurnerAssemblingMachineCreator(1, self.map_obj))
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 3 * const.CELL_SIZE:  # assembling-machine-2
+                                    self.player.bag.produce_inside(
+                                        concrete.ElectricAssemblingMachineCreator(1, self.map_obj))
 
                             if sub_y_start + 5 * const.CELL_SIZE > event.pos[1] > sub_y_start + 4 * const.CELL_SIZE:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # stone furnace
                                     self.player.bag.produce_inside(concrete.BurnerFurnaceCreator(1, self.map_obj))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # electric furnace
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[
+                                    0] < x_start + 3 * const.CELL_SIZE:  # electric furnace
                                     self.player.bag.produce_inside(concrete.ElectricFurnaceCreator(1, self.map_obj))
 
                             if sub_y_start + 7 * const.CELL_SIZE > event.pos[1] > sub_y_start + 6 * const.CELL_SIZE:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # electric furnace
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # radar
                                     self.player.bag.produce_inside(concrete.RadarCreator(1, self.map_obj))
 
             self.gui.update_display()
