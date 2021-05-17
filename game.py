@@ -7,6 +7,7 @@ from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
 from basic_geometry import euclidean_dist
 import core.virtual_objects.materials.intermediates as inter
+import core.virtual_objects.map_object_creators.concrete_creators as concrete
 import constants as const
 import time
 import json
@@ -490,6 +491,15 @@ class Game:
                                     self.player.bag.produce_inside(inter.IntegratedCircuit(1))
                                 elif x_start + 4 * const.CELL_SIZE < event.pos[0] < x_start + 5 * const.CELL_SIZE:  # control-unit
                                     self.player.bag.produce_inside(inter.ControlUnit(1))
+                        elif self.module_playing == 'logistics':
+                            if sub_y_start + const.CELL_SIZE > event.pos[1] > sub_y_start:
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # small pole
+                                    self.player.bag.produce_inside(concrete.SmallElectricPoleCreator(1, self.map_obj))
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # big pole
+                                    self.player.bag.produce_inside(concrete.BigElectricPoleCreator(1, self.map_obj))
+                            elif sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # burner
+                                    self.player.bag.produce_inside(concrete.BurnerElectricGeneratorCreator(1, self.map_obj))
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
