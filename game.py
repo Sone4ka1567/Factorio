@@ -6,6 +6,7 @@ from maps import EasyMapCreator, HardMapCreator, EasyMap, HardMap
 from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
 from basic_geometry import euclidean_dist
+import core.virtual_objects.materials.intermediates as inter
 import constants as const
 import time
 import json
@@ -463,6 +464,32 @@ class Game:
                             self.module_playing = 'inter-products'
                         elif x_start + 6 * const.CELL_SIZE < event.pos[0] < x_start + 8 * const.CELL_SIZE:
                             self.module_playing = 'logistics'
+
+                    else:
+                        if self.module_playing == 'inter-products':
+                            if sub_y_start + const.CELL_SIZE > event.pos[1] > sub_y_start:
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # copper-cable
+                                    self.player.bag.produce_inside(inter.CopperCable(1))
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # steel-plate
+                                    self.player.bag.produce_inside(inter.SteelPlate(1))
+                                elif x_start + 4 * const.CELL_SIZE < event.pos[0] < x_start + 5 * const.CELL_SIZE:  # pipe
+                                    self.player.bag.produce_inside(inter.Pipe(1))
+
+                            if sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # iron-gear-wheel
+                                    self.player.bag.produce_inside(inter.IronGearWheel(1))
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # elec circuit
+                                    self.player.bag.produce_inside(inter.ElectricCircuit(1))
+                                elif x_start + 4 * const.CELL_SIZE < event.pos[0] < x_start + 5 * const.CELL_SIZE:  # resistor
+                                    self.player.bag.produce_inside(inter.Resistor(1))
+
+                            if sub_y_start + 5 * const.CELL_SIZE > event.pos[1] > sub_y_start + 4 * const.CELL_SIZE:
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # transistor
+                                    self.player.bag.produce_inside(inter.Transistor(1))
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # integrated circuit
+                                    self.player.bag.produce_inside(inter.IntegratedCircuit(1))
+                                elif x_start + 4 * const.CELL_SIZE < event.pos[0] < x_start + 5 * const.CELL_SIZE:  # control-unit
+                                    self.player.bag.produce_inside(inter.ControlUnit(1))
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
