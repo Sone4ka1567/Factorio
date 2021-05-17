@@ -5,6 +5,7 @@ from tree_sprite import Tree
 from maps import EasyMapCreator, HardMapCreator, EasyMap, HardMap
 from core.virtual_objects.materials.raw_and_basics import Iron, Copper, Wood
 from core.virtual_objects.materials.raw_and_basics import Coal, Stone, Silicon
+from core.virtual_objects.map_object_creators.concrete_creators import BurnerFurnaceCreator, BurnerMiningDrillCreator
 from basic_geometry import euclidean_dist
 import core.virtual_objects.materials.intermediates as inter
 import core.virtual_objects.map_object_creators.concrete_creators as concrete
@@ -51,6 +52,9 @@ class Game:
         self.player = Player(
             self, const.MAP_W // 2, const.MAP_H // 2, **player_perks[self.player_perk]
         )
+        self.player.bag.put(BurnerFurnaceCreator(1, self.map_obj))
+        self.player.bag.put(BurnerMiningDrillCreator(1, self.map_obj))
+
         self.camera = Camera(const.PIXEL_MAP_W, const.PIXEL_MAP_H, self.gui)
 
     def run(self):
