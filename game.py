@@ -12,6 +12,7 @@ from basic_geometry import euclidean_dist
 import core.virtual_objects.materials.intermediates as inter
 import core.virtual_objects.map_object_creators.concrete_creators as concrete
 from core.safe_creator import SafeCreator
+from core.night import run_night
 import constants as const
 import time
 import json
@@ -311,12 +312,22 @@ class Game:
             if 'E' in self.gui.get_keystate():
                 self.show_bag()
 
+            if 'N' in self.gui.get_keystate():
+                st_time = time.time()
+                run_night(self.map)
+                night_image = self.gui.get_image('night.jpg').convert_alpha()
+                self.screen.blit(night_image, (0, 0))
+                self.gui.update_display()
+                time.sleep(max(0, const.NIGHT_TIME - (time.time() - st_time)))
+
             if self.gui.get_event_type(event) == "QUIT":
                 self.quit()
 
     def show_usable_objects_menu(self, object, x_coord, y_coord):
         self.show_usable_objects_menu_playing = True
-        fuel_image = None
+        fuel_image = self.gui.get_image('icons/materials/raw/coal.png').convert_alpha()
+
+        fuel_image.set_colorkey(const.BLACK)
 
         while self.show_usable_objects_menu_playing:
             self.gui.draw_rect(self.screen, const.BAGCOLOR,
@@ -400,6 +411,27 @@ class Game:
                                (x_coord + 5.5 * const.CELL_SIZE - output_text.get_width(), y_coord + 1.5 * const.CELL_SIZE,
                                const.CELL_SIZE, const.CELL_SIZE))
 
+            if not object.output.is_empty():
+                batch = object.output
+                image = self.gui.get_image(
+                    batch[0].get_icon_path()
+                ).convert_alpha()
+
+                image.set_colorkey(const.BLACK)
+
+                self.screen.blit(image,
+                                 (x_coord + 5.5 * const.CELL_SIZE - output_text.get_width(),
+                                  y_coord + 1.5 * const.CELL_SIZE))
+
+                batch_amount = self.additional_mini_font.render(str(batch[0].amount), True, const.WHITE)
+                self.screen.blit(
+                    batch_amount,
+                    (
+                        x_coord + 5.5 * const.CELL_SIZE - output_text.get_width() + const.CELL_SIZE - batch_amount.get_width(),
+                        y_coord + 1.5 * const.CELL_SIZE + const.CELL_SIZE // 2,
+                    ),
+                )
+
             x_delta = x_coord + const.CELL_SIZE // 2
             y_delta = y_coord + const.CELL_SIZE
             cnt = 0
@@ -418,7 +450,7 @@ class Game:
                     y_delta = y_coord + 0.5 * const.CELL_SIZE
                     x_delta += const.CELL_SIZE
 
-            if fuel_image:
+            if object.has_energy():
                 self.screen.blit(fuel_image,
                                  (x_coord + const.CELL_SIZE // 2, y_coord + 1.5 * const.CELL_SIZE))
 
@@ -427,7 +459,7 @@ class Game:
             for event in self.gui.get_events():
 
                 if self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 1:
-                    if not (x_coord < event.pos[0] < x_coord + 6 * const.CELL_SIZE) or not(y_coord < event.pos[1] < y_coord + 10 * const.CELL_SIZE):
+                    if not (x_coord < event.pos[0] < x_coord + 6 * const.CELL_SIZE) or not (y_coord < event.pos[1] < y_coord + 10 * const.CELL_SIZE):
                         self.show_usable_objects_menu_playing = False
 
                     if x_start < event.pos[0] < x_start + 5 * const.CELL_SIZE and y_start < event.pos[1] < y_start + const.CELL_SIZE * (len(batches) + 5) // 5:
@@ -860,22 +892,22 @@ class Game:
             usual_image = self.gui.get_image('welcome_screen/screen_2/usual_button.xcf')
             warrior_image = self.gui.get_image('welcome_screen/screen_2/warrior_button.xcf')
 
-            self.screen.blit(builder_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2))
+            self.screen.blit(warrior_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2))
             self.screen.blit(usual_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 100))
-            self.screen.blit(warrior_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 200))
+            self.screen.blit(builder_image, (const.DISPLAY_W // 2 - 265 / 2, const.DISPLAY_H // 2 + 200))
 
             mouse = self.gui.get_mouse_pos()
             if const.DISPLAY_W // 2 + 265 / 2 > mouse[0] > const.DISPLAY_W // 2 - 265 / 2:
                 for event in self.gui.get_events():
                     if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
                         if const.DISPLAY_H // 2 + 82 > mouse[1] > const.DISPLAY_H // 2:
-                            self.player_perk = 'big_bag'
+                            self.player_perk = 'fast'
                             self.choose_player_screen_playing = False
                         elif const.DISPLAY_H // 2 + 182 > mouse[1] > const.DISPLAY_H // 2 + 100:
                             self.player_perk = 'balanced'
                             self.choose_player_screen_playing = False
                         elif const.DISPLAY_H // 2 + 282 > mouse[1] > const.DISPLAY_H // 2 + 200:
-                            self.player_perk = 'fast'
+                            self.player_perk = 'big_bag'
                             self.choose_player_screen_playing = False
 
             for event in self.gui.get_events():
