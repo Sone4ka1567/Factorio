@@ -11,6 +11,7 @@ class BurnerFurnaceCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
     relative_icon_path = '../../../img/icons/creators/production/stone-furnace.png'
+    relative_image_path = '../../../img/entity/stone-furnace.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerFurnace, amount, map_obj)
@@ -21,6 +22,7 @@ class ElectricFurnaceCreator(MapObjectCreator):
     ticks_to_produce = 20
     producing_time = 1.0
     relative_icon_path = '../../../img/icons/creators/production/electric-furnace.png'
+    relative_image_path = '../../../img/entity/electric-furnace.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.ElectricFurnace, amount, map_obj)
@@ -34,6 +36,7 @@ class BurnerAssemblingMachineCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
     relative_icon_path = '../../../img/icons/creators/production/assembling-machine-1.png'
+    relative_image_path = '../../../img/entity/assembling-machine-1.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerAssemblingMachine, amount, map_obj)
@@ -48,6 +51,7 @@ class ElectricAssemblingMachineCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
     relative_icon_path = '../../../img/icons/creators/production/assembling-machine-2.png'
+    relative_image_path = '../../../img/entity/assembling-machine-2.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.ElectricAssemblingMachine, amount, map_obj)
@@ -63,6 +67,7 @@ class BurnerMiningDrillCreator(MapObjectCreator):
     ticks_to_produce = 20
     producing_time = 1.0
     relative_icon_path = '../../../img/icons/creators/production/burner-mining-drill.png'
+    relative_image_path = '../../../img/entity/burner-mining-drill.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerMiningDrill, amount, map_obj)
@@ -80,6 +85,7 @@ class ElectricMiningDrillCreator(MapObjectCreator):
     ticks_to_produce = 40
     producing_time = 2.0
     relative_icon_path = '../../../img/icons/creators/production/electric-mining-drill.png'
+    relative_image_path = '../../../img/entity/electric-mining-drill.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.ElectricMiningDrill, amount, map_obj)
@@ -94,6 +100,7 @@ class SmallElectricPoleCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
     relative_icon_path = '../../../img/icons/creators/electricity/small-electric-pole.png'
+    relative_image_path = '../../../img/entity/small-electric-pole.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(el.SmallElectricPole, amount, map_obj)
@@ -106,6 +113,7 @@ class BigElectricPoleCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
     relative_icon_path = '../../../img/icons/creators/electricity/big-electric-pole.png'
+    relative_image_path = '../../../img/entity/big-electric-pole.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(el.BigElectricPole, amount, map_obj)
@@ -120,6 +128,7 @@ class BurnerElectricGeneratorCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
     relative_icon_path = '../../../img/icons/creators/electricity/burner-generator.xcf'
+    relative_image_path = '../../../img/entity/burner-generator.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(el.BurnerElectricGenerator, amount, map_obj)
@@ -134,6 +143,7 @@ class RadarCreator(MapObjectCreator):
     ticks_to_produce = 140
     producing_time = 6.0
     relative_icon_path = '../../../img/icons/radar.png'
+    relative_image_path = '../../../img/entity/radar.png'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.Radar, amount, map_obj)

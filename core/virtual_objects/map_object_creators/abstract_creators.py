@@ -1,8 +1,11 @@
 from maps import Map, MapCell
 from core.virtual_objects.materials.intermediates import Intermediate
+from os.path import abspath
 
 
 class MapObjectCreator(Intermediate):
+    relative_image_path: str
+
     def __init__(self, object_type, amount, map_obj: Map):
         super().__init__(amount)
         self.object_type = object_type
@@ -15,6 +18,9 @@ class MapObjectCreator(Intermediate):
 
     def create_object(self, x, y):
         self._put_map_object(x, y, self.object_type(x, y, self.map_obj))
+
+    def get_image_path(self):
+        return abspath(self.relative_image_path.replace('../', ''))
 
     def matches_with_cell(self, cell: MapCell):
         return True
