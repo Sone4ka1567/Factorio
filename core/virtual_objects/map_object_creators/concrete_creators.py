@@ -11,7 +11,7 @@ class BurnerFurnaceCreator(MapObjectCreator):
     ticks_to_produce = 10
     producing_time = 0.5
     relative_icon_path = '../../../img/icons/creators/production/stone-furnace.png'
-    relative_image_path = '../../../img/entity/stone-furnace.png'
+    relative_image_path = '../../../img/entity/stone-furnace.xcf'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerFurnace, amount, map_obj)
@@ -67,7 +67,7 @@ class BurnerMiningDrillCreator(MapObjectCreator):
     ticks_to_produce = 20
     producing_time = 1.0
     relative_icon_path = '../../../img/icons/creators/production/burner-mining-drill.png'
-    relative_image_path = '../../../img/entity/burner-mining-drill.png'
+    relative_image_path = '../../../img/entity/burner-mining-drill.xcf'
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerMiningDrill, amount, map_obj)
