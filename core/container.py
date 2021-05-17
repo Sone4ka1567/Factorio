@@ -1,4 +1,3 @@
-from copy import deepcopy
 from result_func import result_ok, result_error
 
 
@@ -45,7 +44,10 @@ class Container:
         return self.data
 
     def copy(self):
-        return Container(max_size=self.max_size, data=deepcopy(self.data))
+        new_container = Container(self.max_size)
+        for batch in self.data:
+            new_container.put(batch)
+        return new_container
 
     def produce_inside(self, target_batch):
         if len(self.data) == self.max_size:
