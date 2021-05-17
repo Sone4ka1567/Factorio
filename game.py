@@ -42,6 +42,7 @@ class Game:
         # self.gui.stop_music() todo
         self.all_sprites = self.gui.group_sprites()
         self.trees = self.gui.group_sprites()
+        self.usable_objects = self.gui.group_sprites()
 
         for i in range(const.MAP_W):
             for j in range(const.MAP_H):
@@ -172,17 +173,19 @@ class Game:
                     ).convert_alpha()
 
                 self.screen.blit(cell_image,
-                                 ((i - left_border) * const.CELL_SIZE, (j - top_border) * const.CELL_SIZE))
+                                 ((i - left_border) * const.CELL_SIZE - self.player.delta_x, (j - top_border) * const.CELL_SIZE - self.player.delta_y))
 
     def draw(self):
         self.gui.fill_screen(self.screen, const.BG_COLOR)
         self.draw_map()
 
         mouse = self.gui.get_mouse_pos()
-        x_coord = mouse[0] // const.CELL_SIZE
-        y_coord = mouse[1] // const.CELL_SIZE
+        x_coord = (mouse[0] + self.player.delta_x) // const.CELL_SIZE
+        y_coord = (mouse[1] + self.player.delta_y) // const.CELL_SIZE
         x_coord *= const.CELL_SIZE
         y_coord *= const.CELL_SIZE
+        x_coord -= self.player.delta_x
+        y_coord -= self.player.delta_y
         self.gui.draw_line(self.screen, const.HIGHLIGHT, (x_coord, y_coord), (x_coord + const.CELL_SIZE, y_coord))
         self.gui.draw_line(self.screen, const.HIGHLIGHT, (x_coord, y_coord), (x_coord, y_coord + const.CELL_SIZE))
         self.gui.draw_line(self.screen, const.HIGHLIGHT, (x_coord + const.CELL_SIZE, y_coord),
@@ -205,8 +208,8 @@ class Game:
         else:
             top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
 
-        i_ind = mouse[0] // const.CELL_SIZE + left_border
-        j_ind = mouse[1] // const.CELL_SIZE + top_border
+        i_ind = (mouse[0] + self.player.delta_x) // const.CELL_SIZE + left_border
+        j_ind = (mouse[1] + self.player.delta_y) // const.CELL_SIZE + top_border
         cur_cell = self.map_obj[self.map_matr[j_ind][i_ind]]
         if cur_cell.raw_material_batch:
             message = str(cur_cell.raw_material_batch)
@@ -249,8 +252,8 @@ class Game:
                 else:
                     top_border = (const.PIXEL_MAP_H - const.DISPLAY_H) // const.CELL_SIZE
 
-                i_ind = event.pos[0] // const.CELL_SIZE + left_border
-                j_ind = event.pos[1] // const.CELL_SIZE + top_border
+                i_ind = (event.pos[0] + self.player.delta_x) // const.CELL_SIZE + left_border
+                j_ind = (event.pos[1] + self.player.delta_y) // const.CELL_SIZE + top_border
 
                 if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
                                   j_ind - self.player.rect.y // const.CELL_SIZE) < 5:

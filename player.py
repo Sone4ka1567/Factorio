@@ -27,6 +27,9 @@ class Player(PygameSprite):
         self.rect.x = x_spawn * const.CELL_SIZE
         self.rect.y = y_spawn * const.CELL_SIZE
 
+        self.delta_x = 0
+        self.delta_y = 0
+
     def update(self):
         self.speed_x = 0
         self.speed_y = 0
@@ -41,10 +44,18 @@ class Player(PygameSprite):
             self.speed_y = self.speed
 
         self.rect.x += self.speed_x
-        self.collide_with_trees('horizontal')
+        self.collide_with_trees('horizontal', self.game.trees)
+        self.collide_with_trees('horizontal', self.game.usable_objects)
+        self.delta_x += (self.speed_x + const.CELL_SIZE)
+        self.delta_x %= const.CELL_SIZE
 
         self.rect.y += self.speed_y
-        self.collide_with_trees('vertical')
+        self.collide_with_trees('vertical', self.game.trees)
+        self.collide_with_trees('vertical', self.game.usable_objects)
+        self.delta_y += (self.speed_y + const.CELL_SIZE)
+        self.delta_y %= const.CELL_SIZE
+
+        print(self.rect.x, self.rect.y)
 
         if self.rect.right > const.PIXEL_MAP_W:
             self.rect.right = const.PIXEL_MAP_W
@@ -55,8 +66,8 @@ class Player(PygameSprite):
         if self.rect.top < 0:
             self.rect.top = 0
 
-    def collide_with_trees(self, direction):
-        hits = self.sprite_collision(self.game.trees, False)
+    def collide_with_trees(self, direction, group):
+        hits = self.sprite_collision(group, False)
         if hits:
             if direction == 'horizontal':
                 if self.speed_x > 0:
