@@ -951,6 +951,9 @@ class Game:
                     if self.gui.get_event_type(event) == "MOUSEBUTTONDOWN":
                         if const.DISPLAY_H // 2 + 82 > mouse[1] > const.DISPLAY_H // 2:
                             creator = EasyMapCreator()
+                            background_loading = self.gui.get_image('welcome_screen/screen_3/background_4.xcf')
+                            self.screen.blit(background_loading, (0, 0))
+                            self.gui.update_display()
                             self.map = creator.gen_map()
                             self.map_matr = self.map.get_map_matrix()
                             self.map_obj = self.map.get_map_objects()
@@ -958,6 +961,9 @@ class Game:
                             self.choose_map_playing = False
                         elif const.DISPLAY_H // 2 + 232 > mouse[1] > const.DISPLAY_H // 2 + 150:
                             creator = HardMapCreator()
+                            background_loading = self.gui.get_image('welcome_screen/screen_3/background_4.xcf')
+                            self.screen.blit(background_loading, (0, 0))
+                            self.gui.update_display()
                             self.map = creator.gen_map()
                             self.map_matr = self.map.get_map_matrix()
                             self.map_obj = self.map.get_map_objects()
