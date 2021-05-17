@@ -501,6 +501,29 @@ class Game:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # burner
                                     self.player.bag.produce_inside(concrete.BurnerElectricGeneratorCreator(1, self.map_obj))
 
+                        else:
+                            if sub_y_start + const.CELL_SIZE > event.pos[1] > sub_y_start:
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # burner-mining-drill
+                                    self.player.bag.produce_inside(concrete.BurnerMiningDrillCreator(1, self.map_obj))
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # electric-mining-drill
+                                    self.player.bag.produce_inside(concrete.ElectricMiningDrillCreator(1, self.map_obj))
+
+                            if sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # assembling-machine-1
+                                    self.player.bag.produce_inside(concrete.BurnerAssemblingMachineCreator(1, self.map_obj))
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # assembling-machine-2
+                                    self.player.bag.produce_inside(concrete.ElectricAssemblingMachineCreator(1, self.map_obj))
+
+                            if sub_y_start + 5 * const.CELL_SIZE > event.pos[1] > sub_y_start + 4 * const.CELL_SIZE:
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # electric furnace
+                                    self.player.bag.produce_inside(concrete.ElectricFurnaceCreator(1, self.map_obj))
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # stone furnace
+                                    self.player.bag.produce_inside(concrete.BurnerFurnaceCreator(1, self.map_obj))
+
+                            if sub_y_start + 7 * const.CELL_SIZE > event.pos[1] > sub_y_start + 6 * const.CELL_SIZE:
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # electric furnace
+                                    self.player.bag.produce_inside(concrete.RadarCreator(1))
+
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
 
