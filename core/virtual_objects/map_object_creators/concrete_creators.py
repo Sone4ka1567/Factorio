@@ -14,7 +14,7 @@ class BurnerFurnaceCreator(MapObjectCreator):
 
     def __init__(self, amount, map_obj):
         super().__init__(prod.BurnerFurnace, amount, map_obj)
-        self.required_res = (rnb.Stone(5 * amount),)
+        self.required_res = (inter.IronPlate(5 * amount), inter.CopperPlate(amount))
 
 
 class ElectricFurnaceCreator(MapObjectCreator):
@@ -136,8 +136,8 @@ class RadarCreator(MapObjectCreator):
     producing_time = 6.0
     relative_icon_path = '../../../img/icons/radar.png'
 
-    def __init__(self, amount):
-        super().__init__(amount)
+    def __init__(self, amount, map_obj):
+        super().__init__(prod.Radar, amount, map_obj)
         self.required_res = (
             inter.ControlUnit(amount * 3),
             inter.SteelPlate(amount * 25),

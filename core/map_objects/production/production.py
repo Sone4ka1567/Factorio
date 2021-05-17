@@ -134,9 +134,9 @@ class BurnerAssemblingMachine(AssemblingMachine):
 
 class ElectricAssemblingMachine(AssemblingMachine):
     valid_input = (
-        BurnerAssemblingMachine.valid_input
-        + (inter.SiliconPlate,)
-        + BurnerAssemblingMachine.possible_targets
+            BurnerAssemblingMachine.valid_input
+            + (inter.SiliconPlate,)
+            + BurnerAssemblingMachine.possible_targets
     )
     possible_targets = BurnerAssemblingMachine.possible_targets + (
         inter.ElectricCircuit,
@@ -169,3 +169,8 @@ class ElectricMiningDrill(MiningDrill):
     def __init__(self, x, y, map_obj):
         super().__init__(x, y, map_obj)
         self.energy_source = ElectricPowerSource(self.energy_consumption)
+
+
+class Radar(Machine):
+    def process(self):
+        pass

@@ -351,11 +351,11 @@ class Game:
                 self.draw_icon(const.LIGHT_GREY, x_start + 2 * const.CELL_SIZE, sub_y_start + 2 * const.CELL_SIZE,
                                const.CELL_SIZE, const.CELL_SIZE, img)
 
-                img = self.gui.get_image('icons/creators/production/electric-furnace.png').convert_alpha()
+                img = self.gui.get_image('icons/creators/production/stone-furnace.png').convert_alpha()
                 self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start + 4 * const.CELL_SIZE,
                                const.CELL_SIZE, const.CELL_SIZE, img)
 
-                img = self.gui.get_image('icons/creators/production/stone-furnace.png').convert_alpha()
+                img = self.gui.get_image('icons/creators/production/electric-furnace.png').convert_alpha()
                 self.draw_icon(const.LIGHT_GREY, x_start + 2 * const.CELL_SIZE, sub_y_start + 4 * const.CELL_SIZE,
                                const.CELL_SIZE, const.CELL_SIZE, img)
 
@@ -393,6 +393,10 @@ class Game:
                 self.draw_icon(const.LIGHT_GREY, x_start + 4 * const.CELL_SIZE, sub_y_start,
                                const.CELL_SIZE, const.CELL_SIZE, img)
 
+                img = self.gui.get_image('icons/materials/basic/wooden-plate.xcf').convert_alpha()
+                self.draw_icon(const.LIGHT_GREY, x_start + 6 * const.CELL_SIZE, sub_y_start,
+                               const.CELL_SIZE, const.CELL_SIZE, img)
+
                 img = self.gui.get_image('icons/materials/intermediate/iron-gear-wheel.png').convert_alpha()
                 self.draw_icon(const.LIGHT_GREY, x_start, sub_y_start + 2 * const.CELL_SIZE,
                                const.CELL_SIZE, const.CELL_SIZE, img)
@@ -416,6 +420,13 @@ class Game:
                 img = self.gui.get_image('icons/materials/intermediate/control-unit.png').convert_alpha()
                 self.draw_icon(const.LIGHT_GREY, x_start + 4 * const.CELL_SIZE, sub_y_start + 4 * const.CELL_SIZE,
                                const.CELL_SIZE, const.CELL_SIZE, img)
+
+            # отрисовка окна с количеством необходимого
+            self.gui.draw_rect(self.screen, const.REQCOLOR,
+                               (const.DISPLAY_W - const.CELL_SIZE * 6, const.DISPLAY_H - const.CELL_SIZE * 6,
+                                const.CELL_SIZE * 6, const.CELL_SIZE * 6))
+            text = self.additional_mini_font.render('Requirements for:', True, const.WHITE)
+            self.screen.blit(text, (const.DISPLAY_W - const.CELL_SIZE * 5.5, const.DISPLAY_H - const.CELL_SIZE * 5.5))
 
             self.gui.draw_rect(  # production
                 self.screen, production_color,
@@ -475,6 +486,8 @@ class Game:
                                     self.player.bag.produce_inside(inter.SteelPlate(1))
                                 elif x_start + 4 * const.CELL_SIZE < event.pos[0] < x_start + 5 * const.CELL_SIZE:  # pipe
                                     self.player.bag.produce_inside(inter.Pipe(1))
+                                elif x_start + 6 * const.CELL_SIZE < event.pos[0] < x_start + 7 * const.CELL_SIZE:  # pipe
+                                    self.player.bag.produce_inside(inter.WoodenPlate(1))
 
                             if sub_y_start + 3 * const.CELL_SIZE > event.pos[1] > sub_y_start + 2 * const.CELL_SIZE:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # iron-gear-wheel
@@ -515,14 +528,14 @@ class Game:
                                     self.player.bag.produce_inside(concrete.ElectricAssemblingMachineCreator(1, self.map_obj))
 
                             if sub_y_start + 5 * const.CELL_SIZE > event.pos[1] > sub_y_start + 4 * const.CELL_SIZE:
-                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # electric furnace
-                                    self.player.bag.produce_inside(concrete.ElectricFurnaceCreator(1, self.map_obj))
-                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # stone furnace
+                                if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # stone furnace
                                     self.player.bag.produce_inside(concrete.BurnerFurnaceCreator(1, self.map_obj))
+                                elif x_start + 2 * const.CELL_SIZE < event.pos[0] < x_start + 3 * const.CELL_SIZE:  # electric furnace
+                                    self.player.bag.produce_inside(concrete.ElectricFurnaceCreator(1, self.map_obj))
 
                             if sub_y_start + 7 * const.CELL_SIZE > event.pos[1] > sub_y_start + 6 * const.CELL_SIZE:
                                 if x_start < event.pos[0] < x_start + const.CELL_SIZE:  # electric furnace
-                                    self.player.bag.produce_inside(concrete.RadarCreator(1))
+                                    self.player.bag.produce_inside(concrete.RadarCreator(1, self.map_obj))
 
             self.gui.update_display()
             self.gui.tick_fps(self.clock, const.FPS)
