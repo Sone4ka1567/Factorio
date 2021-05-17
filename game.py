@@ -35,6 +35,7 @@ class Game:
         self.small_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 18)
         self.mini_font = self.gui.get_font("fonts/sylar_stencil.ttf", const.DISPLAY_H // 40)
         self.additional_mini_font = self.gui.get_font("fonts/Roboto-Bold.ttf", const.DISPLAY_H // 40)
+        self.additional_font = self.gui.get_font("fonts/Roboto-Bold.ttf", const.DISPLAY_H // 30)
 
         self.start_screen_playing = True
         self.choose_player_screen_playing, self.choose_map_playing = True, True
@@ -88,7 +89,7 @@ class Game:
         if (self.player.rect.x + const.DISPLAY_W // 2) > const.DISPLAY_W:
             right_border = min(
                 const.PIXEL_MAP_W,
-                self.player.rect.x + const.DISPLAY_W // 2 + const.CELL_SIZE
+                self.player.rect.x + const.DISPLAY_W // 2 + 2 * const.CELL_SIZE
             ) // const.CELL_SIZE
         else:
             right_border = const.DISPLAY_W // const.CELL_SIZE
@@ -237,8 +238,8 @@ class Game:
 
         self.gui.flip_display()
 
-    def show_message(self, text, color, event):
-        button_text = self.additional_mini_font.render(text, True, color)
+    def show_message(self, text, color, event, font):
+        button_text = font.render(text, True, color)
         self.screen.blit(button_text, (event.pos[0], event.pos[1] - const.CELL_SIZE // 2))
         self.gui.update_display()
         time.sleep(0.3)
@@ -273,9 +274,9 @@ class Game:
                     else:
                         message = self.player.dig(self.map.get_cell(i_ind, j_ind))
                         color = const.WHITE if message['ok'] else const.RED
-                        self.show_message(message['message'], color, event)
+                        self.show_message(message['message'], color, event, self.additional_mini_font)
                 else:
-                    self.show_message('too far, come closer', const.RED, event)
+                    self.show_message('too far, come closer', const.RED, event, self.additional_mini_font)
 
             elif self.gui.get_event_type(event) == 'MOUSEBUTTONDOWN' and event.button == 1:
 
@@ -294,9 +295,11 @@ class Game:
 
                 if euclidean_dist(i_ind - self.player.rect.x // const.CELL_SIZE,
                                   j_ind - self.player.rect.y // const.CELL_SIZE) < 5:
-                    self.show_bag(True, i_ind, j_ind)
+                    message = self.show_bag(True, i_ind, j_ind)
+                    if message:
+                        self.show_message(message, const.RED, event, self.additional_font)
                 else:
-                    self.show_message('too far, come closer', const.RED, event)
+                    self.show_message('too far, come closer', const.RED, event, self.additional_mini_font)
 
             if 'E' in self.gui.get_keystate():
                 self.show_bag()
@@ -620,7 +623,10 @@ class Game:
                                     sprite = UsableObjectSprite(self, x_ind, y_ind,
                                                                 self.map_obj[self.map_matr[y_ind][x_ind]],
                                                                 left_elem_dictionary[key].get_icon_path())
+
                                     self.dict_sprites_usable_objects[(x_ind, y_ind)] = sprite
+                                else:
+                                    return res['message']
                                 self.show_bag_playing = False
 
             self.gui.update_display()
